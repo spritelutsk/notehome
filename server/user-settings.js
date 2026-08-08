@@ -5,13 +5,11 @@
 // leaking between two people who share one machine.
 //
 // Adding a preference = one entry in SETTINGS_SPEC. Everything else (validation, defaults,
-// forward-compatibility with old rows) follows from it.
+// the API surface, forward-compatibility with old rows) follows from it.
 
 const SETTINGS_SPEC = {
   // Folder contents rendered as cards ("плитка") or as one-line rows ("список").
   contentViewMode: { default: 'grid', values: ['grid', 'list'] },
-  // Interface language: 'uk' | 'ru' | 'en'
-  language: { default: 'ru', values: ['uk', 'ru', 'en'] },
 };
 
 function defaults() {

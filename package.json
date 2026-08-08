@@ -5,8 +5,7 @@
   "description": "SpriteNote - personal tree-organized notes/links/docs manager",
   "main": "server/index.js",
   "scripts": {
-    "start": "node server/index.js",
-    "test": "node test/i18n.test.js"
+    "start": "node server/index.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -18,8 +17,5 @@
     "mysql2": "^3.10.0",
     "node-pty": "^1.1.0",
     "ws": "^8.21.2"
-  },
-  "devDependencies": {
-    "jsdom": "^30.0.1"
   }
 }
