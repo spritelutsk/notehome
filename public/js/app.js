@@ -21,637 +21,823 @@
     searchQuery: '',
   };
 
+  // ---------------- Translations ----------------
+  //
+  // Один ключ — одна строка на трёх языках: [uk, ru, en]. Языки лежат рядом, а не в трёх
+  // отдельных словарях: добавляя строку, невозможно молча забыть про один из языков, и это
+  // видно глазами в одной строке диффа.
+  //
+  // Статическая разметка не дублирует эти строки, а помечена в index.html атрибутами
+  // data-t / data-t-title / data-t-placeholder; renderStaticTexts() расставляет текст по ним.
+
+  const LANGS = ['uk', 'ru', 'en'];
+
+  // Даты форматирует сам браузер; ему нужна не наша метка языка, а BCP 47.
+  const DATE_LOCALE = { uk: 'uk-UA', ru: 'ru-RU', en: 'en-GB' };
+
   const TRANSLATIONS = {
-    uk: {
-      // Error messages
-      invalid_email: 'Введіть коректний email',
-      weak_password: 'Пароль має бути не менше 8 символів',
-      email_taken: 'Цей email вже зареєстрований',
-      invalid_credentials: 'Невірний email або пароль',
-      missing_credentials: "Введіть email і пароль",
-      not_authenticated: 'Потрібен вхід',
-      session_expired: 'Сесія закінчилася, увійдіть знову',
-      admin_required: 'Потрібні права адміністратора',
-      name_required: "Введіть назву",
-      url_required: 'Введіть посилання (URL)',
-      invalid_type: 'Некоректний тип елемента',
-      parent_not_found: 'Папка призначення не знайдена',
-      parent_not_folder: 'Можна переміщувати тільки всередину папки',
-      cannot_move_into_self: 'Не можна перемістити елемент у самого себе',
-      cannot_move_into_descendant: 'Не можна перемістити папку в свою ж підпапку',
-      cannot_remove_last_admin: 'Не можна зняти права у останнього адміністратора',
-      not_found: 'Елемент не знайдено',
-      file_required: 'Оберіть файл',
-      upload_error: 'Помилка завантаження файлу',
-      server_error: 'Внутрішня помилка сервера',
-      cannot_read_dir: 'Не вдалося прочитати папку (немає доступу?)',
-      target_dir_not_found: 'Папка призначення не знайдена',
-      cannot_delete_directory: 'Не можна видалити папку цілком — тільки окремі файли',
-      invalid_import_file: 'Файл не схожий на експорт SpriteNote',
-      fetch_failed: 'Не вдалося відкрити сторінку за цим посиланням',
-      url_not_allowed: 'Це посилання недоступне для перегляду',
-      not_html: 'Сторінка за посиланням — не HTML, не можу її прочитати',
-      empty_page: 'На сторінці не знайшлося тексту',
-      summary_failed: 'Не вийшло скласти стислий опис, спробуйте ще раз',
-      too_many_redirects: 'Занадто багато перенаправлень за посиланням',
-      cannot_delete_last_admin_with_other_users: 'Ви останній адміністратор, а на сайті є інші користувачі — спочатку призначте іншого адміна',
-      too_many_requests: 'Занадто багато спроб, зачекайте трохи і повторіть',
-      invalid_request: 'Некоректний запит',
-      // UI strings
-      app_title: 'SpriteNote — ваш особистий провідник нотаток',
-      btn_login_register: 'Увійти / Реєстрація',
-      landing_h1: 'Усі ваші папки, посилання та нотатки — в одному дереві',
-      landing_p: 'SpriteNote — особистий провідник для зберігання інформації: створюйте папки та підпапки, додавайте посилання з описом, текстові нотатки та документи. Все як у звичному файловому менеджері, але в браузері і тільки для вас.',
-      feature_folders: 'Дерево папок і підпапок, як у провіднику Windows',
-      feature_links: 'Посилання, текстові сторінки та документи всередині папок',
-      feature_edit: 'Редагування, видалення та переміщення будь-яких елементів',
-      feature_private: 'Дані кожного користувача видні тільки йому',
-      btn_start: 'Почати користуватися',
-      auth_title_login: 'Вхід',
-      auth_title_register: 'Реєстрація',
-      auth_sub_login: 'Увійдіть, щоб відкрити свій провідник нотаток',
-      auth_sub_register: 'Створіть акаунт — перший зареєстрований стає адміністратором',
-      label_email: 'Email',
-      label_password: 'Пароль',
-      btn_sign_in: 'Увійти',
-      btn_sign_up: 'Зареєструватися',
-      no_account: 'Немає акаунту?',
-      have_account: 'Вже є акаунт?',
-      link_register: 'Зареєструватися',
-      link_login: 'Увійти',
-      tab_explorer: 'Провідник',
-      tab_help: 'Інструкція',
-      tab_admin: 'Панель керування',
-      tab_notepad: 'Блокнот',
-      tab_terminal: 'Термінал',
-      btn_account: 'Акаунт',
-      btn_logout: 'Вихід',
-      sidebar_root_folders: 'Кореневі папки',
-      btn_export: 'Експортувати все в JSON',
-      btn_import: 'Імпортувати з JSON',
-      btn_new_folder: 'Нова коренева папка',
-      search_placeholder: 'Пошук по дереву…',
-      btn_new_subfolder: 'Нова підпапка',
-      btn_new_link: 'Нове посилання',
-      btn_new_text: 'Нова текстова сторінка',
-      btn_new_doc: 'Новий документ',
-      view_tile: 'Плитка',
-      view_list: 'Список (одним рядком)',
-      help_title: 'Інструкція',
-      help_subtitle: 'Як користуватися SpriteNote і що робить кожна кнопка',
-      help_lead: 'SpriteNote влаштований як файловий менеджер: зліва — дерево папок, справа — вміст обраної папки. Всередині папок лежать посилання, текстові сторінки та документи. Усі дані видні тільки вам.',
-      help_start_title: 'З чого почати',
-      help_start_1: 'Створіть кореневу папку — кнопка «+» у заголовку бічної панелі зліва.',
-      help_start_2: 'Оберіть папку в дереві — її вміст відкриється справа.',
-      help_start_3: 'Додайте елемент кнопками над вмістом: підпапку, посилання, текстову сторінку або документ.',
-      help_start_4: 'Заповніть поля у вікні, що відкрилося, і натисніть «Створити».',
-      help_start_5: 'Далі: клік по елементу — відкрити, кнопка «…» на елементі — змінити, перемістити або видалити.',
-      help_types_title: 'Що можна зберігати',
-      help_type_folder: 'Папка',
-      help_type_folder_desc: 'Вкладеність не обмежена: папки всередині папок, як у провіднику.',
-      help_type_link: 'Посилання',
-      help_type_link_desc: 'Адреса та опис. Клік відкриває сайт у новій вкладці браузера.',
-      help_type_text: 'Текстова сторінка',
-      help_type_text_desc: 'Нотатка прямо в SpriteNote. Клік відкриває її для читання і правки.',
-      help_type_doc: 'Документ',
-      help_type_doc_desc: 'Завантажений файл. Клік завантажує його назад на пристрій.',
-      help_topbar_title: 'Верхня панель',
-      help_topbar_explorer: 'Провідник',
-      help_topbar_explorer_desc: 'Дерево папок і їх вміст — основна сторінка.',
-      help_topbar_help: 'Інструкція',
-      help_topbar_help_desc: 'Ця сторінка.',
-      help_topbar_account: 'Акаунт',
-      help_topbar_account_desc: 'Зміна пароля і видалення акаунту разом з усіма даними.',
-      help_topbar_logout: 'Вихід',
-      help_topbar_logout_desc: 'Завершує сеанс. Дані залишаються, вхід — тим самим email і паролем.',
-      help_sidebar_title: 'Бічна панель: дерево папок',
-      help_sidebar_plus: 'Плюс',
-      help_sidebar_plus_desc: 'Створює нову кореневу папку — папку верхнього рівня.',
-      help_sidebar_download: 'Стрілка вниз',
-      help_sidebar_download_desc: 'Вивантажує все дерево у файл JSON — резервна копія або перенесення на інший сервер.',
-      help_sidebar_upload: 'Стрілка вгору',
-      help_sidebar_upload_desc: 'Завантажує дерево з файлу JSON. Додається тільки те, чого ще немає: повторний імпорт того ж файлу дублікатів не створює.',
-      help_sidebar_search: 'Пошук по дереву',
-      help_sidebar_search_desc: 'Шукає за назвою, описом, текстом сторінок і адресами посилань у всьому дереві одразу. Результати показуються справа з указанням папки; клік по результату відкриває елемент. Очистити — клавішею Esc або стерши текст.',
-      help_sidebar_chevron: 'Трикутник біля папки',
-      help_sidebar_chevron_desc: 'Розгортає і згортає список підпапок. У папок без підпапок його немає.',
-      help_sidebar_dots: 'Три точки біля папки',
-      help_sidebar_dots_desc: 'Меню дій з папкою: відкрити, редагувати, перемістити, видалити. Те ж меню відкривається правою кнопкою миші по рядку.',
-      help_toolbar_title: 'Панель над вмістом',
-      help_toolbar_home: 'Провідник (у рядку шляху)',
-      help_toolbar_home_desc: 'Повертає в корінь — до списку кореневих папок. Назви папок правіше — перехід на будь-який рівень шляху.',
-      help_toolbar_subfolder: 'Нова підпапка',
-      help_toolbar_subfolder_desc: 'Створює папку всередині відкритої папки.',
-      help_toolbar_link: 'Нове посилання',
-      help_toolbar_link_desc: 'Додає посилання з назвою та описом.',
-      help_toolbar_text: 'Нова текстова сторінка',
-      help_toolbar_text_desc: 'Створює нотатку, текст якої зберігається в SpriteNote.',
-      help_toolbar_doc: 'Новий документ',
-      help_toolbar_doc_desc: 'Завантажує файл на сервер і кладе його у відкриту папку.',
-      help_toolbar_tile: 'Плитка',
-      help_toolbar_tile_desc: 'Показує вміст картками. Вибір запам\'ятовується в акаунті і діє на будь-якому пристрої.',
-      help_toolbar_list: 'Список',
-      help_toolbar_list_desc: 'Показує вміст компактними рядками — зручно, коли елементів багато.',
-      help_toolbar_note: 'Чотири кнопки створення з\'являються, тільки коли обрана папка: класти елементи в корінь не можна, там живуть лише папки.',
-      help_element_title: 'Елемент і меню дій',
-      help_element_click: 'Клік по елементу',
-      help_element_click_desc: 'Папка — відкривається, посилання — відкривається в новій вкладці, текстова сторінка — відкривається для правки, документ — завантажується.',
-      help_element_dots: 'Три точки / права кнопка миші',
-      help_element_dots_desc: 'Відкриває меню з чотирьох пунктів нижче.',
-      help_element_open: 'Відкрити · Відкрити посилання · Завантажити',
-      help_element_open_desc: 'Те ж, що клік по елементу; назва пункту залежить від типу.',
-      help_element_edit: 'Редагувати',
-      help_element_edit_desc: 'Відкриває вікно з полями елемента: назва, адреса, опис, текст або файл.',
-      help_element_move: 'Перемістити',
-      help_element_move_desc: 'Відкриває вибір нової папки для елемента.',
-      help_element_delete: 'Видалити',
-      help_element_delete_desc: 'Видаляє елемент після підтвердження. Папка видаляється разом з усім вмістом. Скасувати видалення не можна.',
-      help_modal_title: 'Вікно створення і редагування',
-      help_modal_name: 'Назва',
-      help_modal_name_desc: 'Обов\'язкове поле — під цим ім\'ям елемент видно в дереві і в списку.',
-      help_modal_url: 'Посилання (URL)',
-      help_modal_url_desc: 'Адреса сторінки для елемента-посилання, наприклад https://example.com.',
-      help_modal_claude: 'Стисло про посилання Claude',
-      help_modal_claude_desc: 'Сервер сам відкриває вказану адресу, читає сторінку і заповнює назву та опис за вас. Працює тільки при заповненому полі «Посилання»; займає кілька секунд.',
-      help_modal_desc: 'Опис · Текст сторінки · Файл документа',
-      help_modal_desc_desc: 'Показується те поле, яке стосується типу елемента. При заміні файлу у документа старий файл видаляється.',
-      help_modal_create: 'Створити / Зберегти',
-      help_modal_create_desc: 'Записує елемент. Напис залежить від того, створюєте ви елемент чи правите наявний.',
-      help_modal_cancel: 'Скасувати',
-      help_modal_cancel_desc: 'Закриває вікно без збереження.',
-      help_admin_title: 'Панель керування (тільки адміністратор)',
-      help_admin_lead: 'Адміністратор бачить додаткову вкладку «Панель керування». Там:',
-      help_admin_users: 'Користувачі',
-      help_admin_users_desc: 'Список усіх акаунтів із можливістю зробити когось адміністратором або видалити акаунт.',
-      help_admin_files: 'Файли',
-      help_files_title: 'Файловий менеджер',
-      help_files_subtitle: 'Перегляд, завантаження, видалення файлів на сервері',
-      help_files_lead: 'Ця панель дає доступ до файлової системи сервера. Обережно: зміни торкнуться всіх користувачів.',
-      help_files_path: 'Шлях',
-      help_files_up: 'Вгору',
-      help_files_refresh: 'Оновити',
-      help_files_upload: 'Завантажити файл',
-      help_files_drop: 'Перетягніть файл сюди або натисніть для вибору',
-      help_notepad_title: 'Блокнот',
-      help_notepad_subtitle: 'Швидкі нотатки, які не прив\'язані до дерева',
-      help_notepad_lead: 'Блокнот — це просте текстове поле для тимчасових записів. Воно не зберігається на сервері і очищається при закритті вкладки.',
-      help_terminal_title: 'Термінал (тільки адміністратор)',
-      help_terminal_subtitle: 'Командний рядок сервера прямо в браузері',
-      help_terminal_lead: 'Термінал дає повний доступ до командного рядка сервера. Використовуйте обережно: будь-яка команда виконується від імені сервера.',
-      account_title: 'Акаунт',
-      account_current_password: 'Поточний пароль',
-      account_new_password: 'Новий пароль',
-      account_new_password_repeat: 'Повторіть новий пароль',
-      btn_change_password: 'Змінити пароль',
-      delete_account_title: 'Видалення акаунту',
-      delete_account_desc: 'Видалить ваш акаунт і всі ваші папки, посилання, сторінки та документи без можливості відновлення.',
-      delete_account_confirm: 'Пароль для підтвердження',
-      btn_delete_account: 'Видалити акаунт і всі дані',
-      password_changed: 'Пароль змінено',
-      passwords_mismatch: 'Нові паролі не співпадають',
-      account_deleted: 'Акаунт видалено',
-      confirm_delete_account: 'Видалити акаунт і всі ваші дані без можливості відновлення?',
-      save_setting_failed: 'Не вдалося зберегти налаштування відображення',
-      lang_uk: 'Українська',
-      lang_ru: 'Русский',
-      lang_en: 'English',
-      label_language: 'Мова інтерфейсу',
-    },
-    ru: {
-      // Error messages
-      invalid_email: 'Введите корректный email',
-      weak_password: 'Пароль должен быть не короче 8 символов',
-      email_taken: 'Этот email уже зарегистрирован',
-      invalid_credentials: 'Неверный email или пароль',
-      missing_credentials: 'Введите email и пароль',
-      not_authenticated: 'Требуется вход',
-      session_expired: 'Сессия истекла, войдите снова',
-      admin_required: 'Требуются права администратора',
-      name_required: 'Введите название',
-      url_required: 'Введите ссылку (URL)',
-      invalid_type: 'Некорректный тип элемента',
-      parent_not_found: 'Папка назначения не найдена',
-      parent_not_folder: 'Можно перемещать только внутрь папки',
-      cannot_move_into_self: 'Нельзя переместить элемент в самого себя',
-      cannot_move_into_descendant: 'Нельзя переместить папку в свою же подпапку',
-      cannot_remove_last_admin: 'Нельзя снять права у последнего администратора',
-      not_found: 'Элемент не найден',
-      file_required: 'Выберите файл',
-      upload_error: 'Ошибка загрузки файла',
-      server_error: 'Внутренняя ошибка сервера',
-      cannot_read_dir: 'Не удалось прочитать папку (нет доступа?)',
-      target_dir_not_found: 'Папка назначения не найдена',
-      cannot_delete_directory: 'Нельзя удалить папку целиком — только отдельные файлы',
-      invalid_import_file: 'Файл не похож на экспорт SpriteNote',
-      fetch_failed: 'Не удалось открыть страницу по этой ссылке',
-      url_not_allowed: 'Эта ссылка недоступна для просмотра',
-      not_html: 'Страница по ссылке — не HTML, не могу её прочитать',
-      empty_page: 'На странице не нашлось текста',
-      summary_failed: 'Не получилось составить краткое описание, попробуйте ещё раз',
-      too_many_redirects: 'Слишком много перенаправлений по ссылке',
-      cannot_delete_last_admin_with_other_users: 'Вы последний администратор, а на сайте есть другие пользователи — сначала назначьте другого админа',
-      too_many_requests: 'Слишком много попыток, подождите немного и повторите',
-      invalid_request: 'Некорректный запрос',
-      // UI strings
-      app_title: 'SpriteNote — ваш личный проводник заметок',
-      btn_login_register: 'Войти / Регистрация',
-      landing_h1: 'Все ваши папки, ссылки и заметки — в одном дереве',
-      landing_p: 'SpriteNote — личный проводник для хранения информации: создавайте папки и подпапки, добавляйте ссылки с описанием, текстовые заметки и документы. Всё как в привычном файловом менеджере, но в браузере и только для вас.',
-      feature_folders: 'Дерево папок и подпапок, как в проводнике Windows',
-      feature_links: 'Ссылки, текстовые страницы и документы внутри папок',
-      feature_edit: 'Редактирование, удаление и перемещение любых элементов',
-      feature_private: 'Данные каждого пользователя видны только ему',
-      btn_start: 'Начать пользоваться',
-      auth_title_login: 'Вход',
-      auth_title_register: 'Регистрация',
-      auth_sub_login: 'Войдите, чтобы открыть свой проводник заметок',
-      auth_sub_register: 'Создайте аккаунт — первый зарегистрированный становится администратором',
-      label_email: 'Email',
-      label_password: 'Пароль',
-      btn_sign_in: 'Войти',
-      btn_sign_up: 'Зарегистрироваться',
-      no_account: 'Нет аккаунта?',
-      have_account: 'Уже есть аккаунт?',
-      link_register: 'Зарегистрироваться',
-      link_login: 'Войти',
-      tab_explorer: 'Проводник',
-      tab_help: 'Инструкция',
-      tab_admin: 'Панель управления',
-      tab_notepad: 'Блокнот',
-      tab_terminal: 'Терминал',
-      btn_account: 'Аккаунт',
-      btn_logout: 'Выход',
-      sidebar_root_folders: 'Корневые папки',
-      btn_export: 'Экспортировать всё в JSON',
-      btn_import: 'Импортировать из JSON',
-      btn_new_folder: 'Новая корневая папка',
-      search_placeholder: 'Поиск по дереву…',
-      btn_new_subfolder: 'Новая подпапка',
-      btn_new_link: 'Новая ссылка',
-      btn_new_text: 'Новая текстовая страница',
-      btn_new_doc: 'Новый документ',
-      view_tile: 'Плитка',
-      view_list: 'Список (одной строкой)',
-      help_title: 'Инструкция',
-      help_subtitle: 'Как пользоваться SpriteNote и что делает каждая кнопка',
-      help_lead: 'SpriteNote устроен как файловый менеджер: слева — дерево папок, справа — содержимое выбранной папки. Внутри папок лежат ссылки, текстовые страницы и документы. Все данные видны только вам.',
-      help_start_title: 'С чего начать',
-      help_start_1: 'Создайте корневую папку — кнопка «+» в заголовке боковой панели слева.',
-      help_start_2: 'Выберите папку в дереве — её содержимое откроется справа.',
-      help_start_3: 'Добавьте элемент кнопками над содержимым: подпапку, ссылку, текстовую страницу или документ.',
-      help_start_4: 'Заполните поля в открывшемся окне и нажмите «Создать».',
-      help_start_5: 'Дальше: клик по элементу — открыть, кнопка «…» на элементе — изменить, переместить или удалить.',
-      help_types_title: 'Что можно хранить',
-      help_type_folder: 'Папка',
-      help_type_folder_desc: 'Вложенность не ограничена: папки внутри папок, как в проводнике.',
-      help_type_link: 'Ссылка',
-      help_type_link_desc: 'Адрес и описание. Клик открывает сайт в новой вкладке браузера.',
-      help_type_text: 'Текстовая страница',
-      help_type_text_desc: 'Заметка прямо в SpriteNote. Клик открывает её для чтения и правки.',
-      help_type_doc: 'Документ',
-      help_type_doc_desc: 'Загруженный файл. Клик скачивает его обратно на устройство.',
-      help_topbar_title: 'Верхняя панель',
-      help_topbar_explorer: 'Проводник',
-      help_topbar_explorer_desc: 'Дерево папок и их содержимое — основная страница.',
-      help_topbar_help: 'Инструкция',
-      help_topbar_help_desc: 'Эта страница.',
-      help_topbar_account: 'Аккаунт',
-      help_topbar_account_desc: 'Смена пароля и удаление аккаунта вместе со всеми данными.',
-      help_topbar_logout: 'Выход',
-      help_topbar_logout_desc: 'Завершает сеанс. Данные остаются, вход — тем же email и паролем.',
-      help_sidebar_title: 'Боковая панель: дерево папок',
-      help_sidebar_plus: 'Плюс',
-      help_sidebar_plus_desc: 'Создаёт новую корневую папку — папку верхнего уровня.',
-      help_sidebar_download: 'Стрелка вниз',
-      help_sidebar_download_desc: 'Выгружает всё дерево в файл JSON — резервная копия или перенос на другой сервер.',
-      help_sidebar_upload: 'Стрелка вверх',
-      help_sidebar_upload_desc: 'Загружает дерево из файла JSON. Добавляется только то, чего ещё нет: повторный импорт того же файла дублей не создаёт.',
-      help_sidebar_search: 'Поиск по дереву',
-      help_sidebar_search_desc: 'Ищет по названию, описанию, тексту страниц и адресам ссылок во всём дереве сразу. Результаты показываются справа с указанием папки; клик по результату открывает элемент. Очистить — клавишей Esc или стерев текст.',
-      help_sidebar_chevron: 'Треугольник у папки',
-      help_sidebar_chevron_desc: 'Разворачивает и сворачивает список подпапок. У папок без подпапок его нет.',
-      help_sidebar_dots: 'Три точки у папки',
-      help_sidebar_dots_desc: 'Меню действий с папкой: открыть, редактировать, переместить, удалить. То же меню открывается правой кнопкой мыши по строке.',
-      help_toolbar_title: 'Панель над содержимым',
-      help_toolbar_home: 'Проводник (в строке пути)',
-      help_toolbar_home_desc: 'Возвращает в корень — к списку корневых папок. Названия папок правее — переход на любой уровень пути.',
-      help_toolbar_subfolder: 'Новая подпапка',
-      help_toolbar_subfolder_desc: 'Создаёт папку внутри открытой папки.',
-      help_toolbar_link: 'Новая ссылка',
-      help_toolbar_link_desc: 'Добавляет ссылку с названием и описанием.',
-      help_toolbar_text: 'Новая текстовая страница',
-      help_toolbar_text_desc: 'Создаёт заметку, текст которой хранится в SpriteNote.',
-      help_toolbar_doc: 'Новый документ',
-      help_toolbar_doc_desc: 'Загружает файл на сервер и кладёт его в открытую папку.',
-      help_toolbar_tile: 'Плитка',
-      help_toolbar_tile_desc: 'Показывает содержимое карточками. Выбор запоминается в аккаунте и действует на любом устройстве.',
-      help_toolbar_list: 'Список',
-      help_toolbar_list_desc: 'Показывает содержимое компактными строками — удобно, когда элементов много.',
-      help_toolbar_note: 'Четыре кнопки создания появляются, только когда выбрана папка: класть элементы в корень нельзя, там живут лишь папки.',
-      help_element_title: 'Элемент и меню действий',
-      help_element_click: 'Клик по элементу',
-      help_element_click_desc: 'Папка — открывается, ссылка — открывается в новой вкладке, текстовая страница — открывается для правки, документ — скачивается.',
-      help_element_dots: 'Три точки / правая кнопка мыши',
-      help_element_dots_desc: 'Открывает меню из четырёх пунктов ниже.',
-      help_element_open: 'Открыть · Открыть ссылку · Скачать',
-      help_element_open_desc: 'То же, что клик по элементу; название пункта зависит от типа.',
-      help_element_edit: 'Редактировать',
-      help_element_edit_desc: 'Открывает окно с полями элемента: название, адрес, описание, текст или файл.',
-      help_element_move: 'Переместить',
-      help_element_move_desc: 'Открывает выбор новой папки для элемента.',
-      help_element_delete: 'Удалить',
-      help_element_delete_desc: 'Удаляет элемент после подтверждения. Папка удаляется вместе со всем содержимым. Отменить удаление нельзя.',
-      help_modal_title: 'Окно создания и редактирования',
-      help_modal_name: 'Название',
-      help_modal_name_desc: 'Обязательное поле — под этим именем элемент виден в дереве и в списке.',
-      help_modal_url: 'Ссылка (URL)',
-      help_modal_url_desc: 'Адрес страницы для элемента-ссылки, например https://example.com.',
-      help_modal_claude: 'Кратко о ссылке Claude',
-      help_modal_claude_desc: 'Сервер сам открывает указанный адрес, читает страницу и заполняет название и описание за вас. Работает только при заполненном поле «Ссылка»; занимает несколько секунд.',
-      help_modal_desc: 'Описание · Текст страницы · Файл документа',
-      help_modal_desc_desc: 'Показывается то поле, которое относится к типу элемента. При замене файла у документа старый файл удаляется.',
-      help_modal_create: 'Создать / Сохранить',
-      help_modal_create_desc: 'Записывает элемент. Надпись зависит от того, создаёте вы элемент или правите существующий.',
-      help_modal_cancel: 'Отменить',
-      help_modal_cancel_desc: 'Закрывает окно без сохранения.',
-      help_admin_title: 'Панель управления (только администратор)',
-      help_admin_lead: 'Администратор видит дополнительную вкладку «Панель управления». Там:',
-      help_admin_users: 'Пользователи',
-      help_admin_users_desc: 'Список всех аккаунтов с возможностью сделать кого-то администратором или удалить аккаунт.',
-      help_admin_files: 'Файлы',
-      help_files_title: 'Файловый менеджер',
-      help_files_subtitle: 'Просмотр, загрузка, удаление файлов на сервере',
-      help_files_lead: 'Эта панель даёт доступ к файловой системе сервера. Осторожно: изменения затронут всех пользователей.',
-      help_files_path: 'Путь',
-      help_files_up: 'Вверх',
-      help_files_refresh: 'Обновить',
-      help_files_upload: 'Загрузить файл',
-      help_files_drop: 'Перетащите файл сюда или нажмите для выбора',
-      help_notepad_title: 'Блокнот',
-      help_notepad_subtitle: 'Быстрые заметки, не привязанные к дереву',
-      help_notepad_lead: 'Блокнот — это простое текстовое поле для временных записей. Оно не сохраняется на сервере и очищается при закрытии вкладки.',
-      help_terminal_title: 'Терминал (только администратор)',
-      help_terminal_subtitle: 'Командная строка сервера прямо в браузере',
-      help_terminal_lead: 'Терминал даёт полный доступ к командной строке сервера. Используйте осторожно: любая команда выполняется от имени сервера.',
-      account_title: 'Аккаунт',
-      account_current_password: 'Текущий пароль',
-      account_new_password: 'Новый пароль',
-      account_new_password_repeat: 'Повторите новый пароль',
-      btn_change_password: 'Изменить пароль',
-      delete_account_title: 'Удаление аккаунта',
-      delete_account_desc: 'Удалит ваш аккаунт и все ваши папки, ссылки, страницы и документы без возможности восстановления.',
-      delete_account_confirm: 'Пароль для подтверждения',
-      btn_delete_account: 'Удалить аккаунт и все данные',
-      password_changed: 'Пароль изменён',
-      passwords_mismatch: 'Новые пароли не совпадают',
-      account_deleted: 'Аккаунт удалён',
-      confirm_delete_account: 'Удалить аккаунт и все ваши данные без возможности восстановления?',
-      save_setting_failed: 'Не удалось сохранить настройку отображения',
-      lang_uk: 'Українська',
-      lang_ru: 'Русский',
-      lang_en: 'English',
-      label_language: 'Язык интерфейса',
-    },
-    en: {
-      // Error messages
-      invalid_email: 'Enter a valid email address',
-      weak_password: 'Password must be at least 8 characters',
-      email_taken: 'This email is already registered',
-      invalid_credentials: 'Invalid email or password',
-      missing_credentials: 'Enter email and password',
-      not_authenticated: 'Authentication required',
-      session_expired: 'Session expired, please log in again',
-      admin_required: 'Admin privileges required',
-      name_required: 'Enter a name',
-      url_required: 'Enter a URL',
-      invalid_type: 'Invalid element type',
-      parent_not_found: 'Destination folder not found',
-      parent_not_folder: 'Can only move into a folder',
-      cannot_move_into_self: 'Cannot move an element into itself',
-      cannot_move_into_descendant: 'Cannot move a folder into its own descendant',
-      cannot_remove_last_admin: 'Cannot remove privileges from the last admin',
-      not_found: 'Element not found',
-      file_required: 'Select a file',
-      upload_error: 'File upload error',
-      server_error: 'Internal server error',
-      cannot_read_dir: 'Failed to read folder (no access?)',
-      target_dir_not_found: 'Destination folder not found',
-      cannot_delete_directory: 'Cannot delete entire directory — only individual files',
-      invalid_import_file: 'File does not look like a SpriteNote export',
-      fetch_failed: 'Failed to open page at this URL',
-      url_not_allowed: 'This URL is not accessible',
-      not_html: 'Page at URL is not HTML, cannot read it',
-      empty_page: 'No text found on page',
-      summary_failed: 'Failed to generate summary, try again',
-      too_many_redirects: 'Too many redirects',
-      cannot_delete_last_admin_with_other_users: 'You are the last admin and there are other users — assign another admin first',
-      too_many_requests: 'Too many attempts, please wait and try again',
-      invalid_request: 'Invalid request',
-      // UI strings
-      app_title: 'SpriteNote — your personal notes navigator',
-      btn_login_register: 'Log In / Register',
-      landing_h1: 'All your folders, links, and notes — in one tree',
-      landing_p: 'SpriteNote is a personal navigator for storing information: create folders and subfolders, add links with descriptions, text notes, and documents. Just like a familiar file manager, but in your browser and only for you.',
-      feature_folders: 'Tree of folders and subfolders, like in Windows Explorer',
-      feature_links: 'Links, text pages, and documents inside folders',
-      feature_edit: 'Edit, delete, and move any elements',
-      feature_private: 'Each user\'s data is visible only to them',
-      btn_start: 'Get Started',
-      auth_title_login: 'Log In',
-      auth_title_register: 'Register',
-      auth_sub_login: 'Log in to open your notes navigator',
-      auth_sub_register: 'Create an account — the first registrant becomes admin',
-      label_email: 'Email',
-      label_password: 'Password',
-      btn_sign_in: 'Log In',
-      btn_sign_up: 'Register',
-      no_account: 'No account?',
-      have_account: 'Already have an account?',
-      link_register: 'Register',
-      link_login: 'Log In',
-      tab_explorer: 'Explorer',
-      tab_help: 'Help',
-      tab_admin: 'Admin Panel',
-      tab_notepad: 'Notepad',
-      tab_terminal: 'Terminal',
-      btn_account: 'Account',
-      btn_logout: 'Logout',
-      sidebar_root_folders: 'Root Folders',
-      btn_export: 'Export all to JSON',
-      btn_import: 'Import from JSON',
-      btn_new_folder: 'New Root Folder',
-      search_placeholder: 'Search tree…',
-      btn_new_subfolder: 'New Subfolder',
-      btn_new_link: 'New Link',
-      btn_new_text: 'New Text Page',
-      btn_new_doc: 'New Document',
-      view_tile: 'Grid',
-      view_list: 'List',
-      help_title: 'Help',
-      help_subtitle: 'How to use SpriteNote and what each button does',
-      help_lead: 'SpriteNote works like a file manager: on the left is a folder tree, on the right is the content of the selected folder. Inside folders are links, text pages, and documents. All data is visible only to you.',
-      help_start_title: 'Getting Started',
-      help_start_1: 'Create a root folder — the "+" button in the sidebar header on the left.',
-      help_start_2: 'Select a folder in the tree — its content will open on the right.',
-      help_start_3: 'Add an element using the buttons above the content: subfolder, link, text page, or document.',
-      help_start_4: 'Fill in the fields in the dialog that opens and click "Create".',
-      help_start_5: 'Then: click an element to open it, click "…" on an element to edit, move, or delete it.',
-      help_types_title: 'What You Can Store',
-      help_type_folder: 'Folder',
-      help_type_folder_desc: 'Unlimited nesting: folders inside folders, like in a file manager.',
-      help_type_link: 'Link',
-      help_type_link_desc: 'URL and description. Click opens the website in a new browser tab.',
-      help_type_text: 'Text Page',
-      help_type_text_desc: 'A note directly in SpriteNote. Click opens it for reading and editing.',
-      help_type_doc: 'Document',
-      help_type_doc_desc: 'Uploaded file. Click downloads it back to your device.',
-      help_topbar_title: 'Top Bar',
-      help_topbar_explorer: 'Explorer',
-      help_topbar_explorer_desc: 'Folder tree and their content — the main page.',
-      help_topbar_help: 'Help',
-      help_topbar_help_desc: 'This page.',
-      help_topbar_account: 'Account',
-      help_topbar_account_desc: 'Change password and delete account along with all data.',
-      help_topbar_logout: 'Logout',
-      help_topbar_logout_desc: 'Ends session. Data remains, log in with the same email and password.',
-      help_sidebar_title: 'Sidebar: Folder Tree',
-      help_sidebar_plus: 'Plus',
-      help_sidebar_plus_desc: 'Creates a new root folder — a top-level folder.',
-      help_sidebar_download: 'Down Arrow',
-      help_sidebar_download_desc: 'Exports the entire tree to a JSON file — backup or transfer to another server.',
-      help_sidebar_upload: 'Up Arrow',
-      help_sidebar_upload_desc: 'Imports tree from a JSON file. Only adds what doesn\'t exist yet: re-importing the same file won\'t create duplicates.',
-      help_sidebar_search: 'Tree Search',
-      help_sidebar_search_desc: 'Searches by name, description, page text, and link URLs across the entire tree. Results appear on the right with folder indication; click result to open element. Clear with Esc key or by deleting text.',
-      help_sidebar_chevron: 'Triangle by Folder',
-      help_sidebar_chevron_desc: 'Expands and collapses the list of subfolders. Folders without subfolders don\'t have it.',
-      help_sidebar_dots: 'Three Dots by Folder',
-      help_sidebar_dots_desc: 'Folder actions menu: open, edit, move, delete. Same menu opens with right-click on the row.',
-      help_toolbar_title: 'Toolbar Above Content',
-      help_toolbar_home: 'Explorer (in path bar)',
-      help_toolbar_home_desc: 'Returns to root — to the list of root folders. Folder names to the right — jump to any path level.',
-      help_toolbar_subfolder: 'New Subfolder',
-      help_toolbar_subfolder_desc: 'Creates a folder inside the open folder.',
-      help_toolbar_link: 'New Link',
-      help_toolbar_link_desc: 'Adds a link with name and description.',
-      help_toolbar_text: 'New Text Page',
-      help_toolbar_text_desc: 'Creates a note whose text is stored in SpriteNote.',
-      help_toolbar_doc: 'New Document',
-      help_toolbar_doc_desc: 'Uploads a file to the server and places it in the open folder.',
-      help_toolbar_tile: 'Grid',
-      help_toolbar_tile_desc: 'Shows content as cards. Selection is saved in account and works on any device.',
-      help_toolbar_list: 'List',
-      help_toolbar_list_desc: 'Shows content as compact rows — convenient when there are many elements.',
-      help_toolbar_note: 'Four creation buttons appear only when a folder is selected: you can\'t place elements in root, only folders live there.',
-      help_element_title: 'Element and Actions Menu',
-      help_element_click: 'Click on Element',
-      help_element_click_desc: 'Folder — opens, Link — opens in new tab, Text Page — opens for editing, Document — downloads.',
-      help_element_dots: 'Three Dots / Right Click',
-      help_element_dots_desc: 'Opens menu with four items below.',
-      help_element_open: 'Open · Open Link · Download',
-      help_element_open_desc: 'Same as clicking element; item name depends on type.',
-      help_element_edit: 'Edit',
-      help_element_edit_desc: 'Opens dialog with element fields: name, URL, description, text, or file.',
-      help_element_move: 'Move',
-      help_element_move_desc: 'Opens selection of new folder for element.',
-      help_element_delete: 'Delete',
-      help_element_delete_desc: 'Deletes element after confirmation. Folder deletes with all content. Cannot undo deletion.',
-      help_modal_title: 'Create and Edit Dialog',
-      help_modal_name: 'Name',
-      help_modal_name_desc: 'Required field — element appears under this name in tree and list.',
-      help_modal_url: 'URL',
-      help_modal_url_desc: 'Page address for link element, e.g., https://example.com.',
-      help_modal_claude: 'Summarize Link with Claude',
-      help_modal_claude_desc: 'Server opens the specified URL, reads the page, and fills name and description for you. Only works when "URL" field is filled; takes a few seconds.',
-      help_modal_desc: 'Description · Page Text · Document File',
-      help_modal_desc_desc: 'Shows the field relevant to element type. When replacing a document\'s file, old file is deleted.',
-      help_modal_create: 'Create / Save',
-      help_modal_create_desc: 'Saves element. Label depends on whether you\'re creating or editing.',
-      help_modal_cancel: 'Cancel',
-      help_modal_cancel_desc: 'Closes dialog without saving.',
-      help_admin_title: 'Admin Panel (Admin Only)',
-      help_admin_lead: 'Admin sees additional "Admin Panel" tab. There:',
-      help_admin_users: 'Users',
-      help_admin_users_desc: 'List of all accounts with ability to make someone admin or delete account.',
-      help_admin_files: 'Files',
-      help_files_title: 'File Manager',
-      help_files_subtitle: 'View, upload, delete files on server',
-      help_files_lead: 'This panel provides access to server filesystem. Caution: changes affect all users.',
-      help_files_path: 'Path',
-      help_files_up: 'Up',
-      help_files_refresh: 'Refresh',
-      help_files_upload: 'Upload File',
-      help_files_drop: 'Drag file here or click to select',
-      help_notepad_title: 'Notepad',
-      help_notepad_subtitle: 'Quick notes not tied to tree',
-      help_notepad_lead: 'Notepad is a simple text field for temporary notes. It\'s not saved on server and clears when closing tab.',
-      help_terminal_title: 'Terminal (Admin Only)',
-      help_terminal_subtitle: 'Server command line right in browser',
-      help_terminal_lead: 'Terminal provides full access to server command line. Use carefully: any command runs as server user.',
-      account_title: 'Account',
-      account_current_password: 'Current Password',
-      account_new_password: 'New Password',
-      account_new_password_repeat: 'Repeat New Password',
-      btn_change_password: 'Change Password',
-      delete_account_title: 'Delete Account',
-      delete_account_desc: 'Will delete your account and all your folders, links, pages, and documents without possibility of recovery.',
-      delete_account_confirm: 'Password for confirmation',
-      btn_delete_account: 'Delete Account and All Data',
-      password_changed: 'Password changed',
-      passwords_mismatch: 'New passwords do not match',
-      account_deleted: 'Account deleted',
-      confirm_delete_account: 'Delete your account and all your data without possibility of recovery?',
-      save_setting_failed: 'Failed to save display setting',
-      lang_uk: 'Українська',
-      lang_ru: 'Русский',
-      lang_en: 'English',
-      label_language: 'Interface Language',
-    },
+    // Ответы сервера: код ошибки приходит с бэкенда, errMsg() достаёт по нему строку.
+    invalid_email: ["Введіть коректний email", "Введите корректный email", "Enter a valid email address"],
+    weak_password: [
+      "Пароль має бути не менше 8 символів",
+      "Пароль должен быть не короче 8 символов",
+      "Password must be at least 8 characters",
+    ],
+    email_taken: [
+      "Цей email вже зареєстрований",
+      "Этот email уже зарегистрирован",
+      "This email is already registered",
+    ],
+    invalid_credentials: ["Невірний email або пароль", "Неверный email или пароль", "Invalid email or password"],
+    missing_credentials: ["Введіть email і пароль", "Введите email и пароль", "Enter email and password"],
+    not_authenticated: ["Потрібен вхід", "Требуется вход", "Authentication required"],
+    session_expired: [
+      "Сесія закінчилася, увійдіть знову",
+      "Сессия истекла, войдите снова",
+      "Session expired, please log in again",
+    ],
+    admin_required: ["Потрібні права адміністратора", "Требуются права администратора", "Admin privileges required"],
+    name_required: ["Введіть назву", "Введите название", "Enter a name"],
+    url_required: ["Введіть посилання (URL)", "Введите ссылку (URL)", "Enter a URL"],
+    invalid_type: ["Некоректний тип елемента", "Некорректный тип элемента", "Invalid element type"],
+    parent_not_found: [
+      "Папка призначення не знайдена",
+      "Папка назначения не найдена",
+      "Destination folder not found",
+    ],
+    parent_not_folder: [
+      "Можна переміщувати тільки всередину папки",
+      "Можно перемещать только внутрь папки",
+      "Can only move into a folder",
+    ],
+    cannot_move_into_self: [
+      "Не можна перемістити елемент у самого себе",
+      "Нельзя переместить элемент в самого себя",
+      "Cannot move an element into itself",
+    ],
+    cannot_move_into_descendant: [
+      "Не можна перемістити папку в свою ж підпапку",
+      "Нельзя переместить папку в свою же подпапку",
+      "Cannot move a folder into its own descendant",
+    ],
+    cannot_remove_last_admin: [
+      "Не можна зняти права у останнього адміністратора",
+      "Нельзя снять права у последнего администратора",
+      "Cannot remove privileges from the last admin",
+    ],
+    not_found: ["Елемент не знайдено", "Элемент не найден", "Element not found"],
+    file_required: ["Оберіть файл", "Выберите файл", "Select a file"],
+    upload_error: ["Помилка завантаження файлу", "Ошибка загрузки файла", "File upload error"],
+    server_error: ["Внутрішня помилка сервера", "Внутренняя ошибка сервера", "Internal server error"],
+    cannot_read_dir: [
+      "Не вдалося прочитати папку (немає доступу?)",
+      "Не удалось прочитать папку (нет доступа?)",
+      "Failed to read folder (no access?)",
+    ],
+    target_dir_not_found: [
+      "Папка призначення не знайдена",
+      "Папка назначения не найдена",
+      "Destination folder not found",
+    ],
+    cannot_delete_directory: [
+      "Не можна видалити папку цілком — тільки окремі файли",
+      "Нельзя удалить папку целиком — только отдельные файлы",
+      "Cannot delete entire directory — only individual files",
+    ],
+    invalid_import_file: [
+      "Файл не схожий на експорт SpriteNote",
+      "Файл не похож на экспорт SpriteNote",
+      "File does not look like a SpriteNote export",
+    ],
+    fetch_failed: [
+      "Не вдалося відкрити сторінку за цим посиланням",
+      "Не удалось открыть страницу по этой ссылке",
+      "Failed to open page at this URL",
+    ],
+    url_not_allowed: [
+      "Це посилання недоступне для перегляду",
+      "Эта ссылка недоступна для просмотра",
+      "This URL is not accessible",
+    ],
+    not_html: [
+      "Сторінка за посиланням — не HTML, не можу її прочитати",
+      "Страница по ссылке — не HTML, не могу её прочитать",
+      "Page at URL is not HTML, cannot read it",
+    ],
+    empty_page: ["На сторінці не знайшлося тексту", "На странице не нашлось текста", "No text found on page"],
+    summary_failed: [
+      "Не вийшло скласти стислий опис, спробуйте ще раз",
+      "Не получилось составить краткое описание, попробуйте ещё раз",
+      "Failed to generate summary, try again",
+    ],
+    too_many_redirects: [
+      "Занадто багато перенаправлень за посиланням",
+      "Слишком много перенаправлений по ссылке",
+      "Too many redirects",
+    ],
+    cannot_delete_last_admin_with_other_users: [
+      "Ви останній адміністратор, а на сайті є інші користувачі — спочатку призначте іншого адміна",
+      "Вы последний администратор, а на сайте есть другие пользователи — сначала назначьте другого админа",
+      "You are the last admin and there are other users — assign another admin first",
+    ],
+    too_many_requests: [
+      "Занадто багато спроб, зачекайте трохи і повторіть",
+      "Слишком много попыток, подождите немного и повторите",
+      "Too many attempts, please wait and try again",
+    ],
+    invalid_request: ["Некоректний запит", "Некорректный запрос", "Invalid request"],
+    error_generic: ["Сталася помилка", "Произошла ошибка", "Something went wrong"],
+
+    // Страница до входа и окно входа/регистрации.
+    app_title: [
+      "SpriteNote — ваш особистий провідник нотаток",
+      "SpriteNote — ваш личный проводник заметок",
+      "SpriteNote — your personal notes navigator",
+    ],
+    btn_login_register: ["Увійти / Реєстрація", "Войти / Регистрация", "Log In / Register"],
+    landing_h1: [
+      "Усі ваші папки, посилання та нотатки — в одному дереві",
+      "Все ваши папки, ссылки и заметки — в одном дереве",
+      "All your folders, links, and notes — in one tree",
+    ],
+    landing_p: [
+      "SpriteNote — особистий провідник для зберігання інформації: створюйте папки та підпапки, додавайте посилання з описом, текстові нотатки та документи. Все як у звичному файловому менеджері, але в браузері і тільки для вас.",
+      "SpriteNote — личный проводник для хранения информации: создавайте папки и подпапки, добавляйте ссылки с описанием, текстовые заметки и документы. Всё как в привычном файловом менеджере, но в браузере и только для вас.",
+      "SpriteNote is a personal navigator for storing information: create folders and subfolders, add links with descriptions, text notes, and documents. Just like a familiar file manager, but in your browser and only for you.",
+    ],
+    feature_folders: [
+      "Дерево папок і підпапок, як у провіднику Windows",
+      "Дерево папок и подпапок, как в проводнике Windows",
+      "Tree of folders and subfolders, like in Windows Explorer",
+    ],
+    feature_links: [
+      "Посилання, текстові сторінки та документи всередині папок",
+      "Ссылки, текстовые страницы и документы внутри папок",
+      "Links, text pages, and documents inside folders",
+    ],
+    feature_edit: [
+      "Редагування, видалення та переміщення будь-яких елементів",
+      "Редактирование, удаление и перемещение любых элементов",
+      "Edit, delete, and move any elements",
+    ],
+    feature_private: [
+      "Дані кожного користувача видні тільки йому",
+      "Данные каждого пользователя видны только ему",
+      "Each user's data is visible only to them",
+    ],
+    art_new_item: ["+ новий елемент", "+ новый элемент", "+ new item"],
+    btn_start: ["Почати користуватися", "Начать пользоваться", "Get Started"],
+    auth_title_login: ["Вхід", "Вход", "Log In"],
+    auth_title_register: ["Реєстрація", "Регистрация", "Register"],
+    auth_sub_login: [
+      "Увійдіть, щоб відкрити свій провідник нотаток",
+      "Войдите, чтобы открыть свой проводник заметок",
+      "Log in to open your notes navigator",
+    ],
+    auth_sub_register: [
+      "Створіть акаунт — перший зареєстрований стає адміністратором",
+      "Создайте аккаунт — первый зарегистрированный становится администратором",
+      "Create an account — the first registrant becomes admin",
+    ],
+    label_email: ["Email", "Email", "Email"],
+    label_password: ["Пароль", "Пароль", "Password"],
+    btn_sign_in: ["Увійти", "Войти", "Log In"],
+    btn_sign_up: ["Зареєструватися", "Зарегистрироваться", "Register"],
+    no_account: ["Немає акаунту?", "Нет аккаунта?", "No account?"],
+    have_account: ["Вже є акаунт?", "Уже есть аккаунт?", "Already have an account?"],
+    link_register: ["Зареєструватися", "Зарегистрироваться", "Register"],
+    link_login: ["Увійти", "Войти", "Log In"],
+
+    // Каркас приложения: вкладки, боковая панель, панель над содержимым.
+    tab_explorer: ["Провідник", "Проводник", "Explorer"],
+    tab_help: ["Інструкція", "Инструкция", "Help"],
+    tab_admin: ["Панель керування", "Панель управления", "Admin Panel"],
+    tab_notepad: ["Блокнот", "Блокнот", "Notepad"],
+    tab_terminal: ["Термінал", "Терминал", "Terminal"],
+    btn_account: ["Акаунт", "Аккаунт", "Account"],
+    btn_logout: ["Вихід", "Выход", "Logout"],
+    sidebar_root_folders: ["Кореневі папки", "Корневые папки", "Root Folders"],
+    btn_export: ["Експортувати все в JSON", "Экспортировать всё в JSON", "Export all to JSON"],
+    btn_import: ["Імпортувати з JSON", "Импортировать из JSON", "Import from JSON"],
+    btn_new_folder: ["Нова коренева папка", "Новая корневая папка", "New Root Folder"],
+    search_placeholder: ["Пошук по дереву…", "Поиск по дереву…", "Search tree…"],
+    btn_new_subfolder: ["Нова підпапка", "Новая подпапка", "New Subfolder"],
+    btn_new_link: ["Нове посилання", "Новая ссылка", "New Link"],
+    btn_new_text: ["Нова текстова сторінка", "Новая текстовая страница", "New Text Page"],
+    btn_new_doc: ["Новий документ", "Новый документ", "New Document"],
+    view_tile: ["Плитка", "Плитка", "Grid"],
+    view_list_label: ["Список", "Список", "List"],
+    view_list_title: ["Список (одним рядком)", "Список (одной строкой)", "List (one line each)"],
+    tree_empty: [
+      "Поки немає жодної папки. Натисніть «+», щоб створити першу.",
+      "Пока нет ни одной папки. Нажмите «+», чтобы создать первую.",
+      "No folders yet. Click “+” to create the first one.",
+    ],
+    tree_menu_title: ["Дії з папкою", "Действия с папкой", "Folder actions"],
+    path_root: ["Корінь", "Корень", "Root"],
+    search_results: ["Пошук: «{q}»", "Поиск: «{q}»", "Search: “{q}”"],
+    empty_pick_folder: [
+      "Оберіть папку зліва або створіть нову, щоб почати",
+      "Выберите папку слева или создайте новую, чтобы начать",
+      "Pick a folder on the left or create a new one to start",
+    ],
+    empty_folder: [
+      "Ця папка порожня. Додайте елемент через панель зверху.",
+      "Эта папка пуста. Добавьте элемент через панель сверху.",
+      "This folder is empty. Add an item from the toolbar above.",
+    ],
+    empty_search: [
+      "Нічого не знайдено за запитом «{q}»",
+      "Ничего не найдено по запросу «{q}»",
+      "Nothing found for “{q}”",
+    ],
+    no_file: ["Файл не прикріплено", "Файл не прикреплён", "No file attached"],
+    items_count: ["елементів: {n}", "элементов: {n}", "{n} item(s)"],
+
+    // Меню элемента, подтверждения и тосты.
+    confirm_delete_account: [
+      "Видалити акаунт і всі ваші дані без можливості відновлення?",
+      "Удалить аккаунт и все ваши данные без возможности восстановления?",
+      "Delete your account and all your data without possibility of recovery?",
+    ],
+    menu_open: ["Відкрити", "Открыть", "Open"],
+    menu_open_link: ["Відкрити посилання", "Открыть ссылку", "Open link"],
+    menu_download: ["Завантажити", "Скачать", "Download"],
+    menu_edit: ["Редагувати", "Редактировать", "Edit"],
+    menu_move: ["Перемістити", "Переместить", "Move"],
+    menu_delete: ["Видалити", "Удалить", "Delete"],
+    confirm_delete_folder: [
+      "Видалити папку «{name}» і весь її вміст? Цю дію не скасувати.",
+      "Удалить папку «{name}» и всё её содержимое? Это действие необратимо.",
+      "Delete the folder “{name}” and everything in it? This cannot be undone.",
+    ],
+    confirm_delete_item: [
+      "Видалити «{name}»? Цю дію не скасувати.",
+      "Удалить «{name}»? Это действие необратимо.",
+      "Delete “{name}”? This cannot be undone.",
+    ],
+    confirm_delete_file: ["Видалити файл «{name}»?", "Удалить файл «{name}»?", "Delete the file “{name}”?"],
+    confirm_import: [
+      "Імпортувати дані з «{name}»? Додасться лише те, чого ще немає — наявні елементи залишаться як є, дублі не створюються.",
+      "Импортировать данные из «{name}»? Добавится только то, чего ещё нет — существующие элементы останутся как есть, дубли не создаются.",
+      "Import data from “{name}”? Only what is missing gets added — existing items stay as they are and no duplicates are created.",
+    ],
+    toast_created: ["Створено", "Создано", "Created"],
+    toast_saved: ["Збережено", "Сохранено", "Saved"],
+    toast_deleted: ["Видалено", "Удалено", "Deleted"],
+    toast_moved: ["Переміщено", "Перемещено", "Moved"],
+    toast_done: ["Готово", "Готово", "Done"],
+    toast_uploaded: ["Файл завантажено", "Файл загружен", "File uploaded"],
+    import_added: ["Додано елементів: {n}", "Добавлено элементов: {n}", "Items added: {n}"],
+    import_added_skipped: [
+      "Додано: {n}, вже було: {skipped}",
+      "Добавлено: {n}, уже было: {skipped}",
+      "Added: {n}, already there: {skipped}",
+    ],
+    import_parse_failed: [
+      "Не вдалося розібрати файл імпорту",
+      "Не удалось разобрать файл импорта",
+      "Could not read the import file",
+    ],
+
+    // Окна: создание/редактирование, перемещение, аккаунт.
+    account_title: ["Акаунт", "Аккаунт", "Account"],
+    account_current_password: ["Поточний пароль", "Текущий пароль", "Current Password"],
+    account_new_password: ["Новий пароль", "Новый пароль", "New Password"],
+    account_new_password_repeat: ["Повторіть новий пароль", "Повторите новый пароль", "Repeat New Password"],
+    btn_change_password: ["Змінити пароль", "Изменить пароль", "Change Password"],
+    delete_account_title: ["Видалення акаунту", "Удаление аккаунта", "Delete Account"],
+    delete_account_desc: [
+      "Видалить ваш акаунт і всі ваші папки, посилання, сторінки та документи без можливості відновлення.",
+      "Удалит ваш аккаунт и все ваши папки, ссылки, страницы и документы без возможности восстановления.",
+      "Will delete your account and all your folders, links, pages, and documents without possibility of recovery.",
+    ],
+    delete_account_confirm: ["Пароль для підтвердження", "Пароль для подтверждения", "Password for confirmation"],
+    password_changed: ["Пароль змінено", "Пароль изменён", "Password changed"],
+    passwords_mismatch: ["Нові паролі не співпадають", "Новые пароли не совпадают", "New passwords do not match"],
+    account_deleted: ["Акаунт видалено", "Аккаунт удалён", "Account deleted"],
+    save_setting_failed: [
+      "Не вдалося зберегти налаштування відображення",
+      "Не удалось сохранить настройку отображения",
+      "Failed to save display setting",
+    ],
+    lang_uk: ["Українська", "Українська", "Українська"],
+    lang_ru: ["Русский", "Русский", "Русский"],
+    lang_en: ["English", "English", "English"],
+    label_language: ["Мова інтерфейсу", "Язык интерфейса", "Interface Language"],
+    modal_new: ["Нова: {type}", "Новая: {type}", "New: {type}"],
+    modal_edit: ["Змінити: {type}", "Изменить: {type}", "Edit: {type}"],
+    modal_sub_create: [
+      "Заповніть поля і натисніть «Створити»",
+      "Заполните поля и нажмите «Создать»",
+      "Fill in the fields and click “Create”",
+    ],
+    modal_sub_edit: [
+      "Змініть поля і натисніть «Зберегти»",
+      "Измените поля и нажмите «Сохранить»",
+      "Change the fields and click “Save”",
+    ],
+    current_file: [
+      "Поточний файл: {name} ({size})",
+      "Текущий файл: {name} ({size})",
+      "Current file: {name} ({size})",
+    ],
+    reading_page: ["Читаю сторінку…", "Читаю страницу…", "Reading the page…"],
+    label_name: ["Назва", "Название", "Name"],
+    label_url: ["Посилання (URL)", "Ссылка (URL)", "Link (URL)"],
+    label_description: ["Опис", "Описание", "Description"],
+    label_content: ["Текст сторінки", "Текст страницы", "Page text"],
+    label_file: ["Файл документа", "Файл документа", "Document file"],
+    btn_link_summary: ["Коротко про посилання Claude", "Кратко о ссылке Claude", "Summarize link with Claude"],
+    btn_cancel: ["Скасувати", "Отмена", "Cancel"],
+    btn_create: ["Створити", "Создать", "Create"],
+    btn_save: ["Зберегти", "Сохранить", "Save"],
+    move_title: ["Перемістити", "Переместить", "Move"],
+    move_sub: ["Оберіть папку призначення", "Выберите папку назначения", "Choose the destination folder"],
+    move_root: ["Корінь (без папки)", "Корень (без папки)", "Root (no folder)"],
+    btn_move_here: ["Перемістити сюди", "Переместить сюда", "Move here"],
+
+    // Панель управления, блокнот, терминал.
+    btn_delete_account: ["Видалити акаунт і всі дані", "Удалить аккаунт и все данные", "Delete Account and All Data"],
+    admin_view_title: ["Панель керування", "Панель управления", "Control panel"],
+    admin_view_sub: [
+      "Користувачі, права та файли сервера",
+      "Пользователи, права и файлы сервера",
+      "Users, permissions and server files",
+    ],
+    th_email: ["Email", "Email", "Email"],
+    th_role: ["Роль", "Роль", "Role"],
+    th_data: ["Дані", "Данные", "Data"],
+    th_registered: ["Реєстрація", "Регистрация", "Registered"],
+    th_name: ["Ім'я", "Имя", "Name"],
+    th_size: ["Розмір", "Размер", "Size"],
+    th_modified: ["Змінено", "Изменён", "Modified"],
+    you: ["(ви)", "(вы)", "(you)"],
+    role_admin: ["Адмін", "Админ", "Admin"],
+    role_user: ["Користувач", "Пользователь", "User"],
+    btn_promote: ["Зробити адміном", "Сделать админом", "Make admin"],
+    btn_demote: ["Зняти права адміна", "Снять права админа", "Revoke admin"],
+    server_files_title: ["Файли сервера", "Файлы сервера", "Server files"],
+    btn_download_project: ["Завантажити проєкт (.zip)", "Скачать проект (.zip)", "Download project (.zip)"],
+    btn_up: ["Вгору", "Наверх", "Up"],
+    btn_up_title: ["На рівень вище", "На уровень выше", "One level up"],
+    btn_refresh: ["Оновити", "Обновить", "Refresh"],
+    file_drop: [
+      "Натисніть, щоб завантажити файл у поточну папку",
+      "Нажмите, чтобы загрузить файл в текущую папку",
+      "Click to upload a file into the current folder",
+    ],
+    btn_download: ["Завантажити", "Скачать", "Download"],
+    btn_delete: ["Видалити", "Удалить", "Delete"],
+    dir_empty: ["Папка порожня", "Папка пуста", "The folder is empty"],
+    notepad_view_title: ["Блокнот", "Блокнот", "Notepad"],
+    notepad_placeholder: ["Нотатки адміністратора…", "Заметки администратора…", "Administrator notes…"],
+    notepad_saving: ["Збереження…", "Сохранение…", "Saving…"],
+    notepad_saved: ["Збережено: {date}", "Сохранено: {date}", "Saved: {date}"],
+    notepad_save_error: ["Помилка збереження", "Ошибка сохранения", "Could not save"],
+    terminal_view_title: ["Термінал", "Терминал", "Terminal"],
+    term_not_connected: ["не підключено", "не подключено", "not connected"],
+    term_connecting: ["підключення…", "подключение…", "connecting…"],
+    term_connected: ["підключено", "подключено", "connected"],
+    term_exited: ["процес завершено (код {code})", "процесс завершён (код {code})", "process exited (code {code})"],
+    term_disconnected: [
+      "відключено — оновіть сторінку або перемкніть вкладку, щоб перепідключитися",
+      "отключено — обновите страницу или переключите вкладку, чтобы переподключиться",
+      "disconnected — reload the page or switch tabs to reconnect",
+    ],
+    term_socket_error: ["помилка з'єднання", "ошибка соединения", "connection error"],
+
+    // Единицы размера файла.
+    unit_b: ["Б", "Б", "B"],
+    unit_kb: ["КБ", "КБ", "KB"],
+    unit_mb: ["МБ", "МБ", "MB"],
+    unit_gb: ["ГБ", "ГБ", "GB"],
+
+    // Вкладка «Инструкция». Порядок — как на странице.
+    help_title: ["Інструкція", "Инструкция", "Help"],
+    help_subtitle: [
+      "Як користуватися SpriteNote і що робить кожна кнопка",
+      "Как пользоваться SpriteNote и что делает каждая кнопка",
+      "How to use SpriteNote and what each button does",
+    ],
+    help_lead: [
+      "SpriteNote влаштований як файловий менеджер: зліва — дерево папок, справа — вміст обраної папки. Всередині папок лежать посилання, текстові сторінки та документи. Усі дані видні тільки вам.",
+      "SpriteNote устроен как файловый менеджер: слева — дерево папок, справа — содержимое выбранной папки. Внутри папок лежат ссылки, текстовые страницы и документы. Все данные видны только вам.",
+      "SpriteNote works like a file manager: on the left is a folder tree, on the right is the content of the selected folder. Inside folders are links, text pages, and documents. All data is visible only to you.",
+    ],
+    help_start_title: ["З чого почати", "С чего начать", "Getting Started"],
+    help_start_1: [
+      "Створіть кореневу папку — кнопка «+» у заголовку бічної панелі зліва.",
+      "Создайте корневую папку — кнопка «+» в заголовке боковой панели слева.",
+      "Create a root folder — the \"+\" button in the sidebar header on the left.",
+    ],
+    help_start_2: [
+      "Оберіть папку в дереві — її вміст відкриється справа.",
+      "Выберите папку в дереве — её содержимое откроется справа.",
+      "Select a folder in the tree — its content will open on the right.",
+    ],
+    help_start_3: [
+      "Додайте елемент кнопками над вмістом: підпапку, посилання, текстову сторінку або документ.",
+      "Добавьте элемент кнопками над содержимым: подпапку, ссылку, текстовую страницу или документ.",
+      "Add an element using the buttons above the content: subfolder, link, text page, or document.",
+    ],
+    help_start_4: [
+      "Заповніть поля у вікні, що відкрилося, і натисніть «Створити».",
+      "Заполните поля в открывшемся окне и нажмите «Создать».",
+      "Fill in the fields in the dialog that opens and click \"Create\".",
+    ],
+    help_start_5: [
+      "Далі: клік по елементу — відкрити, кнопка «…» на елементі — змінити, перемістити або видалити.",
+      "Дальше: клик по элементу — открыть, кнопка «…» на элементе — изменить, переместить или удалить.",
+      "Then: click an element to open it, click \"…\" on an element to edit, move, or delete it.",
+    ],
+    help_types_title: ["Що можна зберігати", "Что можно хранить", "What You Can Store"],
+    help_type_folder: ["Папка", "Папка", "Folder"],
+    help_type_folder_desc: [
+      "Вкладеність не обмежена: папки всередині папок, як у провіднику.",
+      "Вложенность не ограничена: папки внутри папок, как в проводнике.",
+      "Unlimited nesting: folders inside folders, like in a file manager.",
+    ],
+    help_type_link: ["Посилання", "Ссылка", "Link"],
+    help_type_link_desc: [
+      "Адреса та опис. Клік відкриває сайт у новій вкладці браузера.",
+      "Адрес и описание. Клик открывает сайт в новой вкладке браузера.",
+      "URL and description. Click opens the website in a new browser tab.",
+    ],
+    help_type_text: ["Текстова сторінка", "Текстовая страница", "Text Page"],
+    help_type_text_desc: [
+      "Нотатка прямо в SpriteNote. Клік відкриває її для читання і правки.",
+      "Заметка прямо в SpriteNote. Клик открывает её для чтения и правки.",
+      "A note directly in SpriteNote. Click opens it for reading and editing.",
+    ],
+    help_type_doc: ["Документ", "Документ", "Document"],
+    help_type_doc_desc: [
+      "Завантажений файл. Клік завантажує його назад на пристрій.",
+      "Загруженный файл. Клик скачивает его обратно на устройство.",
+      "Uploaded file. Click downloads it back to your device.",
+    ],
+    help_topbar_title: ["Верхня панель", "Верхняя панель", "Top Bar"],
+    help_topbar_explorer: ["Провідник", "Проводник", "Explorer"],
+    help_topbar_explorer_desc: [
+      "Дерево папок і їх вміст — основна сторінка.",
+      "Дерево папок и их содержимое — основная страница.",
+      "Folder tree and their content — the main page.",
+    ],
+    help_topbar_help: ["Інструкція", "Инструкция", "Help"],
+    help_topbar_help_desc: ["Ця сторінка.", "Эта страница.", "This page."],
+    help_topbar_account: ["Акаунт", "Аккаунт", "Account"],
+    help_topbar_account_desc: [
+      "Зміна пароля і видалення акаунту разом з усіма даними.",
+      "Смена пароля и удаление аккаунта вместе со всеми данными.",
+      "Change password and delete account along with all data.",
+    ],
+    help_topbar_logout: ["Вихід", "Выход", "Logout"],
+    help_topbar_logout_desc: [
+      "Завершує сеанс. Дані залишаються, вхід — тим самим email і паролем.",
+      "Завершает сеанс. Данные остаются, вход — тем же email и паролем.",
+      "Ends session. Data remains, log in with the same email and password.",
+    ],
+    help_sidebar_title: ["Бічна панель: дерево папок", "Боковая панель: дерево папок", "Sidebar: Folder Tree"],
+    help_sidebar_plus: ["Плюс", "Плюс", "Plus"],
+    help_sidebar_plus_desc: [
+      "Створює нову кореневу папку — папку верхнього рівня.",
+      "Создаёт новую корневую папку — папку верхнего уровня.",
+      "Creates a new root folder — a top-level folder.",
+    ],
+    help_sidebar_download: ["Стрілка вниз", "Стрелка вниз", "Down Arrow"],
+    help_sidebar_download_desc: [
+      "Вивантажує все дерево у файл JSON — резервна копія або перенесення на інший сервер.",
+      "Выгружает всё дерево в файл JSON — резервная копия или перенос на другой сервер.",
+      "Exports the entire tree to a JSON file — backup or transfer to another server.",
+    ],
+    help_sidebar_upload: ["Стрілка вгору", "Стрелка вверх", "Up Arrow"],
+    help_sidebar_upload_desc: [
+      "Завантажує дерево з файлу JSON. Додається тільки те, чого ще немає: повторний імпорт того ж файлу дублікатів не створює.",
+      "Загружает дерево из файла JSON. Добавляется только то, чего ещё нет: повторный импорт того же файла дублей не создаёт.",
+      "Imports tree from a JSON file. Only adds what doesn't exist yet: re-importing the same file won't create duplicates.",
+    ],
+    help_sidebar_search: ["Пошук по дереву", "Поиск по дереву", "Tree Search"],
+    help_sidebar_search_desc: [
+      "Шукає за назвою, описом, текстом сторінок і адресами посилань у всьому дереві одразу. Результати показуються справа з указанням папки; клік по результату відкриває елемент. Очистити — клавішею Esc або стерши текст.",
+      "Ищет по названию, описанию, тексту страниц и адресам ссылок во всём дереве сразу. Результаты показываются справа с указанием папки; клик по результату открывает элемент. Очистить — клавишей Esc или стерев текст.",
+      "Searches by name, description, page text, and link URLs across the entire tree. Results appear on the right with folder indication; click result to open element. Clear with Esc key or by deleting text.",
+    ],
+    help_sidebar_chevron: ["Трикутник біля папки", "Треугольник у папки", "Triangle by Folder"],
+    help_sidebar_chevron_desc: [
+      "Розгортає і згортає список підпапок. У папок без підпапок його немає.",
+      "Разворачивает и сворачивает список подпапок. У папок без подпапок его нет.",
+      "Expands and collapses the list of subfolders. Folders without subfolders don't have it.",
+    ],
+    help_sidebar_dots: ["Три точки біля папки", "Три точки у папки", "Three Dots by Folder"],
+    help_sidebar_dots_desc: [
+      "Меню дій з папкою: відкрити, редагувати, перемістити, видалити. Те ж меню відкривається правою кнопкою миші по рядку.",
+      "Меню действий с папкой: открыть, редактировать, переместить, удалить. То же меню открывается правой кнопкой мыши по строке.",
+      "Folder actions menu: open, edit, move, delete. Same menu opens with right-click on the row.",
+    ],
+    help_toolbar_title: ["Панель над вмістом", "Панель над содержимым", "Toolbar Above Content"],
+    help_toolbar_home: ["Провідник (у рядку шляху)", "Проводник (в строке пути)", "Explorer (in path bar)"],
+    help_toolbar_home_desc: [
+      "Повертає в корінь — до списку кореневих папок. Назви папок правіше — перехід на будь-який рівень шляху.",
+      "Возвращает в корень — к списку корневых папок. Названия папок правее — переход на любой уровень пути.",
+      "Returns to root — to the list of root folders. Folder names to the right — jump to any path level.",
+    ],
+    help_toolbar_subfolder: ["Нова підпапка", "Новая подпапка", "New Subfolder"],
+    help_toolbar_subfolder_desc: [
+      "Створює папку всередині відкритої папки.",
+      "Создаёт папку внутри открытой папки.",
+      "Creates a folder inside the open folder.",
+    ],
+    help_toolbar_link: ["Нове посилання", "Новая ссылка", "New Link"],
+    help_toolbar_link_desc: [
+      "Додає посилання з назвою та описом.",
+      "Добавляет ссылку с названием и описанием.",
+      "Adds a link with name and description.",
+    ],
+    help_toolbar_text: ["Нова текстова сторінка", "Новая текстовая страница", "New Text Page"],
+    help_toolbar_text_desc: [
+      "Створює нотатку, текст якої зберігається в SpriteNote.",
+      "Создаёт заметку, текст которой хранится в SpriteNote.",
+      "Creates a note whose text is stored in SpriteNote.",
+    ],
+    help_toolbar_doc: ["Новий документ", "Новый документ", "New Document"],
+    help_toolbar_doc_desc: [
+      "Завантажує файл на сервер і кладе його у відкриту папку.",
+      "Загружает файл на сервер и кладёт его в открытую папку.",
+      "Uploads a file to the server and places it in the open folder.",
+    ],
+    help_toolbar_tile: ["Плитка", "Плитка", "Grid"],
+    help_toolbar_tile_desc: [
+      "Показує вміст картками. Вибір запам'ятовується в акаунті і діє на будь-якому пристрої.",
+      "Показывает содержимое карточками. Выбор запоминается в аккаунте и действует на любом устройстве.",
+      "Shows content as cards. Selection is saved in account and works on any device.",
+    ],
+    help_toolbar_list: ["Список", "Список", "List"],
+    help_toolbar_list_desc: [
+      "Показує вміст компактними рядками — зручно, коли елементів багато.",
+      "Показывает содержимое компактными строками — удобно, когда элементов много.",
+      "Shows content as compact rows — convenient when there are many elements.",
+    ],
+    help_toolbar_note: [
+      "Чотири кнопки створення з'являються, тільки коли обрана папка: класти елементи в корінь не можна, там живуть лише папки.",
+      "Четыре кнопки создания появляются, только когда выбрана папка: класть элементы в корень нельзя, там живут лишь папки.",
+      "Four creation buttons appear only when a folder is selected: you can't place elements in root, only folders live there.",
+    ],
+    help_element_title: ["Елемент і меню дій", "Элемент и меню действий", "Element and Actions Menu"],
+    help_element_click: ["Клік по елементу", "Клик по элементу", "Click on Element"],
+    help_element_click_desc: [
+      "Папка — відкривається, посилання — відкривається в новій вкладці, текстова сторінка — відкривається для правки, документ — завантажується.",
+      "Папка — открывается, ссылка — открывается в новой вкладке, текстовая страница — открывается для правки, документ — скачивается.",
+      "Folder — opens, Link — opens in new tab, Text Page — opens for editing, Document — downloads.",
+    ],
+    help_element_dots: [
+      "Три точки / права кнопка миші",
+      "Три точки / правая кнопка мыши",
+      "Three Dots / Right Click",
+    ],
+    help_element_dots_desc: [
+      "Відкриває меню з чотирьох пунктів нижче.",
+      "Открывает меню из четырёх пунктов ниже.",
+      "Opens menu with four items below.",
+    ],
+    help_element_open: [
+      "Відкрити · Відкрити посилання · Завантажити",
+      "Открыть · Открыть ссылку · Скачать",
+      "Open · Open Link · Download",
+    ],
+    help_element_open_desc: [
+      "Те ж, що клік по елементу; назва пункту залежить від типу.",
+      "То же, что клик по элементу; название пункта зависит от типа.",
+      "Same as clicking element; item name depends on type.",
+    ],
+    help_element_edit: ["Редагувати", "Редактировать", "Edit"],
+    help_element_edit_desc: [
+      "Відкриває вікно з полями елемента: назва, адреса, опис, текст або файл.",
+      "Открывает окно с полями элемента: название, адрес, описание, текст или файл.",
+      "Opens dialog with element fields: name, URL, description, text, or file.",
+    ],
+    help_element_move: ["Перемістити", "Переместить", "Move"],
+    help_element_move_desc: [
+      "Відкриває вибір нової папки для елемента.",
+      "Открывает выбор новой папки для элемента.",
+      "Opens selection of new folder for element.",
+    ],
+    help_element_delete: ["Видалити", "Удалить", "Delete"],
+    help_element_delete_desc: [
+      "Видаляє елемент після підтвердження. Папка видаляється разом з усім вмістом. Скасувати видалення не можна.",
+      "Удаляет элемент после подтверждения. Папка удаляется вместе со всем содержимым. Отменить удаление нельзя.",
+      "Deletes element after confirmation. Folder deletes with all content. Cannot undo deletion.",
+    ],
+    help_modal_title: ["Вікно створення і редагування", "Окно создания и редактирования", "Create and Edit Dialog"],
+    help_modal_name: ["Назва", "Название", "Name"],
+    help_modal_name_desc: [
+      "Обов'язкове поле — під цим ім'ям елемент видно в дереві і в списку.",
+      "Обязательное поле — под этим именем элемент виден в дереве и в списке.",
+      "Required field — element appears under this name in tree and list.",
+    ],
+    help_modal_url: ["Посилання (URL)", "Ссылка (URL)", "URL"],
+    help_modal_url_desc: [
+      "Адреса сторінки для елемента-посилання, наприклад https://example.com.",
+      "Адрес страницы для элемента-ссылки, например https://example.com.",
+      "Page address for link element, e.g., https://example.com.",
+    ],
+    help_modal_claude: ["Стисло про посилання Claude", "Кратко о ссылке Claude", "Summarize Link with Claude"],
+    help_modal_claude_desc: [
+      "Сервер сам відкриває вказану адресу, читає сторінку і заповнює назву та опис за вас. Працює тільки при заповненому полі «Посилання»; займає кілька секунд.",
+      "Сервер сам открывает указанный адрес, читает страницу и заполняет название и описание за вас. Работает только при заполненном поле «Ссылка»; занимает несколько секунд.",
+      "Server opens the specified URL, reads the page, and fills name and description for you. Only works when \"URL\" field is filled; takes a few seconds.",
+    ],
+    help_modal_desc: [
+      "Опис · Текст сторінки · Файл документа",
+      "Описание · Текст страницы · Файл документа",
+      "Description · Page Text · Document File",
+    ],
+    help_modal_desc_desc: [
+      "Показується те поле, яке стосується типу елемента. При заміні файлу у документа старий файл видаляється.",
+      "Показывается то поле, которое относится к типу элемента. При замене файла у документа старый файл удаляется.",
+      "Shows the field relevant to element type. When replacing a document's file, old file is deleted.",
+    ],
+    help_modal_create: ["Створити / Зберегти", "Создать / Сохранить", "Create / Save"],
+    help_modal_create_desc: [
+      "Записує елемент. Напис залежить від того, створюєте ви елемент чи правите наявний.",
+      "Записывает элемент. Надпись зависит от того, создаёте вы элемент или правите существующий.",
+      "Saves element. Label depends on whether you're creating or editing.",
+    ],
+    help_th_button: ["Кнопка", "Кнопка", "Button"],
+    help_th_action: ["Дія", "Действие", "Action"],
+    help_th_field: ["Кнопка або поле", "Кнопка или поле", "Button or field"],
+    help_th_does: ["Що робить", "Что делает", "What it does"],
+    help_badge_admin: ["Адмін", "Админ", "Admin"],
+    help_modal_corner: ["Куток вікна", "Уголок окна", "Window corner"],
+    help_modal_corner_desc: [
+      "Вікно розтягується мишею за правий нижній кут; розмір запам'ятовується в цьому браузері й застосовується до наступних вікон того ж виду.",
+      "Окно растягивается мышью за правый нижний угол; размер запоминается в этом браузере и применяется к следующим окнам того же вида.",
+      "Drag the bottom-right corner to resize. The size is remembered in this browser and reused for the next window of the same kind.",
+    ],
+    help_modal_cancel_row: ["Скасувати і «×»", "Отмена и «×»", "Cancel and “×”"],
+    help_modal_cancel_row_desc: [
+      "Закривають вікно без збереження. Те саме робить клік по затемненому фону.",
+      "Закрывают окно без сохранения. То же делает клик по затемнённому фону.",
+      "Close the window without saving. Clicking the dimmed background does the same.",
+    ],
+    help_move_title: ["Вікно «Перемістити»", "Окно «Переместить»", "The “Move” window"],
+    help_move_root: ["Корінь (без папки)", "Корень (без папки)", "Root (no folder)"],
+    help_move_root_desc: [
+      "Робить папку кореневою. Доступно лише для папок — посилання, сторінки й документи мусять лежати в папці.",
+      "Делает папку корневой. Доступно только для папок — ссылки, страницы и документы обязаны лежать в папке.",
+      "Makes the folder a root folder. Folders only — links, pages and documents must live inside a folder.",
+    ],
+    help_move_folder: ["Папка у списку", "Папка в списке", "A folder in the list"],
+    help_move_folder_desc: [
+      "Обирає її як місце призначення. Папка, яку ви переносите, і її вміст у списку не показуються: всередину себе перемістити не можна.",
+      "Выбирает её как место назначения. Папка, которую вы переносите, и её содержимое в списке не показываются: внутрь себя переместить нельзя.",
+      "Picks it as the destination. The folder you are moving and its contents are not listed: it cannot be moved into itself.",
+    ],
+    help_move_confirm: ["Перемістити сюди", "Переместить сюда", "Move here"],
+    help_move_confirm_desc: [
+      "Виконує перенесення до обраної папки.",
+      "Выполняет перенос в выбранную папку.",
+      "Performs the move into the chosen folder.",
+    ],
+    help_move_cancel: ["Скасувати і «×»", "Отмена и «×»", "Cancel and “×”"],
+    help_move_cancel_desc: [
+      "Закривають вікно, нічого не змінюючи.",
+      "Закрывают окно, ничего не меняя.",
+      "Close the window without changing anything.",
+    ],
+    help_account_title: ["Вікно «Акаунт»", "Окно «Аккаунт»", "The “Account” window"],
+    help_account_lang: ["Мова інтерфейсу", "Язык интерфейса", "Interface language"],
+    help_account_lang_desc: [
+      "Перемикає мову на українську, російську або англійську. Вибір зберігається в акаунті й переїжджає разом з ним на інший пристрій.",
+      "Переключает язык на украинский, русский или английский. Выбор хранится в аккаунте и переезжает вместе с ним на другое устройство.",
+      "Switches the interface to Ukrainian, Russian or English. The choice is stored on the account and follows it to any device.",
+    ],
+    help_account_password: ["Змінити пароль", "Изменить пароль", "Change password"],
+    help_account_password_desc: [
+      "Змінює пароль: потрібен поточний пароль і новий, не коротший за 8 символів, введений двічі.",
+      "Меняет пароль: нужен текущий пароль и новый, не короче 8 символов, введённый дважды.",
+      "Changes the password: the current one plus a new one, at least 8 characters, entered twice.",
+    ],
+    help_account_delete: [
+      "Видалити акаунт і всі дані",
+      "Удалить аккаунт и все данные",
+      "Delete account and all data",
+    ],
+    help_account_delete_desc: [
+      "Видаляє акаунт разом з усіма папками, посиланнями, сторінками та завантаженими файлами. Потребує пароль і підтвердження, відновити дані потім неможливо.",
+      "Удаляет аккаунт вместе со всеми папками, ссылками, страницами и загруженными файлами. Требует пароль и подтверждение, восстановить данные потом невозможно.",
+      "Deletes the account together with every folder, link, page and uploaded file. Requires the password and a confirmation; the data cannot be recovered.",
+    ],
+    help_admin_section_title: ["Для адміністраторів", "Для администраторов", "For administrators"],
+    help_admin_note: [
+      "Ці вкладки та кнопки бачать лише адміністратори. Перший зареєстрований користувач стає адміністратором, іншим права видає він.",
+      "Эти вкладки и кнопки видны только администраторам. Первый зарегистрированный пользователь становится администратором, остальным права выдаёт он.",
+      "These tabs and buttons are visible to administrators only. The first registered user becomes an administrator and grants the role to everyone else.",
+    ],
+    help_admin_tab: ["Вкладка «Панель керування»", "Вкладка «Панель управления»", "The “Control panel” tab"],
+    help_admin_tab_desc: [
+      "Список користувачів з роллю, обсягом даних і датою реєстрації, а також файловий менеджер сервера.",
+      "Список пользователей с ролью, объёмом данных и датой регистрации, а также файловый менеджер сервера.",
+      "The list of users with their role, data size and registration date, plus the server file manager.",
+    ],
+    help_admin_role: [
+      "Зробити адміном / Зняти права адміна",
+      "Сделать админом / Снять права админа",
+      "Make admin / Revoke admin",
+    ],
+    help_admin_role_desc: [
+      "Змінює роль користувача. Знявши права з себе, ви одразу втрачаєте доступ до адмінських вкладок.",
+      "Меняет роль пользователя. Сняв права с себя, вы сразу теряете доступ к админским вкладкам.",
+      "Changes a user's role. Revoke your own and you lose access to the admin tabs immediately.",
+    ],
+    help_admin_zip: ["Завантажити проєкт (.zip)", "Скачать проект (.zip)", "Download project (.zip)"],
+    help_admin_zip_desc: [
+      "Віддає архів з вихідним кодом застосунку.",
+      "Отдаёт архив с исходным кодом приложения.",
+      "Returns an archive with the application source code.",
+    ],
+    help_admin_up: ["Вгору", "Наверх", "Up"],
+    help_admin_up_desc: [
+      "Переходить на рівень вище у файловому менеджері сервера. Неактивна в корені файлової системи.",
+      "Переходит на уровень выше в файловом менеджере сервера. Неактивна в корне файловой системы.",
+      "Goes one level up in the server file manager. Disabled at the filesystem root.",
+    ],
+    help_admin_refresh: ["Оновити", "Обновить", "Refresh"],
+    help_admin_refresh_desc: [
+      "Перечитує вміст поточної папки сервера.",
+      "Перечитывает содержимое текущей папки сервера.",
+      "Re-reads the contents of the current server folder.",
+    ],
+    help_admin_upload: ["Натисніть, щоб завантажити файл", "Нажмите, чтобы загрузить файл", "Click to upload a file"],
+    help_admin_upload_desc: [
+      "Завантажує файл з вашого пристрою у відкриту папку сервера.",
+      "Загружает файл с вашего устройства в открытую папку сервера.",
+      "Uploads a file from your device into the open server folder.",
+    ],
+    help_admin_download: ["Завантажити (у файла)", "Скачать (у файла)", "Download (on a file)"],
+    help_admin_download_desc: [
+      "Завантажує файл сервера собі.",
+      "Скачивает файл сервера себе.",
+      "Downloads the server file to your device.",
+    ],
+    help_admin_delete: ["Видалити (у файла)", "Удалить (у файла)", "Delete (on a file)"],
+    help_admin_delete_desc: [
+      "Видаляє файл з диска сервера після підтвердження. Це справжній файл, а не елемент дерева — відновлення немає.",
+      "Удаляет файл с диска сервера после подтверждения. Это настоящий файл, а не элемент дерева — восстановления нет.",
+      "Deletes the file from the server disk after a confirmation. This is a real file, not a tree item — there is no recovery.",
+    ],
+    help_admin_notepad: ["Вкладка «Блокнот»", "Вкладка «Блокнот»", "The “Notepad” tab"],
+    help_admin_notepad_desc: [
+      "Спільний текстовий блокнот адміністраторів. Кнопки збереження немає: текст зберігається сам за секунду після того, як ви перестали друкувати, статус — під полем.",
+      "Общий текстовый блокнот администраторов. Кнопки сохранения нет: текст сохраняется сам через секунду после того, как вы перестали печатать, статус — под полем.",
+      "A shared text notepad for administrators. There is no save button: the text saves itself a second after you stop typing, and the status is shown below the field.",
+    ],
+    help_admin_terminal: ["Вкладка «Термінал»", "Вкладка «Терминал»", "The “Terminal” tab"],
+    help_admin_terminal_desc: [
+      "Повноцінний командний рядок сервера від імені користувача, під яким запущено застосунок. Статус з'єднання — праворуч від заголовка; якщо написано «відключено», оновіть сторінку або перемкніться на іншу вкладку й назад.",
+      "Полноценная командная строка сервера от имени пользователя, под которым запущено приложение. Статус соединения — справа от заголовка; если написано «отключено», обновите страницу или переключитесь на другую вкладку и обратно.",
+      "A full server command line, running as the user the application runs as. The connection status sits next to the heading; if it says “disconnected”, reload the page or switch tabs and back.",
+    ],
+    help_facts_title: ["Корисно знати", "Полезно знать", "Worth knowing"],
+    help_fact_rmb: [
+      "Права кнопка миші працює і в дереві, і на картках — це те саме меню, що й «…».",
+      "Правая кнопка мыши работает и в дереве, и на карточках — это то же меню, что и «…».",
+      "Right-click works both in the tree and on cards — it is the same menu as “…”.",
+    ],
+    help_fact_hover: [
+      "Наведіть курсор на картку: у спливаючій підказці видно повний опис, навіть якщо в картці він обрізаний.",
+      "Наведите курсор на карточку: во всплывающей подсказке видно полное описание, даже если в карточке оно обрезано.",
+      "Hover a card: the tooltip shows the full description even when the card clips it.",
+    ],
+    help_fact_delete: [
+      "Видалення будь-якого елемента незворотне, «кошика» в SpriteNote немає.",
+      "Удаление любого элемента необратимо, «корзины» в SpriteNote нет.",
+      "Deleting anything is permanent — SpriteNote has no trash bin.",
+    ],
+    help_fact_toasts: [
+      "Усі дії підтверджуються спливаючим повідомленням у кутку екрана; повідомлення про помилку означає, що зміна не збереглася.",
+      "Все действия подтверждаются всплывающим сообщением в углу экрана; сообщение об ошибке означает, что изменение не сохранилось.",
+      "Every action is confirmed by a toast in the corner of the screen; an error toast means the change was not saved.",
+    ],
+    help_fact_private: [
+      "Ваші дані бачите тільки ви: інші користувачі, включно з адміністраторами, не бачать вміст вашого дерева.",
+      "Ваши данные видны только вам: другие пользователи, включая администраторов, не видят содержимое вашего дерева.",
+      "Your data is yours alone: other users, administrators included, cannot see the contents of your tree.",
+    ],
   };
 
-  const ERROR_MESSAGES = {
-    invalid_email: 'Введите корректный email',
-    weak_password: 'Пароль должен быть не короче 8 символов',
-    email_taken: 'Этот email уже зарегистрирован',
-    invalid_credentials: 'Неверный email или пароль',
-    missing_credentials: 'Введите email и пароль',
-    not_authenticated: 'Требуется вход',
-    session_expired: 'Сессия истекла, войдите снова',
-    admin_required: 'Требуются права администратора',
-    name_required: 'Введите название',
-    url_required: 'Введите ссылку (URL)',
-    invalid_type: 'Некорректный тип элемента',
-    parent_not_found: 'Папка назначения не найдена',
-    parent_not_folder: 'Можно перемещать только внутрь папки',
-    cannot_move_into_self: 'Нельзя переместить элемент в самого себя',
-    cannot_move_into_descendant: 'Нельзя переместить папку в свою же подпапку',
-    cannot_remove_last_admin: 'Нельзя снять права у последнего администратора',
-    not_found: 'Элемент не найден',
-    file_required: 'Выберите файл',
-    upload_error: 'Ошибка загрузки файла',
-    server_error: 'Внутренняя ошибка сервера',
-    cannot_read_dir: 'Не удалось прочитать папку (нет доступа?)',
-    target_dir_not_found: 'Папка назначения не найдена',
-    cannot_delete_directory: 'Нельзя удалить папку целиком — только отдельные файлы',
-    invalid_import_file: 'Файл не похож на экспорт SpriteNote',
-    fetch_failed: 'Не удалось открыть страницу по этой ссылке',
-    url_not_allowed: 'Эта ссылка недоступна для просмотра',
-    not_html: 'Страница по ссылке — не HTML, не могу её прочитать',
-    empty_page: 'На странице не нашлось текста',
-    summary_failed: 'Не получилось составить краткое описание, попробуйте ещё раз',
-    too_many_redirects: 'Слишком много перенаправлений по ссылке',
-    cannot_delete_last_admin_with_other_users: 'Вы последний администратор, а на сайте есть другие пользователи — сначала назначьте другого админа',
-    too_many_requests: 'Слишком много попыток, подождите немного и повторите',
-    invalid_request: 'Некорректный запрос',
-  };
-
-  function t(key) {
-    const lang = state.settings?.language || 'ru';
-    return TRANSLATIONS[lang]?.[key] || TRANSLATIONS.ru[key] || key;
+  // Подстановка вида {name} — для строк, куда попадают имена файлов, счётчики и т. п.
+  function t(key, vars) {
+    const idx = Math.max(0, LANGS.indexOf(state.settings?.language || DEFAULT_SETTINGS.language));
+    const row = TRANSLATIONS[key];
+    if (!row) return key;
+    const s = row[idx] || row[LANGS.indexOf(DEFAULT_SETTINGS.language)] || key;
+    return vars ? s.replace(/\{(\w+)\}/g, (m, name) => (name in vars ? String(vars[name]) : m)) : s;
   }
 
+  // Коды ошибок приходят с сервера и совпадают с ключами словаря; незнакомый код не должен
+  // превращаться в собственное имя на экране, поэтому падаем на общую формулировку.
   function errMsg(code) {
-    return t(code) || 'Произошла ошибка';
+    return TRANSLATIONS[code] ? t(code) : t('error_generic');
   }
 
   // ---------------- DOM refs ----------------
@@ -776,17 +962,19 @@
     return data;
   }
 
+  // Локальная переменная нарочно не названа `t`: это имя занято функцией перевода, и её
+  // затенение внутри функции — ровно тот сорт ошибки, который проявляется только в рантайме.
   function toast(message, type = 'default') {
-    const t = document.createElement('div');
-    t.className = `toast ${type}`;
-    t.textContent = message;
-    el.toastContainer.appendChild(t);
-    setTimeout(() => t.remove(), 4000);
+    const node = document.createElement('div');
+    node.className = `toast ${type}`;
+    node.textContent = message;
+    el.toastContainer.appendChild(node);
+    setTimeout(() => node.remove(), 4000);
   }
 
   function formatBytes(bytes) {
-    if (!bytes) return '0 Б';
-    const units = ['Б', 'КБ', 'МБ', 'ГБ'];
+    if (!bytes) return `0 ${t('unit_b')}`;
+    const units = [t('unit_b'), t('unit_kb'), t('unit_mb'), t('unit_gb')];
     let i = 0, v = bytes;
     while (v >= 1024 && i < units.length - 1) { v /= 1024; i++; }
     return `${v.toFixed(v >= 10 || i === 0 ? 0 : 1)} ${units[i]}`;
@@ -796,7 +984,7 @@
     if (!str) return '';
     const d = new Date(str.replace(' ', 'T'));
     if (isNaN(d.getTime())) return str;
-    return d.toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+    return d.toLocaleString(DATE_LOCALE[state.settings?.language] || 'ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
   }
 
   // ---------------- Icons ----------------
@@ -873,6 +1061,44 @@
     const svg = iconEl(node.dataset.icon);
     if (svg) node.prepend(svg);
   });
+
+  // ---------------- Static texts ----------------
+  //
+  // Разметка в index.html написана по-русски и помечена ключами словаря. Русский текст в файле —
+  // не дубль, а то, что видно до загрузки скрипта и что останется, если ключ однажды исчезнет.
+  //
+  // Три атрибута: `data-t` — видимый текст элемента, `data-t-title` — всплывающая подсказка,
+  // `data-t-placeholder` — подсказка внутри поля ввода.
+
+  // Меняем только текстовые узлы: у кнопок первым потомком лежит вставленная иконка (SVG),
+  // и присваивание textContent стёрло бы её. Текст встаёт после иконки — там, где и был.
+  function setElementText(node, text) {
+    node.childNodes.forEach((child) => { if (child.nodeType === Node.TEXT_NODE) child.remove(); });
+    node.appendChild(document.createTextNode(text));
+  }
+
+  function renderStaticTexts() {
+    document.querySelectorAll('[data-t]').forEach((node) => setElementText(node, t(node.dataset.t)));
+    document.querySelectorAll('[data-t-title]').forEach((node) => { node.title = t(node.dataset.tTitle); });
+    document.querySelectorAll('[data-t-placeholder]').forEach((node) => { node.placeholder = t(node.dataset.tPlaceholder); });
+
+    document.title = t('app_title');
+    document.documentElement.lang = state.settings?.language || DEFAULT_SETTINGS.language;
+    if (el.accountLanguage) el.accountLanguage.value = state.settings?.language || DEFAULT_SETTINGS.language;
+
+    // Тексты, которые собираются не из разметки: окно входа и заголовки, зависящие от режима.
+    if (!el.authOverlay.classList.contains('hidden')) renderAuthMode();
+  }
+
+  // Перерисовать всё, что построено из данных: дерево, содержимое папки и открытую панель.
+  // Вызывается после смены языка — статическая разметка обновляется отдельно.
+  function renderDynamicTexts() {
+    if (!state.user) return;
+    renderTree();
+    renderContent();
+    if (state.view === 'admin') { loadAdminUsers(); loadAdminFiles(state.filesPath); }
+    if (state.view === 'notepad') loadNotepad();
+  }
 
   // ---------------- Auth flow ----------------
 
@@ -951,7 +1177,7 @@
       });
       state.settings = { ...DEFAULT_SETTINGS, ...data.settings };
     } catch (_) {
-      toast('Не удалось сохранить настройку отображения', 'error');
+      toast(t('save_setting_failed'), 'error');
     }
   }
 
@@ -960,6 +1186,7 @@
     state.nodes = [];
     state.selectedFolderId = null;
     state.settings = { ...DEFAULT_SETTINGS };
+    renderStaticTexts();
     el.app.classList.add('hidden');
     el.landing.classList.remove('hidden');
   }
@@ -987,20 +1214,20 @@
   el.accountModalClose.addEventListener('click', closeAccountModal);
   el.accountOverlay.addEventListener('click', (e) => { if (e.target === el.accountOverlay) closeAccountModal(); });
 
-  // Language change handler
-  el.accountLanguage.addEventListener('change', async () => {
+  // Смена языка: сначала перерисовываем, потом сохраняем. Интерфейс обязан переключиться даже
+  // если запись настройки не дойдёт до сервера — в этом смысле язык ничем не отличается от
+  // режима «плитка/список», который тоже применяется оптимистично (см. saveSetting).
+  //
+  // Ошибку показывает только сам запрос: если завернуть сюда ещё и отрисовку, любая ошибка
+  // в ней превратится в сообщение «не удалось сохранить настройку» — неправдивое и уводящее
+  // от причины.
+  el.accountLanguage.addEventListener('change', () => {
     const newLang = el.accountLanguage.value;
-    try {
-      await api('/api/auth/settings', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ language: newLang }),
-      });
-      state.settings.language = newLang;
-      renderStaticTexts();
-    } catch (_) {
-      toast(t('save_setting_failed'), 'error');
-    }
+    if (!LANGS.includes(newLang)) return;
+    state.settings.language = newLang;
+    renderStaticTexts();
+    renderDynamicTexts();
+    saveSetting('language', newLang);
   });
 
   el.passwordForm.addEventListener('submit', async (e) => {
@@ -1055,6 +1282,7 @@
     el.app.classList.remove('hidden');
     el.topbarEmail.textContent = state.user.email;
     applyUserSettings();
+    renderStaticTexts();
     applyAdminVisibility();
     switchView('explorer');
     await loadNodes();
@@ -1117,7 +1345,8 @@
   // Node type -> key in ICONS. Kept explicit so a new node type has to opt in to an icon rather
   // than silently rendering nothing.
   const TYPE_ICON = { folder: 'folder', link: 'link', text: 'text', doc: 'doc' };
-  const TYPE_LABEL = { folder: 'Папка', link: 'Ссылка', text: 'Текстовая страница', doc: 'Документ' };
+  // Подписи типов живут в словаре вместе с карточками типов на странице «Инструкция».
+  const typeLabel = (type) => t(`help_type_${type}`);
 
   function renderTree() {
     el.treeRoot.innerHTML = '';
@@ -1125,7 +1354,7 @@
     if (roots.length === 0) {
       const hint = document.createElement('div');
       hint.className = 'empty-hint';
-      hint.textContent = 'Пока нет ни одной папки. Нажмите «+», чтобы создать первую.';
+      hint.textContent = t('tree_empty');
       el.treeRoot.appendChild(hint);
       return;
     }
@@ -1165,7 +1394,7 @@
     const menuBtn = document.createElement('button');
     menuBtn.className = 'tree-menu-btn';
     menuBtn.innerHTML = iconHtml('dots');
-    menuBtn.title = 'Действия с папкой';
+    menuBtn.title = t('tree_menu_title');
     menuBtn.addEventListener('click', (e) => { e.stopPropagation(); openContextMenu(folder, e.clientX, e.clientY); });
 
     row.append(caret, icon, label, menuBtn);
@@ -1212,14 +1441,14 @@
 
     if (state.searchQuery.trim()) {
       const label = document.createElement('span');
-      label.append(iconEl('search'), document.createTextNode(`Поиск: «${state.searchQuery.trim()}»`));
+      label.append(iconEl('search'), document.createTextNode(t('search_results', { q: state.searchQuery.trim() })));
       el.breadcrumb.appendChild(label);
       return;
     }
 
     const root = document.createElement('span');
     root.className = 'crumb';
-    root.append(iconEl('home'), document.createTextNode('Проводник'));
+    root.append(iconEl('home'), document.createTextNode(t('tab_explorer')));
     root.addEventListener('click', () => { state.selectedFolderId = null; renderTree(); renderContent(); });
     el.breadcrumb.appendChild(root);
 
@@ -1242,10 +1471,10 @@
     if (state.searchQuery.trim()) return;
     if (state.selectedFolderId === null) return;
     const actions = [
-      ['folder', 'Новая подпапка'],
-      ['link', 'Новая ссылка'],
-      ['text', 'Новая текстовая страница'],
-      ['doc', 'Новый документ'],
+      ['folder', t('btn_new_subfolder')],
+      ['link', t('btn_new_link')],
+      ['text', t('btn_new_text')],
+      ['doc', t('btn_new_doc')],
     ];
     actions.forEach(([type, label]) => {
       const btn = document.createElement('button');
@@ -1294,7 +1523,7 @@
       el.contentGrid.innerHTML = `
         <div class="empty-state">
           <div class="big-icon">${iconHtml('folderOpen')}</div>
-          <div>Выберите папку слева или создайте новую, чтобы начать</div>
+          <div>${escapeHtml(t('empty_pick_folder'))}</div>
         </div>`;
       return;
     }
@@ -1310,7 +1539,7 @@
       el.contentGrid.innerHTML = `
         <div class="empty-state">
           <div class="big-icon">${iconHtml('inbox')}</div>
-          <div>Эта папка пуста. Добавьте элемент через панель сверху.</div>
+          <div>${escapeHtml(t('empty_folder'))}</div>
         </div>`;
       return;
     }
@@ -1336,7 +1565,7 @@
       el.contentGrid.innerHTML = `
         <div class="empty-state">
           <div class="big-icon">${iconHtml('search')}</div>
-          <div>Ничего не найдено по запросу «${escapeHtml(query)}»</div>
+          <div>${escapeHtml(t('empty_search', { q: query }))}</div>
         </div>`;
       return;
     }
@@ -1346,7 +1575,7 @@
 
   function nodePathLabel(node) {
     const ancestors = pathTo(node.parentId);
-    return ancestors.length ? ancestors.map((a) => a.name).join(' / ') : 'Корень';
+    return ancestors.length ? ancestors.map((a) => a.name).join(' / ') : t('path_root');
   }
 
   function openSearchResult(node) {
@@ -1383,8 +1612,8 @@
     if (opts.showPath) desc.textContent = fullDesc = nodePathLabel(node);
     else if (node.type === 'link') { fullDesc = node.description || node.url; desc.textContent = fullDesc; }
     else if (node.type === 'text') { fullDesc = node.content || ''; desc.textContent = fullDesc.slice(0, 140); }
-    else if (node.type === 'doc') desc.textContent = fullDesc = node.fileName ? `${node.fileName} · ${formatBytes(node.fileSize)}` : 'Файл не прикреплён';
-    else desc.textContent = fullDesc = `${childrenOf(node.id).length} элемент(ов)`;
+    else if (node.type === 'doc') desc.textContent = fullDesc = node.fileName ? `${node.fileName} · ${formatBytes(node.fileSize)}` : t('no_file');
+    else desc.textContent = fullDesc = t('items_count', { n: childrenOf(node.id).length });
 
     // Full, untruncated description on hover — the visible line is clipped for layout.
     if (fullDesc.trim()) card.title = `${node.name}\n\n${fullDesc}`;
@@ -1420,13 +1649,13 @@
     const menu = document.createElement('div');
     menu.className = 'context-menu';
 
-    const openLabel = node.type === 'folder' ? 'Открыть' : node.type === 'link' ? 'Открыть ссылку' : node.type === 'doc' ? 'Скачать' : 'Открыть';
+    const openLabel = node.type === 'link' ? t('menu_open_link') : node.type === 'doc' ? t('menu_download') : t('menu_open');
     menu.appendChild(menuItem(openLabel, () => openNode(node)));
-    menu.appendChild(menuItem('Редактировать', () => openItemModal({ mode: 'edit', type: node.type, nodeId: node.id })));
-    menu.appendChild(menuItem('Переместить', () => openMoveModal(node.id)));
+    menu.appendChild(menuItem(t('menu_edit'), () => openItemModal({ mode: 'edit', type: node.type, nodeId: node.id })));
+    menu.appendChild(menuItem(t('menu_move'), () => openMoveModal(node.id)));
     const hr = document.createElement('hr');
     menu.appendChild(hr);
-    menu.appendChild(menuItem('Удалить', () => deleteNode(node), true));
+    menu.appendChild(menuItem(t('menu_delete'), () => deleteNode(node), true));
 
     document.body.appendChild(menu);
     const rect = menu.getBoundingClientRect();
@@ -1445,12 +1674,12 @@
   }
 
   async function deleteNode(node) {
-    const label = node.type === 'folder' ? `папку «${node.name}» и всё её содержимое` : `«${node.name}»`;
-    if (!confirm(`Удалить ${label}? Это действие необратимо.`)) return;
+    const key = node.type === 'folder' ? 'confirm_delete_folder' : 'confirm_delete_item';
+    if (!confirm(t(key, { name: node.name }))) return;
     try {
       await api(`/api/nodes/${node.id}`, { method: 'DELETE' });
       if (state.selectedFolderId === node.id) state.selectedFolderId = node.parentId;
-      toast('Удалено', 'success');
+      toast(t('toast_deleted'), 'success');
       await loadNodes();
     } catch (err) {
       toast(err.message, 'error');
@@ -1515,10 +1744,10 @@
     el.itemFileCurrent.textContent = '';
 
     el.itemModalTitle.textContent = mode === 'create'
-      ? `Новая: ${TYPE_LABEL[type].toLowerCase()}`
-      : `Изменить: ${TYPE_LABEL[type].toLowerCase()}`;
-    el.itemModalSub.textContent = mode === 'create' ? 'Заполните поля и нажмите «Создать»' : 'Измените поля и нажмите «Сохранить»';
-    el.itemSubmit.textContent = mode === 'create' ? 'Создать' : 'Сохранить';
+      ? t('modal_new', { type: typeLabel(type).toLowerCase() })
+      : t('modal_edit', { type: typeLabel(type).toLowerCase() });
+    el.itemModalSub.textContent = t(mode === 'create' ? 'modal_sub_create' : 'modal_sub_edit');
+    el.itemSubmit.textContent = t(mode === 'create' ? 'btn_create' : 'btn_save');
 
     el.fieldUrl.classList.toggle('hidden', type !== 'link');
     el.fieldDescription.classList.toggle('hidden', type !== 'link');
@@ -1531,7 +1760,7 @@
       el.itemDescription.value = node.description || '';
       el.itemContent.value = node.content || '';
       if (type === 'doc') {
-        el.itemFileCurrent.textContent = node.fileName ? `Текущий файл: ${node.fileName} (${formatBytes(node.fileSize)})` : 'Файл не прикреплён';
+        el.itemFileCurrent.textContent = node.fileName ? t('current_file', { name: node.fileName, size: formatBytes(node.fileSize) }) : t('no_file');
       }
     }
 
@@ -1561,12 +1790,12 @@
     // Snapshot the whole button, icon included — assigning textContent would drop the SVG.
     const originalLabel = el.itemFetchPreview.innerHTML;
     el.itemFetchPreview.disabled = true;
-    el.itemFetchPreview.innerHTML = `${iconHtml('refresh', 'icon-spin')}Читаю страницу…`;
+    el.itemFetchPreview.innerHTML = `${iconHtml('refresh', 'icon-spin')}${escapeHtml(t('reading_page'))}`;
     try {
       const data = await api(`/api/nodes/link-summary?url=${encodeURIComponent(url)}`);
       if (data.title) el.itemName.value = data.title;
       if (data.description) el.itemDescription.value = data.description;
-      toast('Готово', 'success');
+      toast(t('toast_done'), 'success');
     } catch (err) {
       toast(err.message, 'error');
     } finally {
@@ -1594,10 +1823,10 @@
         fd.append('type', type);
         fd.append('parentId', parentId === null ? '' : String(parentId));
         await api('/api/nodes', { method: 'POST', body: fd });
-        toast('Создано', 'success');
+        toast(t('toast_created'), 'success');
       } else {
         await api(`/api/nodes/${nodeId}`, { method: 'PUT', body: fd });
-        toast('Сохранено', 'success');
+        toast(t('toast_saved'), 'success');
       }
       closeItemModal();
       await loadNodes();
@@ -1634,7 +1863,7 @@
     const file = el.importTreeInput.files[0];
     if (!file) return;
     el.importTreeInput.value = '';
-    if (!confirm(`Импортировать данные из «${file.name}»? Добавится только то, чего ещё нет — существующие элементы останутся как есть, дубли не создаются.`)) return;
+    if (!confirm(t('confirm_import', { name: file.name }))) return;
     try {
       const text = await file.text();
       const payload = JSON.parse(text);
@@ -1644,12 +1873,12 @@
         body: JSON.stringify(payload),
       });
       const summary = data.skipped
-        ? `Добавлено: ${data.imported}, уже было: ${data.skipped}`
-        : `Добавлено элементов: ${data.imported}`;
+        ? t('import_added_skipped', { n: data.imported, skipped: data.skipped })
+        : t('import_added', { n: data.imported });
       toast(summary, 'success');
       await loadNodes();
     } catch (err) {
-      toast(err.message || 'Не удалось разобрать файл импорта', 'error');
+      toast(err.message || t('import_parse_failed'), 'error');
     }
   });
 
@@ -1685,7 +1914,7 @@
 
     const rootRow = document.createElement('div');
     rootRow.className = 'tree-row' + (state.moveModal.chosenParentId === null ? ' selected' : '');
-    rootRow.innerHTML = `<span class="tree-caret empty"></span>${iconHtml('home', 'tree-icon')}<span>Корень (без папки)</span>`;
+    rootRow.innerHTML = `<span class="tree-caret empty"></span>${iconHtml('home', 'tree-icon')}<span>${escapeHtml(t('move_root'))}</span>`;
     rootRow.addEventListener('click', () => { state.moveModal.chosenParentId = null; renderMoveTree(); });
     el.moveTree.appendChild(rootRow);
 
@@ -1717,7 +1946,7 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ parentId: chosenParentId }),
       });
-      toast('Перемещено', 'success');
+      toast(t('toast_moved'), 'success');
       closeMoveModal();
       await loadNodes();
     } catch (err) {
@@ -1739,15 +1968,15 @@
         const tr = document.createElement('tr');
         const isSelf = u.id === state.user.id;
         tr.innerHTML = `
-          <td>${escapeHtml(u.email)}${isSelf ? ' <span style="color:var(--text-dim)">(вы)</span>' : ''}</td>
-          <td><span class="badge ${u.isAdmin ? 'badge-admin' : 'badge-user'}">${u.isAdmin ? 'Админ' : 'Пользователь'}</span></td>
+          <td>${escapeHtml(u.email)}${isSelf ? ` <span style="color:var(--text-dim)">${escapeHtml(t('you'))}</span>` : ''}</td>
+          <td><span class="badge ${u.isAdmin ? 'badge-admin' : 'badge-user'}">${escapeHtml(u.isAdmin ? t('role_admin') : t('role_user'))}</span></td>
           <td>${formatBytes(u.bytesUsed)}</td>
           <td>${formatDate(u.createdAt)}</td>
           <td></td>`;
         const actionTd = tr.lastElementChild;
         const btn = document.createElement('button');
         btn.className = 'btn btn-ghost btn-small';
-        btn.textContent = u.isAdmin ? 'Снять права админа' : 'Сделать админом';
+        btn.textContent = u.isAdmin ? t('btn_demote') : t('btn_promote');
         btn.addEventListener('click', async () => {
           try {
             await api(`/api/admin/users/${u.id}/admin`, {
@@ -1755,7 +1984,7 @@
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ isAdmin: !u.isAdmin }),
             });
-            toast('Готово', 'success');
+            toast(t('toast_done'), 'success');
             await loadAdminUsers();
             if (isSelf) {
               const me = await api('/api/auth/me');
@@ -1803,22 +2032,22 @@
           const dl = document.createElement('a');
           dl.href = `/api/admin/files/download?path=${encodeURIComponent(joinPath(data.path, f.name))}`;
           dl.className = 'btn btn-ghost btn-small';
-          dl.textContent = 'Скачать';
+          dl.textContent = t('btn_download');
           dl.style.marginRight = '8px';
           dl.style.textDecoration = 'none';
           dl.style.display = 'inline-block';
           dl.addEventListener('click', (e) => e.stopPropagation());
           const del = document.createElement('button');
           del.className = 'btn btn-ghost btn-small';
-          del.textContent = 'Удалить';
+          del.textContent = t('btn_delete');
           del.addEventListener('click', async (e) => {
             e.stopPropagation();
-            if (!confirm(`Удалить файл «${f.name}»?`)) return;
+            if (!confirm(t('confirm_delete_file', { name: f.name }))) return;
             try {
               await api(`/api/admin/files?path=${encodeURIComponent(joinPath(data.path, f.name))}`, {
                 method: 'DELETE',
               });
-              toast('Удалено', 'success');
+              toast(t('toast_deleted'), 'success');
               await loadAdminFiles(data.path);
             } catch (err) {
               toast(err.message, 'error');
@@ -1830,7 +2059,7 @@
       });
 
       if (data.entries.length === 0) {
-        el.filesTableBody.innerHTML = `<tr><td colspan="4" style="color:var(--text-dim)">Папка пуста</td></tr>`;
+        el.filesTableBody.innerHTML = `<tr><td colspan="4" style="color:var(--text-dim)">${escapeHtml(t('dir_empty'))}</td></tr>`;
       }
     } catch (err) {
       toast(err.message, 'error');
@@ -1855,7 +2084,7 @@
     fd.append('file', file);
     try {
       await api(`/api/admin/files?path=${encodeURIComponent(state.filesPath)}`, { method: 'POST', body: fd });
-      toast('Файл загружен', 'success');
+      toast(t('toast_uploaded'), 'success');
       el.adminFileInput.value = '';
       await loadAdminFiles(state.filesPath);
     } catch (err) {
@@ -1870,13 +2099,13 @@
     try {
       const data = await api('/api/admin/notepad');
       el.notepadTextarea.value = data.content || '';
-      el.notepadStatus.textContent = data.updatedAt ? `Сохранено: ${formatDate(data.updatedAt)}` : ' ';
+      el.notepadStatus.textContent = data.updatedAt ? t('notepad_saved', { date: formatDate(data.updatedAt) }) : ' ';
     } catch (err) {
       toast(err.message, 'error');
     }
   }
   el.notepadTextarea.addEventListener('input', () => {
-    el.notepadStatus.textContent = 'Сохранение…';
+    el.notepadStatus.textContent = t('notepad_saving');
     clearTimeout(notepadSaveTimer);
     notepadSaveTimer = setTimeout(async () => {
       try {
@@ -1885,9 +2114,9 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ content: el.notepadTextarea.value }),
         });
-        el.notepadStatus.textContent = `Сохранено: ${formatDate(new Date().toISOString())}`;
+        el.notepadStatus.textContent = t('notepad_saved', { date: formatDate(new Date().toISOString()) });
       } catch (err) {
-        el.notepadStatus.textContent = 'Ошибка сохранения';
+        el.notepadStatus.textContent = t('notepad_save_error');
       }
     }, 700);
   });
@@ -1933,10 +2162,10 @@
     const ws = new WebSocket(`${proto}//${window.location.host}/api/admin/terminal`);
     state.terminal.ws = ws;
 
-    setTerminalStatus('подключение…');
+    setTerminalStatus(t('term_connecting'));
 
     ws.addEventListener('open', () => {
-      setTerminalStatus('подключено', 'connected');
+      setTerminalStatus(t('term_connected'), 'connected');
       fitAddon.fit();
       ws.send(JSON.stringify({ type: 'resize', cols: term.cols, rows: term.rows }));
     });
@@ -1945,15 +2174,15 @@
       let msg;
       try { msg = JSON.parse(event.data); } catch (_) { return; }
       if (msg.type === 'data') term.write(msg.data);
-      else if (msg.type === 'exit') setTerminalStatus(`процесс завершён (код ${msg.code})`, 'error');
+      else if (msg.type === 'exit') setTerminalStatus(t('term_exited', { code: msg.code }), 'error');
     });
 
     ws.addEventListener('close', () => {
-      setTerminalStatus('отключено — обновите страницу или переключите вкладку, чтобы переподключиться', 'error');
+      setTerminalStatus(t('term_disconnected'), 'error');
     });
 
     ws.addEventListener('error', () => {
-      setTerminalStatus('ошибка соединения', 'error');
+      setTerminalStatus(t('term_socket_error'), 'error');
     });
 
     term.onData((data) => {
@@ -1973,6 +2202,8 @@
       state.user = data.user;
       await enterApp();
     } catch (_) {
+      // Не вошли — язык взять неоткуда, страница остаётся на языке по умолчанию.
+      renderStaticTexts();
       el.landing.classList.remove('hidden');
       el.app.classList.add('hidden');
     }
