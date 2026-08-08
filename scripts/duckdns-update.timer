@@ -1,0 +1,10 @@
+[Unit]
+Description=Periodically update spritenote.duckdns.org DNS record
+
+[Timer]
+OnBootSec=30s
+OnUnitActiveSec=5min
+Persistent=true
+
+[Install]
+WantedBy=timers.target

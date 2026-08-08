@@ -1,0 +1,59 @@
+// Per-user UI preferences.
+//
+// These live in `users.settings` (a JSON blob in a TEXT column) rather than in the browser's
+// localStorage, so a preference follows the account across devices and browsers instead of
+// leaking between two people who share one machine.
+//
+// Adding a preference = one entry in SETTINGS_SPEC. Everything else (validation, defaults,
+// the API surface, forward-compatibility with old rows) follows from it.
+
+const SETTINGS_SPEC = {
+  // Folder contents rendered as cards ("плитка") or as one-line rows ("список").
+  contentViewMode: { default: 'grid', values: ['grid', 'list'] },
+};
+
+function defaults() {
+  const out = {};
+  for (const [key, spec] of Object.entries(SETTINGS_SPEC)) out[key] = spec.default;
+  return out;
+}
+
+function isValid(key, value) {
+  const spec = SETTINGS_SPEC[key];
+  return !!spec && spec.values.includes(value);
+}
+
+// Turn a raw `users.settings` column into a complete settings object. Anything unparseable,
+// unknown or out of range is dropped in favour of the default — a bad row must never break login.
+function parseSettings(raw) {
+  const result = defaults();
+  if (!raw) return result;
+
+  let stored;
+  try {
+    stored = JSON.parse(raw);
+  } catch (_) {
+    return result;
+  }
+  if (!stored || typeof stored !== 'object' || Array.isArray(stored)) return result;
+
+  for (const [key, value] of Object.entries(stored)) {
+    if (isValid(key, value)) result[key] = value;
+  }
+  return result;
+}
+
+// Keep only the recognised, in-range keys of an incoming patch. Returns null when the caller
+// sent something that isn't a usable patch at all, so the route can answer 400 instead of
+// silently storing nothing.
+function sanitizePatch(patch) {
+  if (!patch || typeof patch !== 'object' || Array.isArray(patch)) return null;
+
+  const clean = {};
+  for (const [key, value] of Object.entries(patch)) {
+    if (isValid(key, value)) clean[key] = value;
+  }
+  return Object.keys(clean).length > 0 ? clean : null;
+}
+
+module.exports = { SETTINGS_SPEC, defaults, parseSettings, sanitizePatch };

@@ -1,0 +1,484 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SpriteNote — ваш личный проводник заметок</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='10' fill='%235b8cff'/%3E%3Cpath d='M11 13a2 2 0 012-2h6l3 3h7a2 2 0 012 2v11a2 2 0 01-2 2H13a2 2 0 01-2-2V13z' fill='white' fill-opacity='0.92'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/vendor/xterm/xterm.css">
+</head>
+<body>
+
+<!-- ============ LANDING (pre-auth) ============ -->
+<div id="landing">
+  <div class="landing-topbar">
+    <div class="brand">
+      <svg class="brand-icon" viewBox="0 0 40 40" fill="none">
+        <rect width="40" height="40" rx="10" fill="url(#g1)"/>
+        <path d="M11 13a2 2 0 012-2h6l3 3h7a2 2 0 012 2v11a2 2 0 01-2 2H13a2 2 0 01-2-2V13z" fill="white" fill-opacity="0.92"/>
+        <defs>
+          <linearGradient id="g1" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#5b8cff"/><stop offset="1" stop-color="#7c5bff"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      SpriteNote
+    </div>
+    <button class="btn btn-primary" id="btn-open-auth">Войти / Регистрация</button>
+  </div>
+
+  <div class="landing-hero">
+    <div class="landing-copy">
+      <h1>Все ваши папки, ссылки и заметки — в одном дереве</h1>
+      <p>
+        SpriteNote — личный проводник для хранения информации: создавайте папки и подпапки,
+        добавляйте ссылки с описанием, текстовые заметки и документы. Всё как в привычном
+        файловом менеджере, но в браузере и только для вас.
+      </p>
+      <ul class="feature-list">
+        <li><span class="dot"></span> Дерево папок и подпапок, как в проводнике Windows</li>
+        <li><span class="dot"></span> Ссылки, текстовые страницы и документы внутри папок</li>
+        <li><span class="dot"></span> Редактирование, удаление и перемещение любых элементов</li>
+        <li><span class="dot"></span> Данные каждого пользователя видны только ему</li>
+      </ul>
+      <button class="btn btn-primary" id="btn-open-auth-2">Начать пользоваться</button>
+    </div>
+    <div class="landing-art">
+      <svg viewBox="0 0 420 360" fill="none">
+        <rect x="30" y="40" width="360" height="280" rx="18" fill="#fffaea" stroke="#e9d98a"/>
+        <rect x="30" y="40" width="120" height="280" rx="18" fill="#fdf0ba"/>
+        <rect x="52" y="72" width="76" height="12" rx="6" fill="#5b8cff"/>
+        <rect x="52" y="100" width="60" height="10" rx="5" fill="#e2cd7e"/>
+        <rect x="52" y="122" width="70" height="10" rx="5" fill="#e2cd7e"/>
+        <rect x="52" y="144" width="50" height="10" rx="5" fill="#e2cd7e"/>
+        <rect x="52" y="176" width="60" height="10" rx="5" fill="#7c5bff"/>
+        <rect x="52" y="198" width="66" height="10" rx="5" fill="#e2cd7e"/>
+        <g>
+          <rect x="176" y="76" width="190" height="52" rx="10" fill="#fffefb" stroke="#e9d98a"/>
+          <circle cx="200" cy="102" r="10" fill="#5b8cff"/>
+          <rect x="222" y="94" width="120" height="8" rx="4" fill="#6b5a1e"/>
+          <rect x="222" y="108" width="90" height="7" rx="3.5" fill="#b8a355"/>
+        </g>
+        <g>
+          <rect x="176" y="140" width="190" height="52" rx="10" fill="#fffefb" stroke="#e9d98a"/>
+          <circle cx="200" cy="166" r="10" fill="#1f9d6b"/>
+          <rect x="222" y="158" width="120" height="8" rx="4" fill="#6b5a1e"/>
+          <rect x="222" y="172" width="100" height="7" rx="3.5" fill="#b8a355"/>
+        </g>
+        <g>
+          <rect x="176" y="204" width="190" height="52" rx="10" fill="#fffefb" stroke="#e9d98a"/>
+          <circle cx="200" cy="230" r="10" fill="#7c5bff"/>
+          <rect x="222" y="222" width="120" height="8" rx="4" fill="#6b5a1e"/>
+          <rect x="222" y="236" width="80" height="7" rx="3.5" fill="#b8a355"/>
+        </g>
+        <rect x="176" y="268" width="190" height="30" rx="8" fill="#fffaea" stroke="#e9d98a" stroke-dasharray="4 4"/>
+        <text x="271" y="288" fill="#8a7a42" font-size="12" text-anchor="middle" font-family="sans-serif">+ новый элемент</text>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<!-- ============ AUTH MODAL ============ -->
+<div id="auth-modal-overlay" class="modal-overlay hidden">
+  <div class="modal">
+    <button class="modal-close" id="auth-modal-close">&times;</button>
+    <h2 id="auth-title">Вход</h2>
+    <p class="modal-sub" id="auth-sub">Войдите, чтобы открыть свой проводник заметок</p>
+    <form id="auth-form">
+      <div class="field">
+        <label for="auth-email">Email</label>
+        <input type="email" id="auth-email" autocomplete="email" required>
+      </div>
+      <div class="field">
+        <label for="auth-password">Пароль</label>
+        <input type="password" id="auth-password" autocomplete="current-password" required minlength="8">
+      </div>
+      <div class="field-error" id="auth-error"></div>
+      <div class="modal-actions">
+        <button type="submit" class="btn btn-primary" id="auth-submit" style="width:100%">Войти</button>
+      </div>
+    </form>
+    <div class="modal-switch">
+      <span id="auth-switch-text">Нет аккаунта?</span>
+      <a id="auth-switch-link">Зарегистрироваться</a>
+    </div>
+  </div>
+</div>
+
+<!-- ============ APP (post-auth) ============ -->
+<div id="app" class="hidden">
+  <div class="app-topbar">
+    <div class="brand">
+      <svg class="brand-icon" viewBox="0 0 40 40" fill="none">
+        <rect width="40" height="40" rx="10" fill="url(#g2)"/>
+        <path d="M11 13a2 2 0 012-2h6l3 3h7a2 2 0 012 2v11a2 2 0 01-2 2H13a2 2 0 01-2-2V13z" fill="white" fill-opacity="0.92"/>
+        <defs>
+          <linearGradient id="g2" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#5b8cff"/><stop offset="1" stop-color="#7c5bff"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      SpriteNote
+      <div class="tabs" id="view-tabs">
+        <button class="tab-btn active" data-view="explorer">Проводник</button>
+        <button class="tab-btn" data-view="help" id="tab-help">Инструкция</button>
+        <button class="tab-btn hidden" data-view="admin" id="tab-admin">Панель управления</button>
+        <button class="tab-btn hidden" data-view="notepad" id="tab-notepad">Блокнот</button>
+        <button class="tab-btn hidden" data-view="terminal" id="tab-terminal">Терминал</button>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <span class="user-email" id="topbar-email"></span>
+      <button class="btn btn-ghost btn-small" id="btn-account" title="Аккаунт" data-icon="user">Аккаунт</button>
+      <button class="btn btn-ghost btn-small" id="btn-logout">Выход</button>
+    </div>
+  </div>
+
+  <div class="app-body">
+    <!-- Explorer view -->
+    <div id="view-explorer" class="app-body" style="flex:1;">
+      <div class="sidebar">
+        <div class="sidebar-header">
+          <span>Корневые папки</span>
+          <div style="display:flex; gap:6px;">
+            <button class="icon-btn" id="btn-export-tree" title="Экспортировать всё в JSON" data-icon="download"></button>
+            <button class="icon-btn" id="btn-import-tree" title="Импортировать из JSON" data-icon="upload"></button>
+            <button class="icon-btn" id="btn-new-root-folder" title="Новая корневая папка" data-icon="plus"></button>
+          </div>
+        </div>
+        <div class="sidebar-search">
+          <input type="text" id="tree-search" placeholder="Поиск по дереву…">
+        </div>
+        <input type="file" id="import-tree-input" accept="application/json" class="hidden">
+        <div class="tree" id="tree-root"></div>
+      </div>
+      <div class="content-pane">
+        <div class="content-toolbar">
+          <div class="breadcrumb" id="breadcrumb"></div>
+          <div class="toolbar-actions" id="toolbar-actions"></div>
+          <div class="view-mode-toggle" id="view-mode-toggle">
+            <button class="view-mode-btn" data-mode="grid" title="Плитка" data-icon="grid">Плитка</button>
+            <button class="view-mode-btn" data-mode="list" title="Список (одной строкой)" data-icon="list">Список</button>
+          </div>
+        </div>
+        <div class="content-grid" id="content-grid"></div>
+      </div>
+    </div>
+
+    <!-- Instructions view -->
+    <div id="view-help" class="panel-view help-view hidden">
+      <div class="help-inner">
+        <h2>Инструкция</h2>
+        <p class="panel-sub">Как пользоваться SpriteNote и что делает каждая кнопка</p>
+
+        <p class="help-lead">
+          SpriteNote устроен как файловый менеджер: слева — дерево папок, справа — содержимое
+          выбранной папки. Внутри папок лежат ссылки, текстовые страницы и документы.
+          Все данные видны только вам.
+        </p>
+
+        <div class="section-title">С чего начать</div>
+        <ol class="help-steps">
+          <li>Создайте корневую папку — кнопка <b>«+»</b> в заголовке боковой панели слева.</li>
+          <li>Выберите папку в дереве — её содержимое откроется справа.</li>
+          <li>Добавьте элемент кнопками над содержимым: подпапку, ссылку, текстовую страницу или документ.</li>
+          <li>Заполните поля в открывшемся окне и нажмите <b>«Создать»</b>.</li>
+          <li>Дальше: клик по элементу — открыть, кнопка <b>«…»</b> на элементе — изменить, переместить или удалить.</li>
+        </ol>
+
+        <div class="section-title">Что можно хранить</div>
+        <div class="help-types">
+          <div class="help-type">
+            <div class="help-type-head" data-icon="folder">Папка</div>
+            <p>Вложенность не ограничена: папки внутри папок, как в проводнике.</p>
+          </div>
+          <div class="help-type">
+            <div class="help-type-head" data-icon="link">Ссылка</div>
+            <p>Адрес и описание. Клик открывает сайт в новой вкладке браузера.</p>
+          </div>
+          <div class="help-type">
+            <div class="help-type-head" data-icon="text">Текстовая страница</div>
+            <p>Заметка прямо в SpriteNote. Клик открывает её для чтения и правки.</p>
+          </div>
+          <div class="help-type">
+            <div class="help-type-head" data-icon="doc">Документ</div>
+            <p>Загруженный файл. Клик скачивает его обратно на устройство.</p>
+          </div>
+        </div>
+
+        <div class="section-title">Верхняя панель</div>
+        <table class="data-table help-table">
+          <thead><tr><th>Кнопка</th><th>Что делает</th></tr></thead>
+          <tbody>
+            <tr><td>Проводник</td><td>Дерево папок и их содержимое — основная страница.</td></tr>
+            <tr><td>Инструкция</td><td>Эта страница.</td></tr>
+            <tr><td data-icon="user">Аккаунт</td><td>Смена пароля и удаление аккаунта вместе со всеми данными.</td></tr>
+            <tr><td>Выход</td><td>Завершает сеанс. Данные остаются, вход — тем же email и паролем.</td></tr>
+          </tbody>
+        </table>
+
+        <div class="section-title">Боковая панель: дерево папок</div>
+        <table class="data-table help-table">
+          <thead><tr><th>Кнопка</th><th>Что делает</th></tr></thead>
+          <tbody>
+            <tr><td data-icon="plus">Плюс</td><td>Создаёт новую корневую папку — папку верхнего уровня.</td></tr>
+            <tr class="help-admin-row hidden"><td data-icon="download">Стрелка вниз</td><td>Выгружает всё дерево в файл JSON — резервная копия или перенос на другой сервер. <span class="badge badge-admin">Админ</span></td></tr>
+            <tr class="help-admin-row hidden"><td data-icon="upload">Стрелка вверх</td><td>Загружает дерево из файла JSON. Добавляется только то, чего ещё нет: повторный импорт того же файла дублей не создаёт. <span class="badge badge-admin">Админ</span></td></tr>
+            <tr><td data-icon="search">Поиск по дереву</td><td>Ищет по названию, описанию, тексту страниц и адресам ссылок во всём дереве сразу. Результаты показываются справа с указанием папки; клик по результату открывает элемент. Очистить — клавишей <b>Esc</b> или стерев текст.</td></tr>
+            <tr><td data-icon="chevronRight">Треугольник у папки</td><td>Разворачивает и сворачивает список подпапок. У папок без подпапок его нет.</td></tr>
+            <tr><td data-icon="dots">Три точки у папки</td><td>Меню действий с папкой: открыть, редактировать, переместить, удалить. То же меню открывается правой кнопкой мыши по строке.</td></tr>
+          </tbody>
+        </table>
+
+        <div class="section-title">Панель над содержимым</div>
+        <table class="data-table help-table">
+          <thead><tr><th>Кнопка</th><th>Что делает</th></tr></thead>
+          <tbody>
+            <tr><td data-icon="home">Проводник (в строке пути)</td><td>Возвращает в корень — к списку корневых папок. Названия папок правее — переход на любой уровень пути.</td></tr>
+            <tr><td data-icon="folder">Новая подпапка</td><td>Создаёт папку внутри открытой папки.</td></tr>
+            <tr><td data-icon="link">Новая ссылка</td><td>Добавляет ссылку с названием и описанием.</td></tr>
+            <tr><td data-icon="text">Новая текстовая страница</td><td>Создаёт заметку, текст которой хранится в SpriteNote.</td></tr>
+            <tr><td data-icon="doc">Новый документ</td><td>Загружает файл на сервер и кладёт его в открытую папку.</td></tr>
+            <tr><td data-icon="grid">Плитка</td><td>Показывает содержимое карточками. Выбор запоминается в аккаунте и действует на любом устройстве.</td></tr>
+            <tr><td data-icon="list">Список</td><td>Показывает содержимое компактными строками — удобно, когда элементов много.</td></tr>
+          </tbody>
+        </table>
+        <p class="help-note">
+          Четыре кнопки создания появляются, только когда выбрана папка: класть элементы в корень нельзя,
+          там живут лишь папки.
+        </p>
+
+        <div class="section-title">Элемент и меню действий</div>
+        <table class="data-table help-table">
+          <thead><tr><th>Действие</th><th>Что делает</th></tr></thead>
+          <tbody>
+            <tr><td>Клик по элементу</td><td>Папка — открывается, ссылка — открывается в новой вкладке, текстовая страница — открывается для правки, документ — скачивается.</td></tr>
+            <tr><td data-icon="dots">Три точки / правая кнопка мыши</td><td>Открывает меню из четырёх пунктов ниже.</td></tr>
+            <tr><td>Открыть · Открыть ссылку · Скачать</td><td>То же, что клик по элементу; название пункта зависит от типа.</td></tr>
+            <tr><td>Редактировать</td><td>Открывает окно с полями элемента: название, адрес, описание, текст или файл.</td></tr>
+            <tr><td>Переместить</td><td>Открывает выбор новой папки для элемента.</td></tr>
+            <tr><td class="help-danger">Удалить</td><td>Удаляет элемент после подтверждения. Папка удаляется вместе со всем содержимым. Отменить удаление нельзя.</td></tr>
+          </tbody>
+        </table>
+
+        <div class="section-title">Окно создания и редактирования</div>
+        <table class="data-table help-table">
+          <thead><tr><th>Кнопка или поле</th><th>Что делает</th></tr></thead>
+          <tbody>
+            <tr><td>Название</td><td>Обязательное поле — под этим именем элемент виден в дереве и в списке.</td></tr>
+            <tr><td>Ссылка (URL)</td><td>Адрес страницы для элемента-ссылки, например <code>https://example.com</code>.</td></tr>
+            <tr><td data-icon="sparkles">Кратко о ссылке Claude</td><td>Сервер сам открывает указанный адрес, читает страницу и заполняет название и описание за вас. Работает только при заполненном поле «Ссылка»; занимает несколько секунд.</td></tr>
+            <tr><td>Описание · Текст страницы · Файл документа</td><td>Показывается то поле, которое относится к типу элемента. При замене файла у документа старый файл удаляется.</td></tr>
+            <tr><td>Создать / Сохранить</td><td>Записывает элемент. Надпись зависит от того, создаёте вы элемент или правите существующий.</td></tr>
+            <tr><td>Отмена и «×»</td><td>Закрывают окно без сохранения. То же делает клик по затемнённому фону.</td></tr>
+            <tr><td>Уголок окна</td><td>Окно растягивается мышью за правый нижний угол; размер запоминается в этом браузере и применяется к следующим окнам того же вида.</td></tr>
+          </tbody>
+        </table>
+
+        <div class="section-title">Окно «Переместить»</div>
+        <table class="data-table help-table">
+          <thead><tr><th>Кнопка</th><th>Что делает</th></tr></thead>
+          <tbody>
+            <tr><td data-icon="home">Корень (без папки)</td><td>Делает папку корневой. Доступно только для папок — ссылки, страницы и документы обязаны лежать в папке.</td></tr>
+            <tr><td data-icon="folder">Папка в списке</td><td>Выбирает её как место назначения. Папка, которую вы переносите, и её содержимое в списке не показываются: внутрь себя переместить нельзя.</td></tr>
+            <tr><td>Переместить сюда</td><td>Выполняет перенос в выбранную папку.</td></tr>
+            <tr><td>Отмена и «×»</td><td>Закрывают окно, ничего не меняя.</td></tr>
+          </tbody>
+        </table>
+
+        <div class="section-title">Окно «Аккаунт»</div>
+        <table class="data-table help-table">
+          <thead><tr><th>Кнопка</th><th>Что делает</th></tr></thead>
+          <tbody>
+            <tr><td>Изменить пароль</td><td>Меняет пароль: нужен текущий пароль и новый, не короче 8 символов, введённый дважды.</td></tr>
+            <tr><td class="help-danger">Удалить аккаунт и все данные</td><td>Удаляет аккаунт вместе со всеми папками, ссылками, страницами и загруженными файлами. Требует пароль и подтверждение, восстановить данные потом невозможно.</td></tr>
+          </tbody>
+        </table>
+
+        <div id="help-admin" class="hidden">
+          <div class="section-title">Для администраторов <span class="badge badge-admin">Админ</span></div>
+          <p class="help-note">
+            Эти вкладки и кнопки видны только администраторам. Первый зарегистрированный пользователь
+            становится администратором, остальным права выдаёт он.
+          </p>
+          <table class="data-table help-table">
+            <thead><tr><th>Кнопка</th><th>Что делает</th></tr></thead>
+            <tbody>
+              <tr><td>Вкладка «Панель управления»</td><td>Список пользователей с ролью, объёмом данных и датой регистрации, а также файловый менеджер сервера.</td></tr>
+              <tr><td>Сделать админом / Снять права админа</td><td>Меняет роль пользователя. Сняв права с себя, вы сразу теряете доступ к админским вкладкам.</td></tr>
+              <tr><td data-icon="download">Скачать проект (.zip)</td><td>Отдаёт архив с исходным кодом приложения.</td></tr>
+              <tr><td data-icon="arrowUp">Наверх</td><td>Переходит на уровень выше в файловом менеджере сервера. Неактивна в корне файловой системы.</td></tr>
+              <tr><td data-icon="refresh">Обновить</td><td>Перечитывает содержимое текущей папки сервера.</td></tr>
+              <tr><td>Нажмите, чтобы загрузить файл</td><td>Загружает файл с вашего устройства в открытую папку сервера.</td></tr>
+              <tr><td>Скачать (у файла)</td><td>Скачивает файл сервера себе.</td></tr>
+              <tr><td class="help-danger">Удалить (у файла)</td><td>Удаляет файл с диска сервера после подтверждения. Это настоящий файл, а не элемент дерева — восстановления нет.</td></tr>
+              <tr><td>Вкладка «Блокнот»</td><td>Общий текстовый блокнот администраторов. Кнопки сохранения нет: текст сохраняется сам через секунду после того, как вы перестали печатать, статус — под полем.</td></tr>
+              <tr><td>Вкладка «Терминал»</td><td>Полноценная командная строка сервера от имени пользователя, под которым запущено приложение. Статус соединения — справа от заголовка; если написано «отключено», обновите страницу или переключитесь на другую вкладку и обратно.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="section-title">Полезно знать</div>
+        <ul class="help-facts">
+          <li>Правая кнопка мыши работает и в дереве, и на карточках — это то же меню, что и «…».</li>
+          <li>Наведите курсор на карточку: во всплывающей подсказке видно полное описание, даже если в карточке оно обрезано.</li>
+          <li>Удаление любого элемента необратимо, «корзины» в SpriteNote нет.</li>
+          <li>Все действия подтверждаются всплывающим сообщением в углу экрана; сообщение об ошибке означает, что изменение не сохранилось.</li>
+          <li>Ваши данные видны только вам: другие пользователи, включая администраторов, не видят содержимое вашего дерева.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Admin panel view -->
+    <div id="view-admin" class="panel-view hidden">
+      <h2>Панель управления</h2>
+      <p class="panel-sub">Пользователи, права и файлы сервера</p>
+      <table class="data-table">
+        <thead>
+          <tr><th>Email</th><th>Роль</th><th>Данные</th><th>Регистрация</th><th></th></tr>
+        </thead>
+        <tbody id="users-table-body"></tbody>
+      </table>
+
+      <div class="section-title-row">
+        <div class="section-title" style="margin:0">Файлы сервера</div>
+        <a class="btn btn-ghost btn-small" href="/api/admin/project-zip" style="text-decoration:none" data-icon="download">Скачать проект (.zip)</a>
+      </div>
+      <div class="files-toolbar">
+        <button class="btn btn-ghost btn-small" id="files-up-btn" title="На уровень выше" data-icon="arrowUp">Наверх</button>
+        <div class="files-path" id="files-path"></div>
+        <button class="btn btn-ghost btn-small" id="files-refresh-btn" title="Обновить" data-icon="refresh"></button>
+      </div>
+      <label class="file-drop" id="admin-file-drop">
+        Нажмите, чтобы загрузить файл в текущую папку
+        <input type="file" id="admin-file-input">
+      </label>
+      <table class="data-table">
+        <thead><tr><th>Имя</th><th>Размер</th><th>Изменён</th><th></th></tr></thead>
+        <tbody id="files-table-body"></tbody>
+      </table>
+    </div>
+
+    <!-- Terminal view (admin only) -->
+    <div id="view-terminal" class="terminal-view hidden">
+      <div class="terminal-header">
+        <h2 style="margin:0">Терминал</h2>
+        <span class="terminal-status" id="terminal-status">не подключено</span>
+      </div>
+      <div id="terminal-container"></div>
+    </div>
+
+    <!-- Notepad view -->
+    <div id="view-notepad" class="notepad-view hidden">
+      <h2>Блокнот</h2>
+      <textarea id="notepad-textarea" placeholder="Заметки администратора…"></textarea>
+      <div class="notepad-status" id="notepad-status">&nbsp;</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ ITEM CREATE/EDIT MODAL ============ -->
+<div id="item-modal-overlay" class="modal-overlay hidden">
+  <div class="modal modal-wide modal-resizable" id="item-modal">
+    <button class="modal-close" id="item-modal-close">&times;</button>
+    <h2 id="item-modal-title">Новая папка</h2>
+    <p class="modal-sub" id="item-modal-sub">&nbsp;</p>
+    <form id="item-form">
+      <div class="field">
+        <label for="item-name">Название</label>
+        <input type="text" id="item-name" required maxlength="2000">
+      </div>
+      <div class="field hidden" id="field-url">
+        <label for="item-url">Ссылка (URL)</label>
+        <input type="url" id="item-url" placeholder="https://example.com">
+        <button type="button" class="btn btn-ghost btn-small" id="item-fetch-preview" style="margin-top:8px" data-icon="sparkles">Кратко о ссылке Claude</button>
+      </div>
+      <div class="field hidden" id="field-description">
+        <label for="item-description">Описание</label>
+        <textarea id="item-description"></textarea>
+      </div>
+      <div class="field hidden" id="field-content">
+        <label for="item-content">Текст страницы</label>
+        <textarea id="item-content" style="min-height:200px"></textarea>
+      </div>
+      <div class="field hidden" id="field-file">
+        <label for="item-file">Файл документа</label>
+        <input type="file" id="item-file">
+        <div class="modal-sub" id="item-file-current" style="margin-top:6px"></div>
+      </div>
+      <div class="field-error" id="item-error"></div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost" id="item-cancel">Отмена</button>
+        <button type="submit" class="btn btn-primary" id="item-submit">Создать</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ============ MOVE MODAL ============ -->
+<div id="move-modal-overlay" class="modal-overlay hidden">
+  <div class="modal">
+    <button class="modal-close" id="move-modal-close">&times;</button>
+    <h2>Переместить</h2>
+    <p class="modal-sub">Выберите папку назначения</p>
+    <div class="tree" id="move-tree" style="max-height:320px; overflow-y:auto; border:1px solid var(--border); border-radius:8px; padding:8px;"></div>
+    <div class="modal-actions">
+      <button type="button" class="btn btn-ghost" id="move-cancel">Отмена</button>
+      <button type="button" class="btn btn-primary" id="move-confirm">Переместить сюда</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ ACCOUNT MODAL ============ -->
+<div id="account-modal-overlay" class="modal-overlay hidden">
+  <div class="modal modal-wide">
+    <button class="modal-close" id="account-modal-close">&times;</button>
+    <h2>Аккаунт</h2>
+    <p class="modal-sub" id="account-modal-email">&nbsp;</p>
+
+    <form id="password-form">
+      <div class="field">
+        <label for="current-password">Текущий пароль</label>
+        <input type="password" id="current-password" autocomplete="current-password" required>
+      </div>
+      <div class="field">
+        <label for="new-password">Новый пароль</label>
+        <input type="password" id="new-password" autocomplete="new-password" required minlength="8">
+      </div>
+      <div class="field">
+        <label for="new-password-repeat">Повторите новый пароль</label>
+        <input type="password" id="new-password-repeat" autocomplete="new-password" required minlength="8">
+      </div>
+      <div class="field-error" id="password-error"></div>
+      <div class="modal-actions">
+        <button type="submit" class="btn btn-primary" id="password-submit">Изменить пароль</button>
+      </div>
+    </form>
+
+    <div class="danger-zone">
+      <div class="section-title" style="margin-top:0">Удаление аккаунта</div>
+      <p class="modal-sub" style="margin-bottom:14px">
+        Удалит ваш аккаунт и все ваши папки, ссылки, страницы и документы без возможности восстановления.
+      </p>
+      <form id="delete-account-form">
+        <div class="field">
+          <label for="delete-account-password">Пароль для подтверждения</label>
+          <input type="password" id="delete-account-password" autocomplete="current-password" required>
+        </div>
+        <div class="field-error" id="delete-account-error"></div>
+        <div class="modal-actions">
+          <button type="submit" class="btn btn-danger" id="delete-account-submit">Удалить аккаунт и все данные</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+
+<script src="/vendor/xterm/xterm.js"></script>
+<script src="/vendor/xterm/addon-fit.js"></script>
+<script src="/js/app.js"></script>
+</body>
+</html>

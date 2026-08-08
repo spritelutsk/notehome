@@ -1,0 +1,9 @@
+[Unit]
+Description=Update spritenote.duckdns.org DNS record with current public IP
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=sprite_lutsk1
+ExecStart=/home/sprite_lutsk1/app/scripts/duckdns-update.sh

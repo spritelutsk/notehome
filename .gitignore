@@ -1,0 +1,27 @@
+# Dependencies
+node_modules/
+
+# Logs and temp files
+*.log
+*.tmp
+
+# Environment
+.env
+.env.local
+*.env.*
+
+# Editors
+.vscode/
+.idea/
+
+# Build outputs
+dist/
+build/
+
+# Runtime user data (uploads, admin files) — not source, and privacy-sensitive
+data/
+
+# Internal deployment/ops journal for this specific server — contains real emails and
+# infrastructure detail, not meant for the public repo.
+SESSION.md
+docs/sessions/
