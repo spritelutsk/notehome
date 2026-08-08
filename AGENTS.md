@@ -37,7 +37,15 @@ public/
 ├── css/style.css     единственный стиль-файл
 ├── js/app.js         SPA целиком: state, рендер, обработчики
 └── vendor/xterm/     xterm.js, положен локально, не из CDN
-scripts/              init-db.sql, systemd-юниты, nginx-конфиг, DuckDNS/ACME
+scripts/
+├── init-db.sql       схема БД для свежей установки
+├── spritenote.service           пример systemd-юнита приложения
+├── nginx-spritenote.conf        пример конфига nginx: TLS + security headers + WS
+├── nginx-spritenote-funnel.conf vhost для доступа снаружи через Tailscale Funnel (TLS у Tailscale)
+├── nginx-websocket-map.conf     map $http_upgrade → $connection_upgrade, общий для обоих vhost
+├── duckdns-update.sh/.service/.timer      обновление A-записи DuckDNS по таймеру
+├── duckdns-acme-auth.sh/-cleanup.sh       хуки DNS-01 для Let's Encrypt (пути прописаны в /etc/letsencrypt)
+└── import-notes-sdb.js          разовый импорт из старой базы notes.sdb, не часть приложения
 docs/                 подробности по крупным модулям (см. ниже)
 ```
 

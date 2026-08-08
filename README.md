@@ -45,25 +45,4 @@ npm start
 
 ## Структура
 
-```
-server/
-├── index.js          # express app, middleware, rate limiting
-├── db.js             # mysql2 pool
-├── schema.js         # ensureSchema() — доколонки для уже развёрнутых БД
-├── auth.js           # сессии, middleware requireAuth/requireAdmin
-├── user-settings.js   # спецификация пользовательских настроек
-├── terminal.js        # веб-терминал (WebSocket + node-pty), admin-only
-├── link-summary.js    # «Кратко о ссылке»
-└── routes/
-    ├── auth.js         # регистрация/вход/пароль/удаление аккаунта
-    ├── nodes.js         # CRUD дерева, move, export/import, link-summary
-    └── admin.js         # пользователи, файловый менеджер, блокнот
-public/
-├── index.html / css/style.css / js/app.js   # SPA без фреймворка
-└── vendor/xterm/      # xterm.js, вендорено локально
-scripts/
-├── init-db.sql                 # схема БД
-├── spritenote.service           # пример systemd-юнита приложения
-├── duckdns-update.sh/.service/.timer
-└── nginx-spritenote.conf        # пример конфига nginx (TLS + security headers + WS)
-```
+Карта каталогов — в [AGENTS.md](AGENTS.md#карта-кода), там же ссылки на разборы по модулям.
