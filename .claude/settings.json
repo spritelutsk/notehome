@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(systemctl is-active *)",
+      "Bash(systemctl is-enabled *)",
+      "Bash(systemctl status *)",
+      "Bash(systemctl show *)",
+      "Bash(systemctl list-units *)",
+      "Bash(systemctl list-timers *)",
+      "Bash(journalctl *)",
+      "Bash(node --check *)",
+      "Bash(curl -s http://127.0.0.1:3000/*)",
+      "Bash(curl -s localhost:3000/*)",
+      "Bash(curl -s localhost:3099/*)",
+      "Bash(dig *)",
+      "Bash(dpkg -l)",
+      "Bash(dpkg -l *)",
+      "Bash(apt list *)",
+      "Bash(tailscale status)",
+      "Bash(tailscale status *)",
+      "Bash(tailscale funnel status)",
+      "Bash(tailscale funnel status *)",
+      "Bash(tailscale serve status)",
+      "Bash(ip route)",
+      "Bash(ip route *)",
+      "Bash(ip -brief addr *)"
+    ]
+  }
+}

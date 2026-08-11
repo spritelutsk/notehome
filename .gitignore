@@ -74,3 +74,6 @@ data/
 # infrastructure detail, not meant for the repository.
 SESSION.md
 docs/sessions/
+
+# Локальные разрешения Claude Code — машинный файл, не часть проекта
+.claude/settings.local.json
