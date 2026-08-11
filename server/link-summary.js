@@ -57,8 +57,17 @@ function requestPinned(parsedUrl, ip) {
       headers: {
         Host: parsedUrl.host,
         'User-Agent': 'Mozilla/5.0 (compatible; SpriteNoteBot/1.0)',
+        Accept: 'text/html,application/xhtml+xml,*/*;q=0.8',
+        // Тело нигде не распаковывается: «Кратко о ссылке» разбирает его как текст, и сжатый
+        // ответ превратился бы в мусор. Просим несжатое явно, а не надеемся на умолчание.
+        'Accept-Encoding': 'identity',
       },
       timeout: FETCH_TIMEOUT_MS,
+      // Умолчание Node — 16 КБ на все заголовки, и крупные сайты (Google в первую очередь,
+      // из-за россыпи Set-Cookie) в него не влезают: ответ падает с HPE_HEADER_OVERFLOW ещё
+      // до строки статуса. Снаружи это выглядело как «сервер не отвечает», и живые ссылки
+      // объявлялись мёртвыми.
+      maxHeaderSize: 64 * 1024,
     };
     if (isHttps) options.servername = parsedUrl.hostname; // TLS SNI must still be the real hostname
 
@@ -83,17 +92,42 @@ async function safeFetch(urlStr, maxRedirects = 5) {
     }
     if (!['http:', 'https:'].includes(parsed.protocol)) throw new PreviewError('invalid_url');
 
+    // Два разных отказа, и путать их нельзя: несуществующий домен — обычное дело для старой
+    // ссылки, а адрес во внутренней сети — попытка (пусть и случайная) достать сервер изнутри.
+    // Для пользователя это разные сообщения, поэтому и коды разные. На безопасность деление
+    // не влияет: соединения не происходит ни в том, ни в другом случае.
     const addresses = await dns.lookup(parsed.hostname, { all: true }).catch(() => []);
-    if (addresses.length === 0 || addresses.some((a) => isPrivateIp(a.address))) {
-      throw new PreviewError('url_not_allowed');
-    }
-    // Pin to the first validated address rather than letting the HTTP client re-resolve.
-    const pinnedIp = addresses[0].address;
+    if (addresses.length === 0) throw new PreviewError('dns_failed');
+    // Проверяются ВСЕ адреса, а подключаемся только к проверенным — это и есть защита от
+    // подмены DNS между проверкой и соединением.
+    if (addresses.some((a) => isPrivateIp(a.address))) throw new PreviewError('url_not_allowed');
 
-    let response;
-    try {
-      response = await requestPinned(parsed, pinnedIp);
-    } catch (_) {
+    // Перебираем адреса по очереди, а не берём первый: `dns.lookup` возвращает вперемешку A и
+    // AAAA, а IPv6-маршрута у этой машины нет — подключение к AAAA падает с ENETUNREACH сразу.
+    // Пиннинг на первый адрес объявлял из-за этого мёртвыми вполне живые сайты (google, gemini).
+    // IPv4 идёт первым: на машине без IPv6 это единственный рабочий вариант, и незачем каждый
+    // раз ждать отказа. Пиннинг сохраняется — просто адресов-кандидатов теперь несколько.
+    const ordered = [
+      ...addresses.filter((a) => net.isIPv4(a.address)),
+      ...addresses.filter((a) => !net.isIPv4(a.address)),
+    ];
+
+    let response = null;
+    let lastError = null;
+    for (const { address } of ordered) {
+      try {
+        response = await requestPinned(parsed, address);
+        break;
+      } catch (err) {
+        // Запоминаем ПЕРВУЮ ошибку, а не последнюю: первым идёт IPv4 — единственный адрес,
+        // до которого эта машина вообще может дойти. Отказ по IPv6, который случится следом,
+        // ничего не объясняет и только подменил бы настоящую причину на «сеть недоступна».
+        if (!lastError) lastError = err;
+      }
+    }
+    if (!response) {
+      // Отдельный код на «сеть недоступна»: это про нашу машину, а не про чужой сайт.
+      if (lastError && lastError.code === 'ENETUNREACH') throw new PreviewError('network_unreachable');
       throw new PreviewError('fetch_failed');
     }
 
@@ -204,4 +238,8 @@ async function summarizeUrl(urlStr) {
   }
 }
 
-module.exports = { summarizeUrl, PreviewError };
+// `safeFetch` уезжает наружу ради `server/link-check.js`: проверка ссылок на живость ходит по
+// тем же пользовательским адресам и обязана пользоваться той же защитой — проверкой IP,
+// пиннингом соединения и ручным разбором редиректов. Второй реализации похода по URL
+// в проекте быть не должно.
+module.exports = { summarizeUrl, safeFetch, PreviewError };

@@ -10,6 +10,8 @@ const nodesRoutes = require('./routes/nodes');
 const adminRoutes = require('./routes/admin');
 const { attachTerminal } = require('./terminal');
 const { ensureSchema } = require('./schema');
+const { startTrashPurge } = require('./trash');
+const { startLinkCheck } = require('./link-check');
 
 const app = express();
 
@@ -44,6 +46,18 @@ const linkSummaryLimiter = rateLimit({
 });
 app.use('/api/nodes/link-summary', linkSummaryLimiter);
 
+// Ручная проверка ссылки тоже ходит по пользовательскому адресу — тот же класс поверхности,
+// что и «Кратко о ссылке», только без расхода подписки. Лимит выше, но он есть: иначе кнопкой
+// «Проверить снова» можно долбить чужой сервер вручную.
+const linkCheckLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  max: 120,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'too_many_requests' },
+});
+app.use(/^\/api\/nodes\/\d+\/check-link$/, linkCheckLimiter);
+
 // Admin endpoints (file manager, user management) — generous but bounded, mainly a DoS backstop.
 const adminLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -59,6 +73,15 @@ app.use('/api/nodes', nodesRoutes);
 app.use('/api/admin', adminRoutes);
 
 app.get('/api/health', (req, res) => res.json({ ok: true }));
+
+// Сам service worker кэшировать нельзя: браузер берёт его из HTTP-кэша и может неделю не
+// замечать новую версию — а это тот самый файл, который решает, что делать со всем остальным.
+// `Service-Worker-Allowed` разрешает ему управлять всем сайтом, а не только своим каталогом.
+app.get('/sw.js', (req, res) => {
+  res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+  res.set('Service-Worker-Allowed', '/');
+  res.sendFile(path.join(__dirname, '..', 'public', 'sw.js'));
+});
 
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
@@ -82,6 +105,8 @@ ensureSchema()
       console.log(`SpriteNote server listening on ${HOST}:${PORT}`);
     });
     attachTerminal(server);
+    startTrashPurge();
+    startLinkCheck();
   })
   .catch((err) => {
     console.error('Failed to prepare the database schema:', err);

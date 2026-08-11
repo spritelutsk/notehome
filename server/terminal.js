@@ -48,11 +48,28 @@ function isAllowedOrigin(req) {
   }
 }
 
+// The handshake authenticates once, but a shell stays open for hours. Re-checking the cookie on a
+// timer is what makes logout, session expiry and a revoked admin flag actually reach a live shell.
+const REAUTH_INTERVAL_MS = 60 * 1000;
+
+// Backstop against a buggy or hostile client opening PTYs without end — every one of them is a real
+// bash process on a Raspberry Pi. The interface caps itself at MAX_TERMINAL_TABS (8) in
+// public/js/app.js; this number is deliberately higher, so that closing one tab and opening another
+// never trips the limit while the old socket is still winding down.
+const MAX_PTY_PER_USER = 12;
+
 function attachTerminal(server) {
   const wss = new WebSocketServer({ noServer: true });
+  const liveSessions = new Map(); // user id -> how many PTYs that user has open right now
 
   server.on('upgrade', async (req, socket, head) => {
-    if (!req.url.startsWith('/api/admin/terminal')) return; // let other upgrade handlers (if any) deal with it
+    // Subscribing to 'upgrade' switches off Node's own handling, so a request we do not serve has
+    // to be closed here by hand — otherwise the socket hangs around with no timeout, and anyone
+    // could pile them up unauthenticated. There is no other upgrade handler to defer to.
+    if (!req.url.startsWith('/api/admin/terminal')) {
+      socket.destroy();
+      return;
+    }
     if (!isAllowedOrigin(req)) {
       socket.write('HTTP/1.1 403 Forbidden\r\n\r\n');
       socket.destroy();
@@ -75,6 +92,16 @@ function attachTerminal(server) {
   });
 
   wss.on('connection', (ws, req, user) => {
+    // Counted and checked in the same handler on purpose: doing the check back at the upgrade
+    // would let two simultaneous handshakes both pass it before either one was counted.
+    const open = liveSessions.get(user.id) || 0;
+    if (open >= MAX_PTY_PER_USER) {
+      console.warn(`[terminal] refused: ${user.email} already holds ${open} sessions`);
+      ws.close(4029, 'too_many_sessions');
+      return;
+    }
+    liveSessions.set(user.id, open + 1);
+
     const shell = process.env.SHELL || '/bin/bash';
     const term = pty.spawn(shell, [], {
       name: 'xterm-256color',
@@ -103,8 +130,26 @@ function attachTerminal(server) {
       }
     });
 
+    // The cookie was good at handshake time and is never looked at again by the socket itself, so
+    // without this a shell would outlive logout, session expiry and the removal of admin rights.
+    const reauth = setInterval(async () => {
+      try {
+        if (await authenticateFromCookies(req.headers.cookie)) return;
+        console.log(`[terminal] session no longer valid for ${user.email} (pid ${term.pid})`);
+        ws.close(4001, 'session_expired');
+      } catch (err) {
+        // A database hiccup is not evidence that the session is gone — keep the shell and retry
+        // on the next tick rather than cutting off work in progress.
+        console.error('terminal re-auth check failed', err);
+      }
+    }, REAUTH_INTERVAL_MS);
+
     ws.on('close', () => {
       console.log(`[terminal] session closed by ${user.email} (pid ${term.pid})`);
+      clearInterval(reauth);
+      const left = (liveSessions.get(user.id) || 1) - 1;
+      if (left > 0) liveSessions.set(user.id, left);
+      else liveSessions.delete(user.id);
       try { term.kill(); } catch (_) { /* already dead */ }
     });
   });

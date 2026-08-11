@@ -43,6 +43,14 @@ CREATE TABLE IF NOT EXISTS nodes (
   file_original_name VARCHAR(255) NULL,
   created_at        DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at        DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  -- Корзина: NULL — узел живой, дата — когда его удалили. Все запросы к дереву фильтруют
+  -- по `deleted_at IS NULL`; см. server/routes/nodes.js и server/trash.js.
+  deleted_at        DATETIME NULL DEFAULT NULL,
+  is_favorite       TINYINT(1) NOT NULL DEFAULT 0,
+  -- Живость ссылки, только для type='link'. NULL в статусе = ни разу не проверяли,
+  -- 'ok' = отвечает, любое другое значение — код причины; см. server/link-check.js.
+  link_status       VARCHAR(40) NULL DEFAULT NULL,
+  link_checked_at   DATETIME NULL DEFAULT NULL,
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
   FOREIGN KEY (parent_id) REFERENCES nodes(id) ON DELETE CASCADE,
   INDEX idx_user_parent (user_id, parent_id)

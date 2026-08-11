@@ -32,6 +32,13 @@ const upload = multer({
 
 router.use(requireAuth, requireAdmin);
 
+// Cheapest possible admin route, used by the client to find out whether this router is reachable
+// at all from the address the page was opened on. The Tailscale Funnel vhost answers 404 to the
+// whole /api/admin prefix (a public address must not expose a shell), so a reverse proxy — not the
+// app — decides the answer here. Hence a probe rather than a flag in /api/auth/me: the app cannot
+// know what nginx in front of it blocks.
+router.get('/ping', (req, res) => res.json({ ok: true }));
+
 // --- Users management ---
 
 router.get('/users', async (req, res, next) => {
@@ -45,6 +52,8 @@ router.get('/users', async (req, res, next) => {
                COALESCE(n.file_size, 0)
              ), 0) AS bytes_used
       FROM users u
+      -- Без фильтра по deleted_at намеренно: удалённое лежит в корзине до месяца и всё это
+      -- время занимает место на диске. Здесь считается занятое место, а не размер дерева.
       LEFT JOIN nodes n ON n.user_id = u.id
       GROUP BY u.id, u.email, u.is_admin, u.created_at
       ORDER BY u.created_at

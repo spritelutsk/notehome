@@ -10,6 +10,9 @@
 const SETTINGS_SPEC = {
   // Folder contents rendered as cards ("плитка") or as one-line rows ("список").
   contentViewMode: { default: 'grid', values: ['grid', 'list'] },
+  // Interface language. Only the chrome is translated — folder names, page text and uploaded
+  // documents are the user's own data and stay exactly as they were typed.
+  language: { default: 'uk', values: ['uk', 'ru'] },
 };
 
 function defaults() {
