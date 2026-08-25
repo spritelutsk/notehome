@@ -12,6 +12,7 @@ const { attachTerminal } = require('./terminal');
 const { ensureSchema } = require('./schema');
 const { startTrashPurge } = require('./trash');
 const { startLinkCheck } = require('./link-check');
+const { startLogScan } = require('./log-scan');
 
 const app = express();
 
@@ -107,6 +108,7 @@ ensureSchema()
     attachTerminal(server);
     startTrashPurge();
     startLinkCheck();
+    startLogScan();
   })
   .catch((err) => {
     console.error('Failed to prepare the database schema:', err);

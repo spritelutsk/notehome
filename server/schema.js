@@ -1,11 +1,25 @@
 const pool = require('./db');
 
-// Колонки, добавленные после первого релиза. `scripts/init-db.sql` уже создаёт их для свежей
-// установки; `ensureSchema()` доливает их в уже развёрнутую БД при старте, поэтому обновление
-// остаётся «git pull && restart» без ручного SQL.
-//
+// Таблицы и колонки, добавленные после первого релиза. `scripts/init-db.sql` уже создаёт их
+// для свежей установки; `ensureSchema()` доливает их в уже развёрнутую БД при старте, поэтому
+// обновление остаётся «git pull && restart» без ручного SQL. Определения обязаны совпадать
+// с init-db.sql: свежая база берёт схему оттуда, работающая — отсюда.
+const ADDED_TABLES = [
+  `CREATE TABLE IF NOT EXISTS log_reports (
+     id          INT AUTO_INCREMENT PRIMARY KEY,
+     created_at  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+     window_from DATETIME NOT NULL,
+     window_to   DATETIME NOT NULL,
+     level       VARCHAR(10) NOT NULL,
+     alerts      INT NOT NULL DEFAULT 0,
+     warnings    INT NOT NULL DEFAULT 0,
+     report      MEDIUMTEXT NOT NULL
+   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4`,
+];
+
 // Наличие колонки проверяется по information_schema, а не через `ADD COLUMN IF NOT EXISTS`:
-// последнее — синтаксис только MariaDB.
+// последнее — синтаксис только MariaDB. У таблиц такой заботы нет: `CREATE TABLE IF NOT EXISTS`
+// понимают все.
 const ADDED_COLUMNS = [
   { table: 'users', column: 'settings', definition: 'TEXT NULL' },
   { table: 'nodes', column: 'deleted_at', definition: 'DATETIME NULL DEFAULT NULL' },
@@ -15,6 +29,10 @@ const ADDED_COLUMNS = [
 ];
 
 async function ensureSchema() {
+  for (const sql of ADDED_TABLES) {
+    await pool.query(sql);
+  }
+
   for (const { table, column, definition } of ADDED_COLUMNS) {
     const [rows] = await pool.query(
       `SELECT 1 FROM information_schema.COLUMNS

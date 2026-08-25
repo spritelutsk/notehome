@@ -116,6 +116,10 @@
 <!-- ============ APP (post-auth) ============ -->
 <div id="app" class="hidden">
   <div class="app-topbar">
+    <!-- Вызов дерева. На широком экране дерево видно всегда, и кнопка скрыта в CSS;
+         на телефоне дерево уезжает за левый край, и добраться до него можно только отсюда. -->
+    <button class="icon-btn nav-toggle" id="btn-nav" title="Дерево папок"
+            data-t-title="btn_nav" data-icon="menu" aria-expanded="false"></button>
     <div class="brand">
       <svg class="brand-icon" viewBox="0 0 40 40" fill="none">
         <rect width="40" height="40" rx="10" fill="url(#g2)"/>
@@ -132,6 +136,7 @@
         <button class="tab-btn" data-view="help" id="tab-help" data-t="tab_help">Инструкция</button>
         <button class="tab-btn" data-view="trash" id="tab-trash" data-t="tab_trash">Корзина</button>
         <button class="tab-btn hidden" data-view="admin" id="tab-admin" data-t="tab_admin">Панель управления</button>
+        <button class="tab-btn hidden" data-view="logs" id="tab-logs" data-t="tab_logs">Логи</button>
         <button class="tab-btn hidden" data-view="notepad" id="tab-notepad" data-t="tab_notepad">Блокнот</button>
         <button class="tab-btn hidden" data-view="terminal" id="tab-terminal" data-t="tab_terminal">Терминал</button>
       </div>
@@ -147,7 +152,10 @@
   <div class="app-body">
     <!-- Explorer view -->
     <div id="view-explorer" class="app-body" style="flex:1;">
-      <div class="sidebar">
+      <!-- Затемнение под выдвинутым деревом. На широком экране не появляется никогда:
+           там дерево — часть раскладки, а не всплывающая панель. -->
+      <div class="nav-backdrop hidden" id="nav-backdrop"></div>
+      <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
           <span data-t="sidebar_root_folders">Корневые папки</span>
           <div style="display:flex; gap:6px;">
@@ -388,6 +396,7 @@
               <tr><td data-t="file_drop">Нажмите, чтобы загрузить файл в текущую папку</td><td data-t="help_admin_upload_desc">Загружает файл с вашего устройства в открытую папку сервера.</td></tr>
               <tr><td data-t="help_admin_download">Скачать (у файла)</td><td data-t="help_admin_download_desc">Скачивает файл сервера себе.</td></tr>
               <tr><td class="help-danger" data-t="help_admin_delete">Удалить (у файла)</td><td data-t="help_admin_delete_desc">Удаляет файл с диска сервера после подтверждения. Это настоящий файл, а не элемент дерева&nbsp;— восстановления нет.</td></tr>
+              <tr><td data-t="help_admin_logs">Вкладка «Логи»</td><td data-t="help_admin_logs_desc">Что видно в журналах сервера за последние сутки: ошибки приложения, запросы сканеров, неудачные входы, обращения по чужому имени сайта. Разбор проходит сам каждое утро в 8:00, кнопка «Проверить сейчас» повторяет его немедленно. Выпадающий список рядом открывает отчёты за прошлые дни.</td></tr>
               <tr><td data-t="help_admin_notepad">Вкладка «Блокнот»</td><td data-t="help_admin_notepad_desc">Общий текстовый блокнот администраторов. Кнопки сохранения нет: текст сохраняется сам меньше чем через секунду после последнего нажатия клавиши. Статус сохранения&nbsp;— под полем.</td></tr>
               <tr><td data-t="help_admin_terminal">Вкладка «Терминал»</td><td data-t="help_admin_terminal_desc">Полноценная командная строка сервера от имени пользователя, под которым запущено приложение. Статус соединения&nbsp;— справа от заголовка и относится к открытой вкладке.</td></tr>
               <tr><td data-icon="plus" data-t="help_admin_term_new">Новая вкладка терминала</td><td data-t="help_admin_term_new_desc">Открывает ещё одну командную строку&nbsp;— со своей историей и своим текущим каталогом. Одновременно можно держать до восьми: за каждой вкладкой стоит настоящий процесс на сервере.</td></tr>
@@ -404,6 +413,22 @@
             <tr><td data-t="help_keys_drag">Перетаскивание</td><td data-t="help_keys_drag_desc">Элемент или папку можно перетащить мышью на&nbsp;папку в&nbsp;дереве или на&nbsp;строку пути сверху. Папка под курсором разворачивается сама через мгновение. Окно «Переместить» никуда не делось&nbsp;— с&nbsp;телефона и&nbsp;с&nbsp;клавиатуры работает только оно.</td></tr>
             <tr><td data-t="help_keys_multi">Выделение нескольких</td><td data-t-html="help_keys_multi_desc"><kbd>Ctrl</kbd>+клик добавляет карточку к&nbsp;выделению, <kbd>Shift</kbd>+клик берёт всё от&nbsp;прошлой карточки до&nbsp;этой. Над содержимым появляется полоса с&nbsp;числом выбранных и&nbsp;кнопками «Переместить» и&nbsp;«Удалить». Перетащить выделение можно целиком, потянув за&nbsp;любую из&nbsp;выбранных карточек.</td></tr>
             <tr><td data-t="help_keys_offline">Работа без связи</td><td data-t="help_keys_offline_desc">Сайт можно добавить на&nbsp;домашний экран телефона. Дерево и&nbsp;заметки читаются и&nbsp;без интернета&nbsp;— показывается копия, сохранённая при последнем открытии; внизу об&nbsp;этом предупреждает полоса. Менять что-либо без связи нельзя. Копия стирается при выходе из&nbsp;аккаунта.</td></tr>
+          </tbody>
+        </table>
+
+        <div class="section-title" data-t="help_phone_title">На телефоне</div>
+        <p class="help-note" data-t="help_phone_note">
+          Тот же сайт, та же учётная запись, отдельного приложения нет. Экран узкий, поэтому
+          дерево папок не показывается постоянно&nbsp;— его вызывает кнопка с тремя полосками
+          слева в верхней панели.
+        </p>
+        <table class="data-table help-table">
+          <thead><tr><th data-t="help_th_button">Кнопка</th><th data-t="help_th_does">Что делает</th></tr></thead>
+          <tbody>
+            <tr><td data-icon="menu" data-t="help_phone_nav">Три полоски</td><td data-t="help_phone_nav_desc">Выдвигает дерево папок поверх содержимого. Закрывается выбором папки, нажатием мимо неё или клавишей Esc.</td></tr>
+            <tr><td data-t="help_phone_tabs">Полоса вкладок</td><td data-t="help_phone_tabs_desc">Прокручивается вбок: вкладок больше, чем помещается в ширину экрана.</td></tr>
+            <tr><td data-t="help_phone_actions">Кнопки создания</td><td data-t="help_phone_actions_desc">Тоже прокручиваются вбок, одной строкой над содержимым.</td></tr>
+            <tr><td data-t="help_phone_install">Установка на экран «Домой»</td><td data-t="help_phone_install_desc">В меню браузера&nbsp;— «Добавить на главный экран». Сайт откроется без адресной строки и запомнит вход.</td></tr>
           </tbody>
         </table>
 
@@ -473,6 +498,22 @@
         <thead><tr><th data-t="th_name">Имя</th><th data-t="th_size">Размер</th><th data-t="th_modified">Изменён</th><th></th></tr></thead>
         <tbody id="files-table-body"></tbody>
       </table>
+    </div>
+
+    <!-- Server log report view (admin only) -->
+    <div id="view-logs" class="panel-view hidden">
+      <h2 data-t="tab_logs">Логи</h2>
+      <!-- Подпись собирается в app.js: час проверки и глубина окна приходят с сервера,
+           чтобы числа здесь не разошлись с расписанием разбора. -->
+      <p class="panel-sub" id="logs-sub">&nbsp;</p>
+      <div class="logs-toolbar">
+        <button class="btn btn-ghost btn-small" id="logs-refresh-btn" title="Обновить" data-t-title="btn_refresh" data-icon="refresh"></button>
+        <button class="btn btn-ghost btn-small" id="logs-scan-btn" data-icon="search" data-t="btn_logs_scan">Проверить сейчас</button>
+        <select class="logs-history" id="logs-history" title="История отчётов" data-t-title="logs_history_label"></select>
+      </div>
+      <!-- Отчёт целиком рисуется в app.js: разделов заранее не известно, они приходят
+           списком с сервера. -->
+      <div id="logs-body"></div>
     </div>
 
     <!-- Terminal view (admin only) -->

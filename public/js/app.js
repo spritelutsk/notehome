@@ -16,6 +16,7 @@
     itemModal: null, // { mode, type, parentId, nodeId }
     moveModal: null, // { nodeId, chosenParentId }
     filesPath: null, // null = let the server pick its default (project root) on first load
+    logsReportId: null, // какой отчёт о журналах открыт; null = самый свежий
     terminal: { sessions: [], activeId: null, nextId: 1 }, // вкладки терминала, см. createTerminalSession()
     settings: { ...DEFAULT_SETTINGS }, // per-account UI preferences, replaced on login
     searchQuery: '',
@@ -167,10 +168,37 @@
     tab_help: ["Інструкція", "Инструкция"],
     tab_trash: ["Кошик", "Корзина"],
     tab_admin: ["Панель керування", "Панель управления"],
+    tab_logs: ["Журнали", "Логи"],
     tab_notepad: ["Блокнот", "Блокнот"],
     tab_terminal: ["Термінал", "Терминал"],
     btn_account: ["Акаунт", "Аккаунт"],
     btn_logout: ["Вихід", "Выход"],
+    btn_nav: ["Дерево папок", "Дерево папок"],
+    help_phone_title: ["На телефоні", "На телефоне"],
+    help_phone_note: [
+      "Той самий сайт, той самий обліковий запис, окремого застосунку немає. Екран вузький, тому дерево папок не показується постійно — його викликає кнопка з трьома смужками ліворуч у верхній панелі.",
+      "Тот же сайт, та же учётная запись, отдельного приложения нет. Экран узкий, поэтому дерево папок не показывается постоянно — его вызывает кнопка с тремя полосками слева в верхней панели.",
+    ],
+    help_phone_nav: ["Три смужки", "Три полоски"],
+    help_phone_nav_desc: [
+      "Висуває дерево папок поверх вмісту. Закривається вибором папки, натисканням повз неї або клавішею Esc.",
+      "Выдвигает дерево папок поверх содержимого. Закрывается выбором папки, нажатием мимо неё или клавишей Esc.",
+    ],
+    help_phone_tabs: ["Смуга вкладок", "Полоса вкладок"],
+    help_phone_tabs_desc: [
+      "Прокручується вбік: вкладок більше, ніж уміщається в ширину екрана.",
+      "Прокручивается вбок: вкладок больше, чем помещается в ширину экрана.",
+    ],
+    help_phone_actions: ["Кнопки створення", "Кнопки создания"],
+    help_phone_actions_desc: [
+      "Теж прокручуються вбік, одним рядком над вмістом.",
+      "Тоже прокручиваются вбок, одной строкой над содержимым.",
+    ],
+    help_phone_install: ["Встановлення на екран «Додому»", "Установка на экран «Домой»"],
+    help_phone_install_desc: [
+      "У меню браузера — «Додати на головний екран». Сайт відкриється без адресного рядка і запам'ятає вхід.",
+      "В меню браузера — «Добавить на главный экран». Сайт откроется без адресной строки и запомнит вход.",
+    ],
     sidebar_root_folders: ["Кореневі папки", "Корневые папки"],
     btn_export: ["Експортувати все в JSON", "Экспортировать всё в JSON"],
     btn_import: ["Імпортувати з JSON", "Импортировать из JSON"],
@@ -726,6 +754,123 @@
       "Видаляє файл з диска сервера після підтвердження. Це справжній файл, а не елемент дерева — відновлення немає.",
       "Удаляет файл с диска сервера после подтверждения. Это настоящий файл, а не элемент дерева — восстановления нет.",
     ],
+    // ---- Вкладка «Логи» ----
+    //
+    // Идентификаторы разделов приходят с сервера (`server/log-scan.js`) и совпадают с ключами
+    // `log_<id>` и `log_<id>_desc` здесь. Новый раздел в разборе без пары ключей покажется
+    // на экране своим кодом.
+    logs_view_sub: [
+      "Що видно в журналах сервера за добу. Розбір проходить сам щодня о {hour}:00.",
+      "Что видно в журналах сервера за сутки. Разбор проходит сам каждый день в {hour}:00.",
+    ],
+    logs_never: [
+      "Розбір ще не проходив. Найближчий — о {hour}:00, і чекати не обов’язково: кнопка «Перевірити зараз» зробить це негайно.",
+      "Разбор ещё не проходил. Ближайший — в {hour}:00, и ждать не обязательно: кнопка «Проверить сейчас» сделает это немедленно.",
+    ],
+    btn_logs_scan: ["Перевірити зараз", "Проверить сейчас"],
+    logs_scanning: ["Читаємо журнали…", "Читаем журналы…"],
+    logs_scan_done: ["Розбір завершено", "Разбор завершён"],
+    logs_history_label: ["Звіти за минулі дні", "Отчёты за прошлые дни"],
+    logs_report_of: ["Звіт від {date}", "Отчёт от {date}"],
+    logs_window: ["Період: з {from} до {to}", "Период: с {from} по {to}"],
+    logs_level_ok: ["Нічого тривожного", "Ничего тревожного"],
+    logs_level_warn: ["Є на що подивитися", "Есть на что посмотреть"],
+    logs_level_alert: ["Потребує уваги", "Требует внимания"],
+    logs_quiet_title: ["Без подій", "Без событий"],
+    logs_top: ["Найчастіше", "Чаще всего"],
+    logs_samples: ["Рядки з журналу", "Строки из журнала"],
+    logs_sources: ["Звідки читалося", "Откуда читалось"],
+    logs_source_ok: ["читається", "читается"],
+    log_source_missing: ["файлу немає", "файла нет"],
+    log_source_denied: ["немає прав на читання", "нет прав на чтение"],
+    log_source_unreadable: ["не вдалося прочитати", "не удалось прочитать"],
+
+    log_app_errors: ["Помилки застосунку", "Ошибки приложения"],
+    log_app_errors_desc: [
+      "Рядки журналу самого SpriteNote, у яких згадано помилку або збій.",
+      "Строки журнала самого SpriteNote, в которых упомянута ошибка или сбой.",
+    ],
+    log_app_restarts: ["Перезапуски сервісу", "Перезапуски сервиса"],
+    log_app_restarts_desc: [
+      "Скільки разів застосунок стартував заново. Один-два — це звичайне оновлення; десяток означає, що сервіс падає і піднімається сам.",
+      "Сколько раз приложение стартовало заново. Один-два — это обычное обновление; десяток означает, что сервис падает и поднимается сам.",
+    ],
+    log_terminal_sessions: ["Сеанси веб-термінала", "Сеансы веб-терминала"],
+    log_terminal_sessions_desc: [
+      "Кожен рядок — чийсь командний рядок на сервері. Свої сеанси теж тут: чужий у цьому списку помітний одразу.",
+      "Каждая строка — чья-то командная строка на сервере. Свои сеансы тоже здесь: чужой в этом списке заметен сразу.",
+    ],
+    log_http_requests: ["Запити до сайту", "Запросы к сайту"],
+    log_http_requests_desc: [
+      "Усі звернення на 80 і 443 за добу, і хто приходив найчастіше. Для трафіку через Tailscale Funnel береться адреса з X-Forwarded-For, а не локальна.",
+      "Все обращения на 80 и 443 за сутки и кто приходил чаще всего. Для трафика через Tailscale Funnel берётся адрес из X-Forwarded-For, а не локальный.",
+    ],
+    log_http_probes: ["Запити сканерів", "Запросы сканеров"],
+    log_http_probes_desc: [
+      "Адреси, яких у цього застосунку немає й бути не може: wp-login.php, .env, phpMyAdmin і подібне. Випадково за такими не ходять.",
+      "Адреса, которых у этого приложения нет и быть не может: wp-login.php, .env, phpMyAdmin и подобное. Случайно по таким не ходят.",
+    ],
+    log_auth_failures: ["Невдалі входи", "Неудачные входы"],
+    log_auth_failures_desc: [
+      "Відповіді 401 і 429 на /api/auth/login: неправильний пароль або спрацював ліміт спроб.",
+      "Ответы 401 и 429 на /api/auth/login: неверный пароль или сработал лимит попыток.",
+    ],
+    log_http_server_errors: ["Помилки сервера", "Ошибки сервера"],
+    log_http_server_errors_desc: [
+      "Відповіді 5xx — застосунок не впорався із запитом.",
+      "Ответы 5xx — приложение не справилось с запросом.",
+    ],
+    log_http_client_errors: ["Відповіді 4xx", "Ответы 4xx"],
+    log_http_client_errors_desc: [
+      "Переважно 404. Кілька штук на добу — норма: пошукові роботи ходять по robots.txt і подібному.",
+      "В основном 404. Несколько штук за сутки — норма: поисковые роботы ходят по robots.txt и подобному.",
+    ],
+    log_http_bare_ip: ["Звернення голою адресою", "Обращения по голому IP"],
+    log_http_bare_ip_desc: [
+      "Запити на 443 без SNI: клієнт прийшов на IP і імені сайту не називав. Браузер так не робить, сканер робить завжди.",
+      "Запросы на 443 без SNI: клиент пришёл на IP и имени сайта не называл. Браузер так не делает, сканер делает всегда.",
+    ],
+    log_unknown_host: ["Чуже ім’я сайту", "Чужое имя сайта"],
+    log_unknown_host_desc: [
+      "Заголовок Host не збігається з жодним іменем цієї машини. Означає, що адресу взяли перебором, а не за посиланням.",
+      "Заголовок Host не совпадает ни с одним именем этой машины. Означает, что адрес взяли перебором, а не по ссылке.",
+    ],
+    log_external_requests: ["Звернення ззовні", "Обращения снаружи"],
+    log_external_requests_desc: [
+      "Гості з-поза домашньої мережі й тайлнета. Це норма: адреса фаннела видно з інтернету — але список корисно переглянути.",
+      "Гости из-за пределов домашней сети и тайлнета. Это норма: адрес фаннела виден из интернета — но список полезно просмотреть.",
+    ],
+    log_tls_errors: ["Обриви TLS", "Обрывы TLS"],
+    log_tls_errors_desc: [
+      "Рукостискання, які не дожили до запиту: кривий клієнт, застарілий протокол або спроба говорити відкритим HTTP у 443-й порт.",
+      "Рукопожатия, не дожившие до запроса: кривой клиент, устаревший протокол или попытка говорить открытым HTTP в 443-й порт.",
+    ],
+    log_nginx_errors: ["Помилки nginx", "Ошибки nginx"],
+    log_nginx_errors_desc: [
+      "Записи рівня error і вище з журналу самого nginx.",
+      "Записи уровня error и выше из журнала самого nginx.",
+    ],
+    log_nft_connections: ["TCP-підключення", "TCP-подключения"],
+    log_nft_connections_desc: [
+      "Початок з’єднання на рівні пакетів. Сюди потрапляє й той, хто надіслав SYN і пішов, — до HTTP такий не доходить і в запитах не видно.",
+      "Начало соединения на уровне пакетов. Сюда попадает и тот, кто отправил SYN и ушёл, — до HTTP такой не доходит и в запросах не виден.",
+    ],
+    log_nft_odd: ["Дивні пакети", "Странные пакеты"],
+    log_nft_odd_desc: [
+      "Пакет не на встановлене з’єднання і не початок нового: ACK-скан, FIN, NULL, Xmas. Випадково таке не приходить.",
+      "Пакет не на установленное соединение и не начало нового: ACK-скан, FIN, NULL, Xmas. Случайно такое не приходит.",
+    ],
+    log_sources_unavailable: ["Недоступні журнали", "Недоступные журналы"],
+    log_sources_unavailable_desc: [
+      "Ці файли прочитати не вдалося, і що в них — невідомо. Порожній звіт при недоступному журналі означає «не дивилися», а не «чисто».",
+      "Эти файлы прочитать не удалось, и что в них — неизвестно. Пустой отчёт при недоступном журнале означает «не смотрели», а не «чисто».",
+    ],
+
+    help_admin_logs: ["Вкладка «Журнали»", "Вкладка «Логи»"],
+    help_admin_logs_desc: [
+      "Що видно в журналах сервера за останню добу: помилки застосунку, запити сканерів, невдалі входи, звернення чужим ім’ям сайту. Розбір проходить сам щоранку о 8:00, кнопка «Перевірити зараз» повторює його негайно. Список поруч відкриває звіти за минулі дні.",
+      "Что видно в журналах сервера за последние сутки: ошибки приложения, запросы сканеров, неудачные входы, обращения по чужому имени сайта. Разбор проходит сам каждое утро в 8:00, кнопка «Проверить сейчас» повторяет его немедленно. Список рядом открывает отчёты за прошлые дни.",
+    ],
     help_admin_notepad: ["Вкладка «Блокнот»", "Вкладка «Блокнот»"],
     help_admin_notepad_desc: [
       "Спільний текстовий блокнот адміністраторів. Кнопки збереження немає: текст зберігається сам менш ніж за секунду після останнього натискання клавіші. Статус збереження — під полем.",
@@ -1001,8 +1146,12 @@
     deleteAccountPassword: $('#delete-account-password'),
     deleteAccountError: $('#delete-account-error'),
     deleteAccountSubmit: $('#delete-account-submit'),
+    btnNav: $('#btn-nav'),
+    navBackdrop: $('#nav-backdrop'),
+    sidebar: $('#sidebar'),
     viewTabs: $('#view-tabs'),
     tabAdmin: $('#tab-admin'),
+    tabLogs: $('#tab-logs'),
     tabNotepad: $('#tab-notepad'),
     tabTerminal: $('#tab-terminal'),
 
@@ -1018,6 +1167,12 @@
     helpAdmin: $('#help-admin'),
     helpAdminRows: document.querySelectorAll('.help-admin-row'),
     viewAdmin: $('#view-admin'),
+    viewLogs: $('#view-logs'),
+    logsSub: $('#logs-sub'),
+    logsBody: $('#logs-body'),
+    logsHistory: $('#logs-history'),
+    logsRefreshBtn: $('#logs-refresh-btn'),
+    logsScanBtn: $('#logs-scan-btn'),
     viewNotepad: $('#view-notepad'),
     viewTerminal: $('#view-terminal'),
 
@@ -1146,7 +1301,11 @@
   // light and dark parts of the palette.
 
   const ICONS = {
-    folder: '<path d="M3 7a2 2 0 0 1 2-2h4.2a2 2 0 0 1 1.6.8l1 1.2H19a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z"/>',
+    // Геометрия повторяет folderOpen ниже: та же левая грань (x=2), тот же верх язычка (y=4)
+    // и тот же вырез (l1 1.4). В дереве иконка переключается между этими двумя при раскрытии,
+    // и расхождение хоть на единицу читается как прыжок.
+    folder:
+      '<path d="M4 20a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h4.2a2 2 0 0 1 1.6.8l1 1.4a2 2 0 0 0 1.6.8H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2Z"/>',
     folderOpen:
       '<path d="M4 20a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h4.2a2 2 0 0 1 1.6.8l1 1.4a2 2 0 0 0 1.6.8H18a2 2 0 0 1 2 2v1.5"/>' +
       '<path d="m4 20 2.7-7.6A2 2 0 0 1 8.6 11h12.2a1 1 0 0 1 .95 1.3l-1.9 6a2 2 0 0 1-1.9 1.4H4Z"/>',
@@ -1196,6 +1355,7 @@
       '<path d="M4 6.5h16"/><path d="M9.5 6.5V4.8a1.3 1.3 0 0 1 1.3-1.3h2.4a1.3 1.3 0 0 1 1.3 1.3v1.7"/>' +
       '<path d="M6.5 6.5 7.4 19a1.6 1.6 0 0 0 1.6 1.5h6a1.6 1.6 0 0 0 1.6-1.5l.9-12.5"/>' +
       '<path d="M10.5 10v6.5"/><path d="M13.5 10v6.5"/>',
+    menu: '<path d="M4 7h16"/><path d="M4 12h16"/><path d="M4 17h16"/>',
     dots:
       '<circle cx="12" cy="5.2" r="1.45" fill="currentColor" stroke="none"/>' +
       '<circle cx="12" cy="12" r="1.45" fill="currentColor" stroke="none"/>' +
@@ -1412,6 +1572,7 @@
     if (state.textReader) openTextReader(state.textReader.nodeId);
     if (state.view === 'trash') loadTrash();
     if (state.view === 'admin') { loadAdminUsers(); loadAdminFiles(state.filesPath); }
+    if (state.view === 'logs') loadLogs(state.logsReportId);
     if (state.view === 'notepad') loadNotepad();
     renderTerminalTabs();
   }
@@ -1631,24 +1792,52 @@
 
     const hide = !isAdmin || !(await adminApiReachable());
     el.tabAdmin.classList.toggle('hidden', hide);
+    el.tabLogs.classList.toggle('hidden', hide);
     el.tabNotepad.classList.toggle('hidden', hide);
     el.tabTerminal.classList.toggle('hidden', hide);
     el.helpAdmin.classList.toggle('hidden', hide);
     el.helpAdminRows.forEach((row) => row.classList.toggle('hidden', hide));
 
     // Rights can be dropped while the tab is open — leave a view that no longer has a tab.
-    const adminViews = ['admin', 'notepad', 'terminal'];
+    const adminViews = ['admin', 'logs', 'notepad', 'terminal'];
     if (hide && adminViews.includes(state.view)) switchView('explorer');
   }
 
   // ---------------- View switching ----------------
 
+  // ---------------- Дерево на узком экране ----------------
+  //
+  // На телефоне дерево не помещается рядом с содержимым, поэтому уезжает за левый край и
+  // вызывается кнопкой. Состояние держится классом на самой панели, а не в `state`: ничего,
+  // кроме вида этой панели, от него не зависит, и перерисовка дерева его не теряет.
+  //
+  // На широком экране класса просто нет: правила выдвижения живут внутри медиазапроса, и
+  // повесить его там ни на что не влияет.
+
+  function navOpen() {
+    return el.sidebar.classList.contains('open');
+  }
+
+  function setNav(open) {
+    el.sidebar.classList.toggle('open', open);
+    el.navBackdrop.classList.toggle('hidden', !open);
+    el.btnNav.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+
+  el.btnNav.addEventListener('click', () => setNav(!navOpen()));
+  el.navBackdrop.addEventListener('click', () => setNav(false));
+
   function switchView(view) {
     state.view = view;
+    // Уходя из проводника, закрываем дерево: в остальных видах кнопка вызова скрыта, и
+    // выдвинутая панель осталась бы висеть поверх без всякого способа её убрать.
+    setNav(false);
+    el.btnNav.classList.toggle('hidden', view !== 'explorer');
     el.viewExplorer.classList.toggle('hidden', view !== 'explorer');
     el.viewHelp.classList.toggle('hidden', view !== 'help');
     el.viewTrash.classList.toggle('hidden', view !== 'trash');
     el.viewAdmin.classList.toggle('hidden', view !== 'admin');
+    el.viewLogs.classList.toggle('hidden', view !== 'logs');
     el.viewNotepad.classList.toggle('hidden', view !== 'notepad');
     el.viewTerminal.classList.toggle('hidden', view !== 'terminal');
     el.viewTabs.querySelectorAll('.tab-btn').forEach((b) => {
@@ -1656,6 +1845,7 @@
     });
     if (view === 'trash') { loadTrash(); }
     if (view === 'admin') { loadAdminUsers(); loadAdminFiles(state.filesPath); }
+    if (view === 'logs') { loadLogs(); }
     if (view === 'notepad') { loadNotepad(); }
     if (view === 'terminal') { ensureTerminal(); }
   }
@@ -1814,6 +2004,9 @@
     // невидимым — а групповое удаление всё равно сработало бы по нему.
     clearSelection(false);
     state.selectedFolderId = folderId;
+    // Папка выбрана — на телефоне дерево закрывается само: иначе результат выбора
+    // остался бы за выдвинутой панелью.
+    setNav(false);
     expandPathTo(folderId);
     renderTree();
     renderContent();
@@ -2999,6 +3192,138 @@
     }
   });
 
+  // ---------------- Логи сервера ----------------
+  //
+  // Разбор журналов идёт на сервере раз в сутки (`server/log-scan.js`); здесь готовый отчёт
+  // только раскладывается по карточкам. Разделы приходят кодами, текст к ним — в словаре:
+  // ключи `log_<id>` и `log_<id>_desc`.
+  //
+  // ГЛАВНОЕ ПРО БЕЗОПАСНОСТЬ. В строках отчёта лежит то, что прислал чужой клиент: путь
+  // запроса, User-Agent, заголовок Host. Это ровно тот текст, который сканер может подобрать
+  // так, чтобы он стал разметкой на этой странице. Всё, что уходит в innerHTML ниже, обязано
+  // пройти через escapeHtml() — здесь это не стиль, а единственная защита.
+
+  // В разделе о недоступных журналах во второй колонке лежит код причины, а не число.
+  function logStatValue(value) {
+    return typeof value === 'number' ? String(value) : t(value);
+  }
+
+  function logSectionHtml(section) {
+    const stats = section.stats.length
+      ? `<div class="log-sub-title">${escapeHtml(t('logs_top'))}</div>
+         <table class="data-table log-stats"><tbody>${section.stats
+           .map(
+             (row) =>
+               `<tr><td>${escapeHtml(row.label)}</td>` +
+               `<td class="log-stat-value">${escapeHtml(logStatValue(row.value))}</td></tr>`
+           )
+           .join('')}</tbody></table>`
+      : '';
+    const samples = section.samples.length
+      ? `<div class="log-sub-title">${escapeHtml(t('logs_samples'))}</div>
+         <pre class="log-samples">${section.samples.map((line) => escapeHtml(line)).join('\n')}</pre>`
+      : '';
+
+    return `
+      <section class="log-card log-${section.level}">
+        <div class="log-card-head">
+          <span class="log-card-title">${escapeHtml(t(`log_${section.id}`))}</span>
+          <span class="log-count">${escapeHtml(String(section.count))}</span>
+        </div>
+        <p class="log-card-desc">${escapeHtml(t(`log_${section.id}_desc`))}</p>
+        ${stats}${samples}
+      </section>`;
+  }
+
+  // Список источников показывается всегда, даже когда всё прочиталось. «Тревог нет» имеет
+  // цену, только если видно, что журналы вообще читались.
+  function logSourcesHtml(sources) {
+    const rows = sources
+      .map(
+        (src) =>
+          `<tr${src.error ? ' class="log-source-bad"' : ''}>` +
+          `<td>${escapeHtml(src.label)}</td>` +
+          `<td class="log-stat-value">${escapeHtml(src.error ? t(src.error) : t('logs_source_ok'))}</td></tr>`
+      )
+      .join('');
+    return `<div class="log-sub-title log-sources-title">${escapeHtml(t('logs_sources'))}</div>
+      <table class="data-table log-stats"><tbody>${rows}</tbody></table>`;
+  }
+
+  function renderLogsHistory(history, currentId) {
+    el.logsHistory.innerHTML = history
+      .map(
+        (h) =>
+          `<option value="${escapeHtml(String(h.id))}">` +
+          `${escapeHtml(formatDate(h.createdAt))} — ${escapeHtml(t(`logs_level_${h.level}`))}</option>`
+      )
+      .join('');
+    // Один отчёт выбирать не из чего.
+    el.logsHistory.classList.toggle('hidden', history.length < 2);
+    if (currentId) el.logsHistory.value = String(currentId);
+  }
+
+  function renderLogs(data) {
+    const hour = String(data.scanHour).padStart(2, '0');
+    el.logsSub.textContent = t('logs_view_sub', { hour });
+    state.logsReportId = data.reportId;
+    renderLogsHistory(data.history, data.reportId);
+
+    const report = data.report;
+    if (!report) {
+      el.logsBody.innerHTML = `<p class="log-quiet">${escapeHtml(t('logs_never', { hour }))}</p>`;
+      return;
+    }
+
+    const quiet = [];
+    const cards = [];
+    for (const section of report.sections) {
+      // Пустой и спокойный раздел карточки не заслуживает: разделов полтора десятка, и экран
+      // из одних нулей прячет то немногое, ради чего сюда заходят. Такие уходят одной строкой.
+      if (section.count === 0 && section.level === 'ok') quiet.push(t(`log_${section.id}`));
+      else cards.push(logSectionHtml(section));
+    }
+
+    el.logsBody.innerHTML = `
+      <div class="log-summary log-${report.level}">
+        <div class="log-summary-title">${escapeHtml(t(`logs_level_${report.level}`))}</div>
+        <div class="log-summary-sub">${escapeHtml(t('logs_report_of', { date: formatDate(report.generatedAt) }))}</div>
+        <div class="log-summary-sub">${escapeHtml(
+          t('logs_window', { from: formatDate(report.windowFrom), to: formatDate(report.windowTo) })
+        )}</div>
+      </div>
+      ${cards.join('')}
+      ${quiet.length ? `<p class="log-quiet">${escapeHtml(`${t('logs_quiet_title')}: ${quiet.join(', ')}`)}</p>` : ''}
+      ${logSourcesHtml(report.sources)}`;
+  }
+
+  async function loadLogs(id = null) {
+    try {
+      renderLogs(await api(`/api/admin/logs${id ? `?id=${encodeURIComponent(id)}` : ''}`));
+    } catch (err) {
+      toast(err.message, 'error');
+    }
+  }
+
+  el.logsRefreshBtn.addEventListener('click', () => loadLogs());
+  el.logsHistory.addEventListener('change', () => loadLogs(el.logsHistory.value));
+
+  el.logsScanBtn.addEventListener('click', async () => {
+    el.logsScanBtn.disabled = true;
+    // Текст меняется через setElementText: у кнопки внутри лежит SVG-иконка, и присваивание
+    // textContent стёрло бы её вместе с текстом.
+    setElementText(el.logsScanBtn, t('logs_scanning'));
+    try {
+      renderLogs(await api('/api/admin/logs/scan', { method: 'POST' }));
+      toast(t('logs_scan_done'), 'success');
+    } catch (err) {
+      toast(err.message, 'error');
+    } finally {
+      el.logsScanBtn.disabled = false;
+      setElementText(el.logsScanBtn, t('btn_logs_scan'));
+    }
+  });
+
   // ---------------- Notepad ----------------
 
   let notepadSaveTimer = null;
@@ -3375,6 +3700,7 @@
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
       if (closeTopmostModal()) return;
+      if (navOpen()) { setNav(false); return; }
       if (state.selection.size) { clearSelection(); return; }
       if (state.searchQuery.trim()) { clearSearch(); return; }
       return;

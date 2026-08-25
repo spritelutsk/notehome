@@ -5,6 +5,7 @@ const { spawn } = require('child_process');
 const multer = require('multer');
 const pool = require('../db');
 const { requireAuth, requireAdmin } = require('../auth');
+const logScan = require('../log-scan');
 
 const router = express.Router();
 
@@ -216,6 +217,47 @@ router.get('/project-zip', async (req, res, next) => {
     });
     req.on('close', () => {
       if (zipProc.exitCode === null) zipProc.kill();
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// --- Server log reports ---
+//
+// Разбор идёт сам, раз в сутки (server/log-scan.js). Эти ручки только показывают готовое
+// и позволяют перезапустить разбор руками.
+
+router.get('/logs', async (req, res, next) => {
+  try {
+    const id = req.query.id ? Number(req.query.id) : null;
+    if (id !== null && !Number.isInteger(id)) return res.status(400).json({ error: 'invalid_request' });
+
+    const entry = id === null ? await logScan.latestReport() : await logScan.reportById(id);
+    res.json({
+      // null означает «разбор ещё ни разу не проходил» — обычное состояние в первые сутки
+      // после обновления. Клиент показывает это отдельным текстом, а не пустым экраном.
+      report: entry ? entry.report : null,
+      reportId: entry ? entry.id : null,
+      history: await logScan.reportHistory(),
+      scanHour: logScan.SCAN_HOUR,
+      windowHours: logScan.WINDOW_HOURS,
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.post('/logs/scan', async (req, res, next) => {
+  try {
+    const { id, report } = await logScan.runScan();
+    // Форма ответа та же, что у GET: клиент рисует оба одной функцией.
+    res.json({
+      reportId: id,
+      report,
+      history: await logScan.reportHistory(),
+      scanHour: logScan.SCAN_HOUR,
+      windowHours: logScan.WINDOW_HOURS,
     });
   } catch (err) {
     next(err);

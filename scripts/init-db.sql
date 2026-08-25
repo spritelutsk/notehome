@@ -63,3 +63,17 @@ CREATE TABLE IF NOT EXISTS admin_notepad (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT IGNORE INTO admin_notepad (id, content, updated_at) VALUES (1, '', NOW());
+
+-- Отчёты ежедневного разбора журналов сервера (server/log-scan.js). `report` — весь отчёт
+-- как JSON: разделы и примеры строк меняются вместе с кодом, и раскладывать их по колонкам
+-- значило бы менять схему при каждой правке разбора.
+CREATE TABLE IF NOT EXISTS log_reports (
+  id          INT AUTO_INCREMENT PRIMARY KEY,
+  created_at  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  window_from DATETIME NOT NULL,
+  window_to   DATETIME NOT NULL,
+  level       VARCHAR(10) NOT NULL,
+  alerts      INT NOT NULL DEFAULT 0,
+  warnings    INT NOT NULL DEFAULT 0,
+  report      MEDIUMTEXT NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
