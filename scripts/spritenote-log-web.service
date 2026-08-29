@@ -1,0 +1,21 @@
+[Unit]
+Description=Пакетный журнал веб-портов 80/443 (nftables)
+Documentation=file:///home/YOUR-USER/app/docs/web-access-log.md
+# Загружаться до того, как поднимется сеть и nginx начнёт принимать соединения:
+# иначе первые подключения после перезагрузки в журнал не попадут.
+After=network-pre.target
+Before=network.target nginx.service
+Wants=network-pre.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+# Файл сам сносит свою таблицу перед созданием, поэтому повторный запуск и reload
+# безопасны: правила не накапливаются, а заменяются целиком.
+ExecStart=/usr/sbin/nft -f /etc/nftables.d/log-web.nft
+ExecReload=/usr/sbin/nft -f /etc/nftables.d/log-web.nft
+# Снимаем только свою таблицу. Цепочки Tailscale живут в table ip filter и не задеваются.
+ExecStop=/usr/sbin/nft delete table inet log_web
+
+[Install]
+WantedBy=multi-user.target

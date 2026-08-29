@@ -1,0 +1,22 @@
+# Ротация пакетного журнала веб-портов.
+#
+# Логи nginx (в том числе новые web-*.log) уже накрыты /etc/logrotate.d/nginx правилом
+# /var/log/nginx/*.log — их здесь нет намеренно. Этот файл только про nftables-web.log,
+# который лежит вне каталога nginx и пишется через rsyslog.
+#
+# Ежедневно и 14 копий — как у nginx, чтобы глубина журналов совпадала и «за прошлую
+# неделю» означало одно и то же в обоих местах.
+
+/var/log/nftables-web.log {
+	daily
+	rotate 14
+	missingok
+	notifempty
+	compress
+	delaycompress
+	create 0640 root adm
+	sharedscripts
+	postrotate
+		/usr/lib/rsyslog/rsyslog-rotate
+	endscript
+}

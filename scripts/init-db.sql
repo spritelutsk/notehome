@@ -63,3 +63,30 @@ CREATE TABLE IF NOT EXISTS admin_notepad (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT IGNORE INTO admin_notepad (id, content, updated_at) VALUES (1, '', NOW());
+
+-- Отчёты ежедневного разбора журналов сервера (server/log-scan.js). `report` — весь отчёт
+-- как JSON: разделы и примеры строк меняются вместе с кодом, и раскладывать их по колонкам
+-- значило бы менять схему при каждой правке разбора.
+CREATE TABLE IF NOT EXISTS log_reports (
+  id          INT AUTO_INCREMENT PRIMARY KEY,
+  created_at  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  window_from DATETIME NOT NULL,
+  window_to   DATETIME NOT NULL,
+  level       VARCHAR(10) NOT NULL,
+  alerts      INT NOT NULL DEFAULT 0,
+  warnings    INT NOT NULL DEFAULT 0,
+  report      MEDIUMTEXT NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Журнал удалённого доступа (server/remote.js): кто, к кому, в каком режиме и чем кончилось.
+-- Единственный след согласия — сам сеанс идёт между браузерами напрямую, сервер его не видит.
+-- Одноразовый пароль RustDesk сюда не пишется никогда.
+CREATE TABLE IF NOT EXISTS remote_access_log (
+  id         INT AUTO_INCREMENT PRIMARY KEY,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  viewer_id  INT NOT NULL,
+  target_id  INT NOT NULL,
+  mode       VARCHAR(20) NOT NULL,
+  event      VARCHAR(20) NOT NULL,
+  INDEX idx_remote_access_created (created_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

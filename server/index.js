@@ -9,9 +9,12 @@ const authRoutes = require('./routes/auth');
 const nodesRoutes = require('./routes/nodes');
 const adminRoutes = require('./routes/admin');
 const { attachTerminal } = require('./terminal');
+const { attachRemote } = require('./remote');
+const { attachWsRouter } = require('./ws-router');
 const { ensureSchema } = require('./schema');
 const { startTrashPurge } = require('./trash');
 const { startLinkCheck } = require('./link-check');
+const { startLogScan } = require('./log-scan');
 
 const app = express();
 
@@ -104,9 +107,14 @@ ensureSchema()
     const server = app.listen(PORT, HOST, () => {
       console.log(`SpriteNote server listening on ${HOST}:${PORT}`);
     });
+    // Диспетчер поднимается первым: он владеет единственным обработчиком 'upgrade',
+    // а attachTerminal/attachRemote только регистрируют в нём свои пути.
+    attachWsRouter(server);
     attachTerminal(server);
+    attachRemote(server);
     startTrashPurge();
     startLinkCheck();
+    startLogScan();
   })
   .catch((err) => {
     console.error('Failed to prepare the database schema:', err);

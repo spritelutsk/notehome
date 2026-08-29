@@ -26,12 +26,18 @@ server/
 ├── schema.js         ensureSchema(): доколонки для уже развёрнутых БД
 ├── auth.js           куки-сессии, requireAuth / requireAdmin
 ├── user-settings.js  спецификация пользовательских настроек (SETTINGS_SPEC)
+├── ws-router.js      единственный владелец события upgrade: путь, Origin, кука, права
 ├── terminal.js       веб-терминал: WebSocket + node-pty, только админ
+├── remote.js         удалённый доступ: кто на сайте, согласие, обмен SDP/ICE
+├── ice-servers.js    список STUN/TURN и временные реквизиты к нему (свой coturn)
 ├── link-summary.js   «Кратко о ссылке»: безопасный fetch + вызов claude CLI
+├── link-check.js     проверка живости ссылок тем же safeFetch
+├── trash.js          вынос корзины: узлы старше месяца удаляются насовсем
+├── log-scan.js       ежедневный разбор журналов сервера в отчёт для вкладки «Логи»
 └── routes/
     ├── auth.js       регистрация, вход, пароль, настройки, удаление аккаунта
     ├── nodes.js      CRUD дерева, move, export/import, link-summary
-    └── admin.js      пользователи, файловый менеджер, .zip проекта, блокнот
+    └── admin.js      пользователи, файловый менеджер, .zip проекта, блокнот, отчёты по логам
 public/
 ├── index.html        вся разметка приложения, включая модалки
 ├── css/style.css     единственный стиль-файл
@@ -41,8 +47,15 @@ scripts/
 ├── init-db.sql       схема БД для свежей установки
 ├── spritenote.service           пример systemd-юнита приложения
 ├── nginx-spritenote.conf        пример конфига nginx: TLS + security headers + WS
-├── nginx-spritenote-funnel.conf vhost для доступа снаружи через Tailscale Funnel (TLS у Tailscale)
+├── nginx-spritenote-funnel.conf vhost для доступа снаружи через Tailscale Funnel (TLS у Tailscale);
 ├── nginx-websocket-map.conf     map $http_upgrade → $connection_upgrade, общий для обоих vhost
+├── nginx-spritenote-lan.conf    vhost для локальной сети: только отсюда доступна админка
+├── turnserver-spritenote.conf   дополнение к /etc/turnserver.conf: свой STUN/TURN для просмотра экрана
+├── nftables-rustdesk-ws.nft     WebSocket-порты CortenDesk (21118/21119) — только с петли
+├── spritenote-rustdesk-ws.service  юнит, который грузит это правило до hbbs/hbbr
+├── duckdns-update.sh/.service/.timer      обновление A-записи DuckDNS по таймеру
+├── duckdns-acme-auth.sh/-cleanup.sh       хуки DNS-01 для Let's Encrypt (пути прописаны в /etc/letsencrypt)
+└── import-notes-sdb.js          разовый импорт из старой базы notes.sdb, не часть приложения
 ├── duckdns-update.sh/.service/.timer      обновление A-записи DuckDNS по таймеру
 ├── duckdns-acme-auth.sh/-cleanup.sh       хуки DNS-01 для Let's Encrypt (пути прописаны в /etc/letsencrypt)
 └── import-notes-sdb.js          разовый импорт из старой базы notes.sdb, не часть приложения
@@ -52,10 +65,14 @@ docs/                 подробности по крупным модулям 
 Подробнее по модулям:
 
 - [docs/data-model.md](docs/data-model.md) — таблицы, дерево, настройки пользователя
+- [docs/remote-access.md](docs/remote-access.md) — просмотр экрана, свой STUN/TURN, согласие, стыковка с CortenDesk
 - [docs/frontend.md](docs/frontend.md) — устройство SPA, иконки, состояние
 - [docs/import-export.md](docs/import-export.md) — формат JSON и правило «без дублей»
 - [docs/link-summary.md](docs/link-summary.md) — защита от SSRF и вызов `claude`
 - [docs/admin-and-terminal.md](docs/admin-and-terminal.md) — админка и веб-терминал
+- [docs/backup.md](docs/backup.md) — ночная копия базы и документов
+- [docs/web-access-log.md](docs/web-access-log.md) — журнал обращений на 80 и 443
+- [docs/log-scan.md](docs/log-scan.md) — ежедневный разбор этих журналов и вкладка «Логи»
 - `docs/sessions/` — журнал рабочих сессий; лежит только на рабочей машине, в git не уходит
   (см. `.gitignore`): там инфраструктура конкретного сервера, а не проект
 
@@ -96,7 +113,12 @@ docs/                 подробности по крупным модулям 
 - **Веб-терминал — это полноценный shell от имени пользователя приложения.** Он не в песочнице.
   Файловый менеджер админки тоже видит всю файловую систему, а не только проект.
 - **Схема БД в двух местах.** Свежая установка берёт `scripts/init-db.sql`, уже развёрнутая —
-  `server/schema.js`. Добавляя колонку, правьте **оба**, иначе прод и новая установка разъедутся.
+  `server/schema.js`. Добавляя колонку или таблицу, правьте **оба**, иначе прод и новая
+  установка разъедутся.
+- **Разбору журналов нужна группа `adm`.** Файлы в `/var/log/nginx` и `/var/log/nftables-web.log`
+  лежат с правами `640 root:adm`, и пользователь юнита обязан быть в этой группе. Выпадение
+  из неё не молчит: недоступный источник виден отдельным разделом отчёта и красит его жёлтым —
+  но заметит это только тот, кто открыл вкладку. См. [docs/log-scan.md](docs/log-scan.md).
 
 ## Как запускать и проверять
 
@@ -104,6 +126,7 @@ docs/                 подробности по крупным модулям 
 npm start                     # слушает HOST:PORT из .env, по умолчанию 127.0.0.1:3000
 sudo systemctl restart spritenote     # на этой Pi приложение крутится юнитом
 journalctl -u spritenote -f           # логи
+
 ```
 
 Автотестов в проекте нет. Проверка серверных изменений — поднять экземпляр на отдельной БД
