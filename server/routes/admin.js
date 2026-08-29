@@ -4,6 +4,7 @@ const fs = require('fs');
 const { spawn } = require('child_process');
 const multer = require('multer');
 const pool = require('../db');
+const { presenceSnapshot } = require('../remote');
 const { requireAuth, requireAdmin } = require('../auth');
 const logScan = require('../log-scan');
 
@@ -59,12 +60,19 @@ router.get('/users', async (req, res, next) => {
       GROUP BY u.id, u.email, u.is_admin, u.created_at
       ORDER BY u.created_at
     `);
+    // Кто сейчас на сайте. Считается по живым WebSocket-соединениям вкладки «Удалённый
+    // доступ», а не по строкам в `sessions`: сессия живёт месяц и говорит лишь о том, что
+    // человек когда-то вошёл, а не о том, что он здесь прямо сейчас.
+    const live = presenceSnapshot();
     res.json({
       users: rows.map((r) => ({
         id: r.id,
         email: r.email,
         isAdmin: !!r.is_admin,
         createdAt: r.created_at,
+        online: !!live[r.id],
+        tabs: live[r.id] ? live[r.id].tabs : 0,
+        onlineSince: live[r.id] ? live[r.id].since : null,
         bytesUsed: Number(r.bytes_used),
       })),
     });

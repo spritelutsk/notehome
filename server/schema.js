@@ -15,6 +15,18 @@ const ADDED_TABLES = [
      warnings    INT NOT NULL DEFAULT 0,
      report      MEDIUMTEXT NOT NULL
    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4`,
+
+  // Кто к кому подключался по удалённому доступу. Единственный след согласия: сам сеанс идёт
+  // между браузерами напрямую, сервер его не видит. Одноразовый пароль CortenDesk сюда не пишется.
+  `CREATE TABLE IF NOT EXISTS remote_access_log (
+     id         INT AUTO_INCREMENT PRIMARY KEY,
+     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+     viewer_id  INT NOT NULL,
+     target_id  INT NOT NULL,
+     mode       VARCHAR(20) NOT NULL,
+     event      VARCHAR(20) NOT NULL,
+     INDEX idx_remote_access_created (created_at)
+   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4`,
 ];
 
 // Наличие колонки проверяется по information_schema, а не через `ADD COLUMN IF NOT EXISTS`:

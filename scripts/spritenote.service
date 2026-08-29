@@ -2,15 +2,34 @@
 Description=SpriteNote web app (Node.js + Express)
 After=network-online.target mariadb.service
 Wants=network-online.target
-Requires=mariadb.service
+
+# Wants=, а не Requires=. Requires= выглядит правильнее — «без базы приложение бессмысленно», —
+# но у него есть неочевидное следствие: когда база падает, systemd гасит и приложение, а такую
+# остановку считает штатной, поэтому Restart=always не срабатывает. Приложение остаётся лежать
+# до прихода человека, даже когда база давно вернулась.
+#
+# Так и случилось 26 августа 2026: у базы datadir на внешнем USB-диске, диск отвалился от
+# просадки питания и вернулся через секунду, но сайт отдавал 502 ещё 2 часа 50 минут.
+#
+# С Wants= база по-прежнему поднимается вместе с приложением, но её падение больше не убивает
+# его насовсем: пул mysql2 переподключается сам, когда база возвращается.
+Wants=mariadb.service
+
+# Если datadir базы (или сам проект) лежит на съёмном диске — раскомментируйте и укажите точку
+# монтирования. Тогда каждая попытка старта заодно смонтирует вернувшийся диск.
+# RequiresMountsFor=/srv/имя-точки-монтирования
+
+# Снимает лимит «5 попыток за 10 секунд»: без этого systemd сдаётся и больше не пробует,
+# а диска или базы может не быть и полчаса.
+StartLimitIntervalSec=0
 
 [Service]
 Type=simple
-User=sprite_lutsk1
-WorkingDirectory=/home/sprite_lutsk1/app
-ExecStart=/opt/nodejs/bin/node server/index.js
+User=sergey
+WorkingDirectory=/home/sergey/Documents/note
+ExecStart=/usr/bin/node server/index.js
 Restart=always
-RestartSec=3
+RestartSec=10
 Environment=NODE_ENV=production
 
 [Install]

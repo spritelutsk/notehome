@@ -135,6 +135,7 @@
         <button class="tab-btn active" data-view="explorer" data-t="tab_explorer">Проводник</button>
         <button class="tab-btn" data-view="help" id="tab-help" data-t="tab_help">Инструкция</button>
         <button class="tab-btn" data-view="trash" id="tab-trash" data-t="tab_trash">Корзина</button>
+        <button class="tab-btn" data-view="remote" id="tab-remote" data-t="tab_remote">Удалённый доступ</button>
         <button class="tab-btn hidden" data-view="admin" id="tab-admin" data-t="tab_admin">Панель управления</button>
         <button class="tab-btn hidden" data-view="logs" id="tab-logs" data-t="tab_logs">Логи</button>
         <button class="tab-btn hidden" data-view="notepad" id="tab-notepad" data-t="tab_notepad">Блокнот</button>
@@ -389,6 +390,7 @@
             <thead><tr><th data-t="help_th_button">Кнопка</th><th data-t="help_th_does">Что делает</th></tr></thead>
             <tbody>
               <tr><td data-t="help_admin_tab">Вкладка «Панель управления»</td><td data-t="help_admin_tab_desc">Список пользователей с ролью, объёмом данных и датой регистрации, а также файловый менеджер сервера.</td></tr>
+              <tr><td data-t="help_admin_online">Столбец «На сайте»</td><td data-t="help_admin_online_desc">Показывает, кто открыл сайт прямо сейчас, и сколько у него вкладок. Считается по живым соединениям, а не по сессиям: сессия живёт месяц и говорит лишь о том, что человек когда-то вошёл. Столбец обновляется сам, пока вкладка открыта.</td></tr>
               <tr><td data-t="help_admin_role">Сделать админом / Снять права админа</td><td data-t="help_admin_role_desc">Меняет роль пользователя. Сняв права с себя, вы сразу теряете доступ к вкладкам администратора.</td></tr>
               <tr><td data-icon="download" data-t="btn_download_project">Скачать проект (.zip)</td><td data-t="help_admin_zip_desc">Отдаёт архив с исходным кодом приложения.</td></tr>
               <tr><td data-icon="arrowUp" data-t="btn_up">Наверх</td><td data-t="help_admin_up_desc">Переходит на уровень выше в файловом менеджере сервера. Неактивна в корне файловой системы.</td></tr>
@@ -432,6 +434,23 @@
           </tbody>
         </table>
 
+        <div class="section-title" data-t="help_remote_title">Удалённый доступ</div>
+        <p data-t-html="help_remote_lead">На вкладке <b>«Удалённый доступ»</b> видно, кто сейчас на&nbsp;сайте. Подключение начинается только после того, как человек его разрешил&nbsp;— обойти согласие не&nbsp;может никто, включая администратора.</p>
+        <table class="help-table">
+          <tbody>
+            <tr><td data-t="help_remote_watch">Смотреть экран</td><td data-t-html="help_remote_watch_desc">Работает в&nbsp;браузере, ставить ничего не&nbsp;нужно. Показывается весь экран; браузер попросит это подтвердить&nbsp;— убрать его запрос страница не&nbsp;может. Управлять его компьютером <b>нельзя</b>&nbsp;— браузер такого не&nbsp;умеет.</td></tr>
+            <tr><td data-t="help_remote_control">Управлять</td><td data-t-html="help_remote_control_desc">Настоящее управление мышью и клавиатурой. Работает через внешнее ПО для удалённого доступа, которое должно быть установлено на обеих машинах — Windows или Linux. SpriteNote только сводит стороны: после согласия он показывает идентификатор и одноразовый пароль.</td></tr>
+            <tr><td data-t="help_remote_notify">Запрос в фоне</td><td data-t-html="help_remote_notify_desc">Если вкладка свёрнута, о запросе скажет уведомление системы&nbsp;— оно видно поверх других окон&nbsp;— и мигающий заголовок вкладки со звуком. Разрешение на уведомления браузер спросит при первом открытии этой вкладки; без него остаётся заголовок. Разрешать доступ всё равно нужно <b>здесь</b>, а не в уведомлении.</td></tr>
+            <tr><td data-t="help_remote_id">Идентификатор CortenDesk</td><td data-t-html="help_remote_id_desc">Живёт в&nbsp;окне <b>«Аккаунт»</b> и&nbsp;подставляется в&nbsp;подтверждение, когда управлять просят вас. Переносить девять цифр глазами обычно не&nbsp;нужно: в&nbsp;пустое поле сайт подставляет ID сам, узнав у&nbsp;своего сервера, кто регистрировался с&nbsp;этого адреса. Работает это в&nbsp;домашней сети; в&nbsp;остальных случаях впишите ID руками из&nbsp;окна CortenDesk «Ваш ID».</td></tr>
+            <tr><td data-t="help_remote_open">Окно управления</td><td data-t-html="help_remote_open_desc">Как&nbsp;только&nbsp;вторая&nbsp;сторона&nbsp;согласилась&nbsp;и&nbsp;передала&nbsp;пароль,&nbsp;SpriteNote&nbsp;открывает&nbsp;экран&nbsp;сам.&nbsp;Если&nbsp;настроена&nbsp;своя&nbsp;веб-консоль&nbsp;—&nbsp;вкладкой&nbsp;прямо&nbsp;в&nbsp;браузере,&nbsp;ставить&nbsp;ничего&nbsp;не&nbsp;надо;&nbsp;если&nbsp;нет&nbsp;—&nbsp;установленным&nbsp;<b>CortenDesk</b>&nbsp;по&nbsp;ссылке.&nbsp;Автоматический&nbsp;переход&nbsp;браузер&nbsp;вправе&nbsp;не&nbsp;пустить,&nbsp;поэтому&nbsp;рядом&nbsp;всегда&nbsp;есть&nbsp;кнопка,&nbsp;а&nbsp;под&nbsp;реквизитами&nbsp;—&nbsp;готовая&nbsp;команда.&nbsp;Панель&nbsp;может&nbsp;сообщить,&nbsp;что&nbsp;программа&nbsp;не&nbsp;открылась:&nbsp;это&nbsp;догадка,&nbsp;а&nbsp;не&nbsp;проверка&nbsp;—&nbsp;узнать&nbsp;со&nbsp;страницы,&nbsp;что&nbsp;установлено&nbsp;на&nbsp;машине,&nbsp;браузер&nbsp;не&nbsp;даёт.&nbsp;Программа&nbsp;на&nbsp;месте&nbsp;—&nbsp;нажмите&nbsp;«Он&nbsp;установлен»,&nbsp;и&nbsp;сообщение&nbsp;уйдёт.</td></tr>
+            <tr><td data-t="help_remote_fullscreen">На весь экран</td><td data-t="help_remote_fullscreen_desc">Кнопка в&nbsp;полосе над чужим экраном разворачивает окно просмотра во&nbsp;весь монитор. Полоса с&nbsp;кнопкой «Завершить» остаётся видна. Выйти можно той же&nbsp;кнопкой или клавишей Esc.</td></tr>
+            <tr><td data-t="help_remote_server">Свой сервер CortenDesk</td><td data-t-html="help_remote_server_desc">На&nbsp;этом же Raspberry&nbsp;Pi поднят <b>CortenDesk Server OSS</b>&nbsp;— тот, что раздаёт идентификаторы и&nbsp;сводит стороны. Адрес и&nbsp;ключ показаны на&nbsp;вкладке «Удалённый доступ», их надо один раз вписать в&nbsp;CortenDesk на&nbsp;каждой машине: «Настройки»&nbsp;→ «Сеть». После этого управление не&nbsp;выходит за&nbsp;пределы дома и&nbsp;не&nbsp;идёт через публичные серверы.</td></tr>
+            <tr><td data-t="help_remote_outside">Управление из интернета</td><td data-t-html="help_remote_outside_desc">Порты своего сервера наружу не открыты и открыть их нельзя&nbsp;— провайдер держит нас за&nbsp;CGNAT. Поэтому снаружи CortenDesk ходит на&nbsp;тот же адрес, что и&nbsp;сайт, по&nbsp;защищённому сокету. Возьмите на&nbsp;вкладке вариант <b>«Из&nbsp;интернета»</b> и&nbsp;включите в&nbsp;CortenDesk «Настройки»&nbsp;→ «Сеть»&nbsp;→ <b>«Использовать WebSocket»</b>. В&nbsp;локальной сети и&nbsp;через Tailscale галочка не&nbsp;нужна: там связь идёт напрямую и&nbsp;быстрее.</td></tr>
+            <tr><td data-t="help_remote_https">Только по https</td><td data-t="help_remote_https_desc">Показ экрана требует защищённого соединения: по&nbsp;обычному http браузер его запретит, и&nbsp;вкладка об&nbsp;этом предупредит. Управление через CortenDesk этого не&nbsp;требует&nbsp;— это отдельная программа.</td></tr>
+            <tr><td data-t="help_remote_where">Откуда виден экран</td><td data-t="help_remote_where_desc">Показ экрана работает между устройствами домашней сети и&nbsp;между устройствами тайлнета. Снаружи, без Tailscale, картинки не&nbsp;будет: видео ищет прямой путь между браузерами, а&nbsp;снаружи его нет. Управление через CortenDesk работает отовсюду.</td></tr>
+          </tbody>
+        </table>
+
         <div class="section-title" data-t="help_facts_title">Полезно знать</div>
         <ul class="help-facts">
           <li data-t-html="help_fact_keys">Почти всё, что делается мышью, делается и&nbsp;с&nbsp;клавиатуры: список сочетаний&nbsp;— по клавише <kbd>?</kbd>.</li>
@@ -470,13 +489,129 @@
       <div id="trash-empty-state" class="hidden"></div>
     </div>
 
+    <!-- Удалённый доступ. Два режима с разными возможностями, и разница объясняется прямо
+         в интерфейсе: просмотр экрана работает в браузере без установки, но управлять чужой
+         машиной браузер не умеет — для этого нужен CortenDesk на обеих сторонах. -->
+    <div id="view-remote" class="panel-view hidden">
+      <h2 data-t="tab_remote">Удалённый доступ</h2>
+      <p class="panel-sub" data-t="remote_intro">Выберите, кто сейчас на&nbsp;сайте. Подключение начнётся только после того, как человек его разрешит.</p>
+
+      <div class="remote-warn hidden" id="remote-insecure" data-t-html="remote_insecure"></div>
+
+      <div class="remote-toolbar">
+        <button class="btn btn-ghost btn-small" id="remote-refresh-btn" title="Обновить" data-t-title="btn_refresh" data-icon="refresh"></button>
+        <span class="remote-status" id="remote-status">&nbsp;</span>
+      </div>
+
+      <div id="remote-users"></div>
+
+      <!-- Реквизиты своего сервера CortenDesk. Значения приходят с сервера и подставляются
+           скриптом; блока нет вовсе, если сервер не настроен. Свёрнут по умолчанию: нужен
+           один раз при настройке машины, а не в каждом сеансе. -->
+      <details class="remote-server hidden" id="remote-server">
+        <summary data-t="remote_srv_title">Свой сервер CortenDesk</summary>
+        <p class="panel-sub" data-t="remote_srv_sub">Впишите эти значения в&nbsp;CortenDesk на&nbsp;обеих машинах: «Настройки»&nbsp;→ «Сеть»&nbsp;→ «ID-сервер» и&nbsp;«Ключ». Тогда управление пойдёт через этот сервер, а&nbsp;не&nbsp;через публичные.</p>
+        <div class="remote-rd-row hidden" id="remote-srv-lan-row">
+          <span data-t="remote_srv_lan">В локальной сети</span><code id="remote-srv-lan"></code>
+          <button class="btn btn-ghost btn-small" id="remote-srv-lan-copy" data-t="btn_copy">Копировать</button>
+        </div>
+        <div class="remote-rd-row hidden" id="remote-srv-vpn-row">
+          <span data-t="remote_srv_vpn">Через Tailscale</span><code id="remote-srv-vpn"></code>
+          <button class="btn btn-ghost btn-small" id="remote-srv-vpn-copy" data-t="btn_copy">Копировать</button>
+        </div>
+        <div class="remote-rd-row hidden" id="remote-srv-wss-row">
+          <span data-t="remote_srv_wss">Из интернета</span><code id="remote-srv-wss"></code>
+          <button class="btn btn-ghost btn-small" id="remote-srv-wss-copy" data-t="btn_copy">Копировать</button>
+        </div>
+        <div class="remote-rd-row">
+          <span data-t="remote_srv_key">Ключ</span><code id="remote-srv-key"></code>
+          <button class="btn btn-ghost btn-small" id="remote-srv-key-copy" data-t="btn_copy">Копировать</button>
+        </div>
+
+        <!-- Готовая строка настройки: на дальней машине это одна вставка вместо трёх полей. -->
+        <p class="panel-sub" data-t="remote_srv_import">Быстрее&nbsp;— готовой строкой: скопируйте её, а&nbsp;в&nbsp;CortenDesk откройте «Настройки»&nbsp;→ «Сеть» и&nbsp;нажмите «Импорт конфигурации сервера из&nbsp;буфера обмена».</p>
+        <div class="remote-rd-row">
+          <span data-t="remote_srv_config">Настройка</span>
+          <button class="btn btn-ghost btn-small hidden" id="remote-srv-cfg-lan" data-t="remote_srv_lan">В локальной сети</button>
+          <button class="btn btn-ghost btn-small hidden" id="remote-srv-cfg-vpn" data-t="remote_srv_vpn">Через Tailscale</button>
+          <button class="btn btn-ghost btn-small hidden" id="remote-srv-cfg-wss" data-t="remote_srv_wss">Из интернета</button>
+        </div>
+        <p class="panel-sub hidden" id="remote-srv-own-web" data-t-html="remote_srv_own_web">Своя веб-консоль уже настроена на&nbsp;этот сервер, импортировать в&nbsp;неё ничего не&nbsp;нужно. Панель управления консолью лежит отдельно и&nbsp;нужна администратору. Вход в&nbsp;неё свой, не&nbsp;от&nbsp;SpriteNote.</p>
+        <!-- Панель управления консолью — только администратору: у обычного пользователя
+             учётка в консоли есть, но панель ему не откроется, и звать его туда значило бы
+             звать в закрытую дверь. -->
+        <div class="remote-rd-row hidden" id="remote-srv-admin-row">
+          <span data-t="remote_srv_admin">Панель консоли</span><code id="remote-srv-admin-url"></code>
+          <button class="btn btn-ghost btn-small" id="remote-srv-admin-open" data-t="menu_open">Открыть</button>
+        </div>
+        <p class="panel-sub hidden" id="remote-srv-wss-note" data-t-html="remote_srv_wss_note">Вариант «Из&nbsp;интернета» работает только вместе с&nbsp;галочкой <b>«Использовать WebSocket»</b> в&nbsp;«Настройки»&nbsp;→ «Сеть». Нужен CortenDesk 1.4 или новее. Связь тогда идёт через ретранслятор, а&nbsp;не&nbsp;напрямую, поэтому в&nbsp;локальной сети и&nbsp;тайлнете лучше первые два варианта.</p>
+      </details>
+
+      <!-- Экран собеседника. Держится вне списка, чтобы обновление присутствия не трогало видео. -->
+      <div id="remote-stage" class="remote-stage hidden">
+        <div class="remote-stage-bar">
+          <span id="remote-stage-title">&nbsp;</span>
+          <span class="remote-stage-actions">
+            <button class="btn btn-ghost btn-small" id="remote-fullscreen-btn" data-t="remote_fullscreen">На весь экран</button>
+            <button class="btn btn-ghost btn-small btn-danger-ghost" id="remote-stop-btn" data-t="remote_stop">Завершить</button>
+          </span>
+        </div>
+        <video id="remote-video" autoplay playsinline muted></video>
+      </div>
+
+      <!-- Реквизиты CortenDesk, полученные от принимающей стороны. Пароль одноразовый.
+           Экран открывает своя веб-консоль, если она настроена, иначе
+           установленный CortenDesk по ссылке cortendesk://. Кнопка рядом обязательна в обоих
+           случаях: переход без жеста пользователя браузер вправе не пустить. -->
+      <div id="remote-rd-result" class="remote-rd-result hidden">
+        <h3 data-t="remote_rd_got">Данные для подключения</h3>
+        <p class="panel-sub" id="remote-rd-got-sub" data-t="remote_rd_got_sub">Окно CortenDesk открывается само. Если не&nbsp;открылось&nbsp;— нажмите «Открыть CortenDesk» или введите данные вручную.</p>
+        <div class="remote-rd-row">
+          <span data-t="remote_rd_id">ID</span><code id="remote-rd-id"></code>
+          <button class="btn btn-ghost btn-small" id="remote-rd-copy-id" data-t="btn_copy">Копировать</button>
+        </div>
+        <div class="remote-rd-row">
+          <span data-t="remote_rd_pass">Пароль</span><code id="remote-rd-pass"></code>
+          <button class="btn btn-ghost btn-small" id="remote-rd-copy" data-t="btn_copy">Копировать</button>
+        </div>
+        <div class="remote-rd-actions">
+          <button class="btn btn-primary btn-small hidden" id="remote-rd-console" data-t="remote_rd_console">Открыть веб-консоль</button>
+          <button class="btn btn-primary btn-small" id="remote-rd-open" data-t="remote_rd_open">Открыть CortenDesk</button>
+          <button class="btn btn-ghost btn-small" id="remote-rd-close" data-t="btn_close">Закрыть</button>
+        </div>
+
+        <!-- Предложение установить. Показывается только после явного нажатия «Открыть
+             CortenDesk», у которого страница не потеряла фокус, — то есть по догадке, а не по
+             факту: спросить систему про обработчик схемы браузер не даёт. Отсюда и
+             «похоже» в тексте. -->
+        <div class="remote-rd-missing hidden" id="remote-rd-missing">
+          <p data-t="remote_rd_missing">Похоже, CortenDesk на&nbsp;этой машине не&nbsp;установлен: окно не&nbsp;открылось.</p>
+          <div class="remote-rd-actions">
+            <button class="btn btn-ghost btn-small" id="remote-rd-missing-hide" data-t="remote_rd_missing_hide">Он установлен</button>
+          </div>
+          <p class="field-hint" data-t-html="remote_rd_missing_note">После установки один раз впишите свой сервер: раскройте <b>«Свой сервер CortenDesk»</b> на&nbsp;этой вкладке и&nbsp;скопируйте готовую строку настройки. Без этого CortenDesk пойдёт через публичные серверы.</p>
+        </div>
+
+        <!-- Показывается всегда, а не по таймеру: узнать со страницы, открылось ли внешнее
+             приложение, нельзя, поэтому вместо угадывания даётся запасной путь. -->
+        <div class="remote-rd-fallback">
+          <p data-t-html="remote_rd_fallback">Окно не&nbsp;появилось&nbsp;— значит, CortenDesk на&nbsp;этой машине не&nbsp;установлен или схема <code>cortendesk://</code> не&nbsp;зарегистрирована. То&nbsp;же самое из&nbsp;командной строки:</p>
+          <div class="remote-rd-row">
+            <code id="remote-rd-cmd"></code>
+            <button class="btn btn-ghost btn-small" id="remote-rd-copy-cmd" data-t="btn_copy">Копировать</button>
+          </div>
+        </div>
+        <p class="field-hint" data-t="remote_rd_note">Пароль одноразовый и&nbsp;действует один сеанс.</p>
+      </div>
+    </div>
+
     <!-- Admin panel view -->
     <div id="view-admin" class="panel-view hidden">
       <h2 data-t="tab_admin">Панель управления</h2>
       <p class="panel-sub" data-t="admin_view_sub">Пользователи, права и файлы сервера</p>
       <table class="data-table">
         <thead>
-          <tr><th>Email</th><th data-t="th_role">Роль</th><th data-t="th_data">Данные</th><th data-t="auth_title_register">Регистрация</th><th></th></tr>
+          <tr><th>Email</th><th data-t="th_online">На сайте</th><th data-t="th_role">Роль</th><th data-t="th_data">Данные</th><th data-t="auth_title_register">Регистрация</th><th></th></tr>
         </thead>
         <tbody id="users-table-body"></tbody>
       </table>
@@ -598,6 +733,58 @@
 </div>
 
 <!-- ============ HOTKEYS ============ -->
+<!-- Запрос доступа: это видит тот, К КОМУ хотят подключиться. Согласие обязательно
+     и для администратора тоже — обхода здесь нет ни у кого.
+
+     Форм две, и разница не косметическая. «Управлять» спрашивает модальным окном ниже:
+     выдаются мышь, клавиатура и файлы, и такое нельзя разрешать мимоходом. Показ экрана
+     спрашивает полосой: сразу следом браузер откроет свой диалог доступа к экрану, и два
+     окна согласия подряд — это одно лишнее. Кнопка в полосе всё равно обязательна:
+     getDisplayMedia() открывается только из жеста человека. -->
+<div id="remote-ask-bar" class="hidden">
+  <div class="remote-ask-bar-body">
+    <p class="remote-ask-bar-text" id="remote-ask-bar-text">&nbsp;</p>
+    <p class="remote-ask-bar-note" id="remote-ask-bar-note">&nbsp;</p>
+  </div>
+  <div class="remote-ask-bar-actions">
+    <button class="btn btn-ghost" id="remote-ask-bar-deny" data-t="remote_deny">Отклонить</button>
+    <button class="btn btn-primary" id="remote-ask-bar-show" data-t="remote_ask_show">Показать</button>
+  </div>
+</div>
+
+<div id="remote-ask-overlay" class="modal-overlay hidden">
+  <div class="modal">
+    <h2 data-t="remote_ask_title">Запрос удалённого доступа</h2>
+    <p class="modal-sub" id="remote-ask-text">&nbsp;</p>
+    <p class="remote-ask-note" id="remote-ask-note">&nbsp;</p>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="remote-ask-deny" data-t="remote_deny">Отклонить</button>
+      <button class="btn btn-primary" id="remote-ask-allow" data-t="remote_allow">Разрешить</button>
+    </div>
+  </div>
+</div>
+
+<!-- Реквизиты CortenDesk вводит принимающая сторона после согласия: пароль одноразовый,
+     выдаётся самим CortenDesk и на сервере не хранится. -->
+<div id="remote-rd-overlay" class="modal-overlay hidden">
+  <div class="modal">
+    <h2 data-t="remote_rd_title">Разрешить управление</h2>
+    <p class="modal-sub" data-t="remote_rd_sub">Откройте CortenDesk и возьмите оттуда одноразовый пароль.</p>
+    <div class="field">
+      <label for="remote-rd-id-input" data-t="remote_rd_id">ID</label>
+      <input type="text" id="remote-rd-id-input" inputmode="numeric" autocomplete="off">
+    </div>
+    <div class="field">
+      <label for="remote-rd-pass-input" data-t="remote_rd_pass">Пароль</label>
+      <input type="text" id="remote-rd-pass-input" autocomplete="off">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="remote-rd-cancel" data-t="btn_cancel">Отмена</button>
+      <button class="btn btn-primary" id="remote-rd-send" data-t="remote_rd_send">Передать</button>
+    </div>
+  </div>
+</div>
+
 <div id="hotkeys-modal-overlay" class="modal-overlay hidden">
   <div class="modal modal-wide">
     <button class="modal-close" id="hotkeys-modal-close">&times;</button>
@@ -653,6 +840,16 @@
         <option value="uk">Українська</option>
         <option value="ru">Русский</option>
       </select>
+    </div>
+
+    <!-- Идентификатор CortenDesk. Нужен только для режима управления: просмотр экрана работает
+         без него и без установки чего-либо. -->
+    <div class="field">
+      <label for="account-cortendesk" data-t="label_cortendesk">Идентификатор CortenDesk</label>
+      <input type="text" id="account-cortendesk" inputmode="numeric" autocomplete="off"
+             placeholder="например, 123456789" data-t-placeholder="cortendesk_placeholder">
+      <p class="field-hint" data-t="cortendesk_hint">Только цифры. Смотрите в окне CortenDesk: «Ваш ID».</p>
+      <p class="field-hint hidden" id="account-cortendesk-auto" data-t="cortendesk_auto">Подставлен сам: с этого адреса на нашем сервере CortenDesk зарегистрирована одна машина.</p>
     </div>
 
     <form id="password-form">

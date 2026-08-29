@@ -4,6 +4,8 @@ const fs = require('fs');
 const bcrypt = require('bcryptjs');
 const pool = require('../db');
 const { defaults: defaultSettings, parseSettings, sanitizePatch } = require('../user-settings');
+const { onUserSettingsChanged } = require('../remote');
+const { peerIdForAddress, clientAddress } = require('../cortendesk-server');
 const {
   createSession,
   destroySession,
@@ -138,11 +140,31 @@ router.put('/settings', requireAuth, async (req, res, next) => {
 
     const merged = { ...parseSettings(rows[0].settings), ...patch };
     await pool.query('UPDATE users SET settings = ? WHERE id = ?', [JSON.stringify(merged), req.user.id]);
+    // Вкладка «Удалённый доступ» показывает у каждого признак «готов к управлению», и он
+    // считается из этих настроек. Присутствие обязано узнать о правке сразу.
+    onUserSettingsChanged(req.user.id, merged);
 
     res.json({ settings: merged });
   } catch (err) {
     next(err);
   }
+});
+
+// Идентификатор CortenDesk той машины, с которой открыта страница, — чтобы человек не переносил
+// девять цифр глазами из чужого окна. Своего ID браузер не знает и знать не может, поэтому
+// смотрим в базу своего же hbbs: кто регистрировался с этого адреса.
+//
+// Ошибки здесь не бывает по определению. Нет базы, нет утилиты, адрес чужой, совпало двое —
+// всё это одно и то же «подсказки не будет», и поле просто остаётся пустым, как раньше.
+// Отвечать 500 значило бы показать человеку ошибку там, где ничего не сломалось.
+router.get('/cortendesk-id', requireAuth, async (req, res) => {
+  let id = '';
+  try {
+    id = await peerIdForAddress(clientAddress(req));
+  } catch (_) {
+    id = '';
+  }
+  res.json({ id });
 });
 
 router.put('/password', requireAuth, async (req, res, next) => {

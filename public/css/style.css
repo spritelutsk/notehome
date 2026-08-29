@@ -397,6 +397,14 @@ button {
   padding: 28px;
   box-shadow: var(--shadow-lg);
   animation: modal-in .16s var(--ease);
+
+  /* Окно «Аккаунт» переросло невысокий экран, и нижние поля стали недостижимы: страница под
+     оверлеем не прокручивается, а само окно высоту не ограничивало. Прокрутка здесь, а не у
+     оверлея, — иначе при коротком содержимом окно перестаёт стоять по центру.
+     overscroll-behavior не даёт прокрутке «провалиться» на страницу за окном. */
+  max-height: calc(100vh - 48px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 @keyframes modal-in { from { opacity: 0; transform: translateY(8px) scale(.99); } to { opacity: 1; transform: none; } }
 
@@ -1507,6 +1515,337 @@ table.data-table.log-stats td { padding: 7px 12px; font-size: var(--fs-sm); }
 .nav-toggle { display: none; }
 .nav-backdrop { display: none; }
 
+/* Зелёная точка «сейчас на сайте» в панели управления. Цвет один из четырёх базовых:
+   зелёный здесь значит ровно то же, что и везде, — всё в порядке и работает. */
+.online-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 6px;
+  border-radius: 50%;
+  background: var(--c-green);
+  vertical-align: middle;
+}
+
+/* ---------------- Удалённый доступ ---------------- */
+
+/* Подсказка под полем формы. */
+.field-hint {
+  margin: 4px 0 0;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+/* Предупреждение о незащищённом соединении: жёлтый — «работает не всё», не ошибка. */
+.remote-warn {
+  margin: 12px 0;
+  padding: 10px 12px;
+  border: 1px solid var(--c-yellow-line);
+  border-radius: var(--r-lg);
+  background: var(--c-yellow-wash);
+  color: var(--c-yellow-ink);
+  font-size: 13px;
+}
+
+.remote-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 12px 0;
+}
+
+.remote-status {
+  font-size: 13px;
+  color: var(--text-2);
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.remote-user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  margin-bottom: 8px;
+}
+
+.remote-user-icon {
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;              /* overflow:hidden у соседей обнуляет минимальный размер флекс-элемента */
+  padding: 7px;
+  border-radius: var(--r-md);
+  background: var(--c-blue-soft);
+  color: var(--c-blue-ink);
+}
+
+.remote-user-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* Адрес — данные пользователя: он может быть длинным, но не должен распирать строку. */
+.remote-user-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.remote-user-hint {
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.remote-user-actions {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+/* Пояснение в окне согласия: для режима управления оно важнее самой кнопки. */
+.remote-ask-note {
+  margin: 8px 0 4px;
+  padding: 10px 12px;
+  border-radius: var(--r-md);
+  background: var(--surface-2);
+  color: var(--text-2);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* Окно согласия на управление — по той же причине, что и полоса ниже: выше контекстного
+   меню и подсказок. Общий .modal-overlay сидит на 100 и оказался бы под ними. */
+#remote-ask-overlay { z-index: 400; }
+
+/* Полоса запроса на показ экрана — вместо модального окна намеренно. Следом за согласием
+   браузер откроет свой диалог доступа к экрану, и окно перед ним было бы вторым окном
+   согласия подряд. Кнопка здесь всё равно обязательна: getDisplayMedia() открывается только
+   из жеста человека. У режима «Управлять» окно осталось — там второго диалога нет. */
+#remote-ask-bar {
+  position: fixed;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  /* Выше всего остального на странице, включая контекстное меню (200) и всплывающие
+     подсказки (300). Запрос чужого доступа не должен оказаться под чем бы то ни было:
+     невидимый запрос — это либо пропущенный, либо разрешённый вслепую. */
+  z-index: 400;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  max-width: min(680px, calc(100vw - 24px));
+  padding: 10px 12px 10px 16px;
+  background: var(--surface);
+  border: 1px solid var(--c-blue-line);
+  border-left: 3px solid var(--c-blue);
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-lg);
+  animation: toast-in .16s var(--ease);
+}
+#remote-ask-bar .remote-ask-bar-body { flex: 1 1 260px; min-width: 0; }
+#remote-ask-bar .remote-ask-bar-text {
+  margin: 0;
+  color: var(--text);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  line-height: 1.4;
+}
+#remote-ask-bar .remote-ask-bar-note {
+  margin: 3px 0 0;
+  color: var(--text-dim);
+  font-size: 12px;
+  line-height: 1.45;
+}
+#remote-ask-bar .remote-ask-bar-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.remote-stage {
+  margin-top: 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  background: var(--surface);
+}
+
+.remote-stage-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-2);
+  font-size: 13px;
+  color: var(--text-2);
+}
+
+.remote-stage-actions {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+/* В полноэкранном режиме разворачивается контейнер, а не видео: полоса с кнопкой «Завершить»
+   остаётся на месте, иначе выйти из чужого экрана можно было бы только клавишей Esc.
+   Без явных правил браузер растянет контейнер, а видео останется прежней высоты — отсюда
+   flex-колонка и снятое ограничение max-height. Два селектора, а не один через запятую:
+   неизвестный псевдокласс в списке отменяет всё правило целиком. */
+.remote-stage:fullscreen {
+  display: flex;
+  flex-direction: column;
+  border: 0;
+  border-radius: 0;
+  background: #000;
+}
+.remote-stage:fullscreen #remote-video {
+  flex: 1;
+  min-height: 0;
+  max-height: none;
+}
+.remote-stage:-webkit-full-screen {
+  display: flex;
+  flex-direction: column;
+  border: 0;
+  border-radius: 0;
+  background: #000;
+}
+.remote-stage:-webkit-full-screen #remote-video {
+  flex: 1;
+  min-height: 0;
+  max-height: none;
+}
+
+/* Чёрная подложка под видео — исключение из палитры, но осознанное: любой другой фон
+   виден полосами по краям чужого экрана, пропорции которого мы не знаем заранее. */
+#remote-video {
+  display: block;
+  width: 100%;
+  max-height: 70vh;
+  background: #000;
+  object-fit: contain;
+}
+
+/* Реквизиты своего сервера удалённого доступа. <details>, потому что нужны один раз при настройке
+   машины: в каждом сеансе они только занимали бы место над списком людей. */
+.remote-server {
+  margin: 14px 0;
+  padding: 12px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--surface-2);
+}
+
+.remote-server > summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.remote-server .panel-sub {
+  margin: 10px 0;
+}
+
+/* Ключ длиннее строки на узком экране — переносим по любому месту, панель не растягиваем. */
+.remote-server .remote-rd-row code {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.remote-rd-result {
+  margin-top: 14px;
+  padding: 14px 16px;
+  border: 1px solid var(--c-green-line);
+  border-radius: var(--r-lg);
+  background: var(--c-green-wash);
+}
+
+.remote-rd-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 6px 0;
+}
+
+.remote-rd-row span {
+  min-width: 70px;
+  color: var(--text-2);
+  font-size: 13px;
+}
+
+.remote-rd-row code {
+  padding: 4px 10px;
+  border-radius: var(--r-md);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  font-size: 15px;
+  user-select: all;            /* реквизиты набирают в другом окне — выделение одним кликом */
+}
+
+/* Ряд кнопок под реквизитами: на узком экране переносится, ссылка на веб-клиент выглядит
+   такой же кнопкой, как остальные. */
+.remote-rd-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+/* Предложение установить ПО для удалённого доступа. Жёлтый, а не красный: это догадка и подсказка, а не
+   ошибка — программа вполне может быть на месте, просто фокус не ушёл. */
+.remote-rd-missing {
+  margin-top: 12px;
+  padding: 12px;
+  border: 1px solid var(--c-yellow-line);
+  border-radius: var(--r-md);
+  background: var(--c-yellow-wash);
+  font-size: 13px;
+  color: var(--text);
+}
+
+.remote-rd-missing .remote-rd-actions {
+  margin-top: 8px;
+}
+
+/* Запасной путь: команда для терминала и объяснение, почему окно могло не открыться.
+   Отделён линией, потому что читают его только тогда, когда основной путь не сработал. */
+.remote-rd-fallback {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--c-green-line);
+  font-size: 13px;
+  color: var(--text-2);
+}
+
+.remote-rd-fallback code {
+  padding: 2px 6px;
+  border-radius: var(--r-sm);
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+
+/* Команда длиннее строки — переносим по словам, а не растягиваем панель. */
+.remote-rd-fallback .remote-rd-row code {
+  flex: 1;
+  min-width: 0;
+  padding: 4px 10px;
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
 @media (max-width: 640px) {
   /* Верхняя панель в две строки: логотип с кнопками сверху, вкладки отдельной полосой.
      Пять вкладок в одну строку с логотипом и почтой не помещаются никак. */
@@ -1621,6 +1960,14 @@ table.data-table.log-stats td { padding: 7px 12px; font-size: var(--fs-sm); }
 
 /* Пальцем в кнопку 26 пикселей не попасть. Правило по указателю, а не по ширине экрана:
    планшет и сенсорный ноутбук тоже про касание, хотя места на них достаточно. */
+@media (max-width: 640px) {
+  .remote-user { flex-wrap: wrap; }
+  .remote-user-main { flex-basis: calc(100% - 46px); }
+  .remote-user-actions { width: 100%; }
+  .remote-user-actions .btn { flex: 1; }
+  #remote-video { max-height: 50vh; }
+}
+
 @media (hover: none) and (pointer: coarse) {
   .icon-btn, .tab-btn, .view-mode-btn, .btn-small { min-height: 40px; }
   .tree-row { padding-top: 9px; padding-bottom: 9px; }

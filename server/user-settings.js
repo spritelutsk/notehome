@@ -13,6 +13,10 @@ const SETTINGS_SPEC = {
   // Interface language. Only the chrome is translated — folder names, page text and uploaded
   // documents are the user's own data and stay exactly as they were typed.
   language: { default: 'uk', values: ['uk', 'ru'] },
+  // Идентификатор в CortenDesk — для режима управления в «Удалённом доступе». Не перечисление,
+  // а строка по образцу, поэтому у неё `pattern` вместо `values`. Пустая строка допустима:
+  // это состояние «управление не настроено», и оно же значение по умолчанию.
+  cortendeskId: { default: '', pattern: /^\d{6,16}$/ },
 };
 
 function defaults() {
@@ -23,7 +27,12 @@ function defaults() {
 
 function isValid(key, value) {
   const spec = SETTINGS_SPEC[key];
-  return !!spec && spec.values.includes(value);
+  if (!spec) return false;
+  if (spec.values) return spec.values.includes(value);
+  // Строка по образцу. Пустая строка означает «не задано» и разрешена всегда — иначе настройку
+  // нельзя было бы очистить, только переписать на другую.
+  if (spec.pattern) return typeof value === 'string' && (value === '' || spec.pattern.test(value));
+  return false;
 }
 
 // Turn a raw `users.settings` column into a complete settings object. Anything unparseable,

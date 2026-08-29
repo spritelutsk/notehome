@@ -77,3 +77,16 @@ CREATE TABLE IF NOT EXISTS log_reports (
   warnings    INT NOT NULL DEFAULT 0,
   report      MEDIUMTEXT NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Журнал удалённого доступа (server/remote.js): кто, к кому, в каком режиме и чем кончилось.
+-- Единственный след согласия — сам сеанс идёт между браузерами напрямую, сервер его не видит.
+-- Одноразовый пароль RustDesk сюда не пишется никогда.
+CREATE TABLE IF NOT EXISTS remote_access_log (
+  id         INT AUTO_INCREMENT PRIMARY KEY,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  viewer_id  INT NOT NULL,
+  target_id  INT NOT NULL,
+  mode       VARCHAR(20) NOT NULL,
+  event      VARCHAR(20) NOT NULL,
+  INDEX idx_remote_access_created (created_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

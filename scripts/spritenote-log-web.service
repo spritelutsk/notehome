@@ -10,12 +10,12 @@ Wants=network-pre.target
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-# Файл начинается с destroy table, поэтому повторный запуск и reload безопасны:
-# правила не накапливаются, а заменяются целиком.
+# Файл сам сносит свою таблицу перед созданием, поэтому повторный запуск и reload
+# безопасны: правила не накапливаются, а заменяются целиком.
 ExecStart=/usr/sbin/nft -f /etc/nftables.d/log-web.nft
 ExecReload=/usr/sbin/nft -f /etc/nftables.d/log-web.nft
 # Снимаем только свою таблицу. Цепочки Tailscale живут в table ip filter и не задеваются.
-ExecStop=/usr/sbin/nft destroy table inet log_web
+ExecStop=/usr/sbin/nft delete table inet log_web
 
 [Install]
 WantedBy=multi-user.target

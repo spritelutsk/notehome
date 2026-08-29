@@ -299,6 +299,7 @@
     label_file: ["Файл документа", "Файл документа"],
     btn_link_summary: ["Коротко про посилання Claude", "Кратко о ссылке Claude"],
     btn_cancel: ["Скасувати", "Отмена"],
+    btn_close: ["Закрити", "Закрыть"],
     btn_create: ["Створити", "Создать"],
     btn_save: ["Зберегти", "Сохранить"],
     move_title: ["Перемістити", "Переместить"],
@@ -1091,6 +1092,225 @@
       "Папка, у якій він лежав, теж у кошику — спочатку відновіть її",
       "Папка, в которой он лежал, тоже в корзине — сначала восстановите её",
     ],
+    // --- Удалённый доступ ---
+    tab_remote: ["Віддалений доступ", "Удалённый доступ"],
+    remote_intro: [
+      "Виберіть, хто зараз на сайті. Підключення почнеться лише після того, як людина його дозволить.",
+      "Выберите, кто сейчас на сайте. Подключение начнётся только после того, как человек его разрешит.",
+    ],
+    remote_insecure: [
+      "Перегляд екрана працює лише на захищеному з’єднанні. Ця сторінка відкрита по <b>http</b>, і браузер не дасть показати екран — зайдіть за адресою <b>https</b>.",
+      "Просмотр экрана работает только на защищённом соединении. Эта страница открыта по <b>http</b>, и браузер не даст показать экран — зайдите по адресу <b>https</b>.",
+    ],
+    remote_nobody: ["Зараз більше нікого немає на сайті.", "Сейчас больше никого нет на сайте."],
+    remote_watch: ["Дивитись екран", "Смотреть экран"],
+    remote_control: ["Керувати", "Управлять"],
+    remote_no_cortendesk: [
+      "Ідентифікатор для управління не збережено — введіть під час підтвердження",
+      "Идентификатор для управления не сохранён — введёт при подтверждении",
+    ],
+    remote_stop: ["Завершити", "Завершить"],
+    remote_ask_title: ["Запит віддаленого доступу", "Запрос удалённого доступа"],
+    remote_ask_screen: ["{email} просить показати ваш екран.", "{email} просит показать ваш экран."],
+    remote_ask_control: [
+      "{email} просить доступ до керування вашим комп’ютером.",
+      "{email} просит доступ к управлению вашим компьютером.",
+    ],
+    remote_ask_note_screen: [
+      "Дозволивши, ви покажете весь екран — браузер попросить це підтвердити. Керувати вашим комп’ютером не зможуть, тільки бачити.",
+      "Разрешив, вы покажете весь экран — браузер попросит это подтвердить. Управлять вашим компьютером не смогут, только видеть.",
+    ],
+    remote_ask_note_control: [
+      "Це повне керування: миша, клавіатура, файли. Дозволяйте лише тому, кому довіряєте, і будьте біля комп’ютера.",
+      "Это полное управление: мышь, клавиатура, файлы. Разрешайте только тому, кому доверяете, и будьте у компьютера.",
+    ],
+    remote_allow: ["Дозволити", "Разрешить"],
+    remote_ask_show: ["Показати", "Показать"],
+    remote_notify_tab: ["Запит доступу", "Запрос доступа"],
+    remote_deny: ["Відхилити", "Отклонить"],
+    remote_requested: ["Запит надіслано, чекаємо відповіді…", "Запрос отправлен, ждём ответа…"],
+    remote_declined: ["Запит відхилено.", "Запрос отклонён."],
+    remote_timeout: ["Відповіді не було.", "Ответа не было."],
+    remote_ended: ["Сеанс завершено.", "Сеанс завершён."],
+    remote_peer_gone: ["Співрозмовник вийшов.", "Собеседник вышел."],
+    remote_connecting: ["Підключення…", "Подключение…"],
+    remote_watching: ["Екран: {email}", "Экран: {email}"],
+    remote_sharing: ["Ви показуєте екран: {email}", "Вы показываете экран: {email}"],
+    remote_granted: ["Ви дозволили керування: {email}", "Вы разрешили управление: {email}"],
+    remote_share_cancelled: [
+      "Ви не вибрали екран — доступ не надано.",
+      "Вы не выбрали экран — доступ не предоставлен.",
+    ],
+    remote_rd_title: ["Дозволити керування", "Разрешить управление"],
+    remote_rd_sub: [
+      "Відкрийте ПО для управління і візьміть звідти одноразовий пароль.",
+      "Откройте CortenDesk и возьмите оттуда одноразовый пароль.",
+    ],
+    remote_rd_id: ["ID", "ID"],
+    remote_rd_pass: ["Пароль", "Пароль"],
+    remote_rd_send: ["Передати", "Передать"],
+    remote_rd_got: ["Дані для підключення", "Данные для подключения"],
+    remote_rd_got_sub: [
+      "Вікно CortenDesk відкривається саме. Якщо не відкрилося — натисніть «Відкрити CortenDesk» або введіть дані вручну.",
+      "Окно CortenDesk открывается само. Если не открылось — нажмите «Открыть CortenDesk» или введите данные вручную.",
+    ],
+    remote_rd_open: ["Відкрити CortenDesk", "Открыть CortenDesk"],
+    remote_rd_console: ["Відкрити вебконсоль", "Открыть веб-консоль"],
+    remote_rd_got_sub_web: [
+      "Вкладка з екраном відкривається сама. Якщо браузер її заблокував — натисніть «Відкрити вебконсоль». Пароль уже в буфері обміну.",
+      "Вкладка с экраном открывается сама. Если браузер её заблокировал — нажмите «Открыть веб-консоль». Пароль уже в буфере обмена.",
+    ],
+    remote_rd_missing: [
+      "Схоже, CortenDesk на цій машині не встановлений: вікно не відкрилося.",
+      "Похоже, CortenDesk на этой машине не установлен: окно не открылось.",
+    ],
+    remote_rd_missing_hide: ["Він встановлений", "Он установлен"],
+    remote_rd_missing_note: [
+      "Після встановлення один раз впишіть свій сервер: розгорніть <b>«Свій сервер CortenDesk»</b> на цій вкладці та скопіюйте готовий рядок налаштування. Без цього CortenDesk піде через публічні сервери.",
+      "После установки один раз впишите свой сервер: раскройте <b>«Свой сервер CortenDesk»</b> на этой вкладке и скопируйте готовую строку настройки. Без этого CortenDesk пойдёт через публичные серверы.",
+    ],
+    btn_copy: ["Копіювати", "Копировать"],
+    remote_rd_opening: ["Відкриваємо CortenDesk…", "Открываем CortenDesk…"],
+    remote_rd_copied: ["Пароль скопійовано.", "Пароль скопирован."],
+    remote_rd_id_copied: ["ID скопійовано.", "ID скопирован."],
+    remote_rd_cmd_copied: ["Команду скопійовано.", "Команда скопирована."],
+    remote_rd_fallback: [
+      "Вікно не з’явилося — отже, CortenDesk на цій машині не встановлено або схему <code>cortendesk://</code> не зареєстровано. Те саме з командного рядка:",
+      "Окно не появилось — значит, CortenDesk на этой машине не установлен или схема <code>cortendesk://</code> не зарегистрирована. То же самое из командной строки:",
+    ],
+    remote_rd_copy_failed: [
+      "Не вдалося скопіювати — виділіть і скопіюйте вручну.",
+      "Не удалось скопировать — выделите и скопируйте вручную.",
+    ],
+    remote_rd_note: [
+      "Пароль одноразовий і діє один сеанс.",
+      "Пароль одноразовый и действует один сеанс.",
+    ],
+    remote_offline: ["Немає зв’язку із сервером.", "Нет связи с сервером."],
+    remote_srv_title: ["Свій сервер CortenDesk", "Свой сервер CortenDesk"],
+    remote_srv_sub: [
+      "Впишіть ці значення в CortenDesk на обох машинах: «Налаштування» → «Мережа» → «ID-сервер» і «Ключ». Тоді керування піде через цей сервер, а не через публічні.",
+      "Впишите эти значения в CortenDesk на обеих машинах: «Настройки» → «Сеть» → «ID-сервер» и «Ключ». Тогда управление пойдёт через этот сервер, а не через публичные.",
+    ],
+    remote_srv_lan: ["У локальній мережі", "В локальной сети"],
+    remote_srv_vpn: ["Через Tailscale", "Через Tailscale"],
+    remote_srv_own_web: [
+      "Своя вебконсоль уже налаштована на цей сервер, імпортувати до неї нічого не треба. Панель керування консоллю лежить окремо й потрібна адміністраторові. Вхід до неї свій, не від SpriteNote.",
+      "Своя веб-консоль уже настроена на этот сервер, импортировать в неё ничего не нужно. Панель управления консолью лежит отдельно и нужна администратору. Вход в неё свой, не от SpriteNote.",
+    ],
+    remote_srv_admin: ["Панель консолі", "Панель консоли"],
+    remote_srv_wss: ["З інтернету", "Из интернета"],
+    remote_srv_wss_note: [
+      "Варіант «З інтернету» працює лише разом із галочкою <b>«Використовувати WebSocket»</b> у «Налаштування» → «Мережа». Потрібен CortenDesk 1.4 або новіший. Зв’язок тоді йде через ретранслятор, а не навпростець, тому в локальній мережі та тайлнеті кращі перші два варіанти.",
+      "Вариант «Из интернета» работает только вместе с галочкой <b>«Использовать WebSocket»</b> в «Настройки» → «Сеть». Нужен CortenDesk 1.4 или новее. Связь тогда идёт через ретранслятор, а не напрямую, поэтому в локальной сети и тайлнете лучше первые два варианта.",
+    ],
+    remote_srv_key: ["Ключ", "Ключ"],
+    remote_srv_config: ["Налаштування", "Настройка"],
+    remote_srv_import: [
+      "Швидше — готовим рядком: скопіюйте його, а в CortenDesk відкрийте «Налаштування» → «Мережа» і натисніть «Імпорт конфігурації сервера з буфера обміну».",
+      "Быстрее — готовой строкой: скопируйте её, а в CortenDesk откройте «Настройки» → «Сеть» и нажмите «Импорт конфигурации сервера из буфера обмена».",
+    ],
+    remote_srv_cfg_copied: [
+      "Налаштування скопійовано — імпортуйте його в CortenDesk.",
+      "Настройка скопирована — импортируйте её в CortenDesk.",
+    ],
+    remote_srv_copied: ["Скопійовано.", "Скопировано."],
+    label_cortendesk: ["Ідентифікатор CortenDesk", "Идентификатор CortenDesk"],
+    cortendesk_placeholder: ["наприклад, 123456789", "например, 123456789"],
+    cortendesk_hint: [
+      "Лише цифри. Дивіться у вікні CortenDesk: «Ваш ID».",
+      "Только цифры. Смотрите в окне CortenDesk: «Ваш ID».",
+    ],
+    cortendesk_auto: [
+      "Підставлено само: з цієї адреси на нашому сервері CortenDesk зареєстровано одну машину.",
+      "Подставлен сам: с этого адреса на нашем сервере CortenDesk зарегистрирована одна машина.",
+    ],
+    cortendesk_bad: [
+      "ID CortenDesk — тільки цифри, від 6 до 16.",
+      "ID CortenDesk — только цифры, от 6 до 16.",
+    ],
+
+    // Коды ошибок от server/remote.js. errMsg() ищет перевод по самому коду.
+    remote_bad_target: ["Так підключитися не можна.", "Так подключиться нельзя."],
+    remote_target_offline: ["Ця людина щойно вийшла.", "Этот человек только что вышел."],
+    remote_too_many_requests: [
+      "Забагато запитів поспіль — дочекайтеся відповіді.",
+      "Слишком много запросов подряд — дождитесь ответа.",
+    ],
+    remote_slow_down: ["Не так швидко.", "Не так быстро."],
+    remote_no_session: ["Сеанс уже недійсний.", "Сеанс уже недействителен."],
+    remote_bad_cortendesk: ["Перевірте ID та пароль.", "Проверьте ID и пароль."],
+    help_remote_title: ["Віддалений доступ", "Удалённый доступ"],
+    help_remote_lead: [
+      "На вкладці <b>«Віддалений доступ»</b> видно, хто зараз на сайті. Підключення починається лише після того, як людина його дозволила — обійти згоду не може ніхто, включно з адміністратором.",
+      "На вкладке <b>«Удалённый доступ»</b> видно, кто сейчас на сайте. Подключение начинается только после того, как человек его разрешил — обойти согласие не может никто, включая администратора.",
+    ],
+    help_remote_watch: ["Дивитись екран", "Смотреть экран"],
+    help_remote_watch_desc: [
+      "Працює в браузері, встановлювати нічого не потрібно. Показується весь екран; браузер попросить це підтвердити — прибрати його запит сторінка не може. Керувати його комп’ютером <b>не можна</b> — браузер такого не вміє.",
+      "Работает в браузере, ставить ничего не нужно. Показывается весь экран; браузер попросит это подтвердить — убрать его запрос страница не может. Управлять его компьютером <b>нельзя</b> — браузер такого не умеет.",
+    ],
+    help_remote_control: ["Керувати", "Управлять"],
+    help_remote_control_desc: [
+      "Справжнє керування мишею і клавіатурою. Працює через <b>CortenDesk</b>, який має стояти на обох машинах — Windows або Linux. SpriteNote лише зводить сторони: після згоди він показує ID і одноразовий пароль.",
+      "Настоящее управление мышью и клавиатурой. Работает через <b>CortenDesk</b>, который должен стоять на обеих машинах — Windows или Linux. SpriteNote только сводит стороны: после согласия он показывает ID и одноразовый пароль.",
+    ],
+    help_remote_notify: ["Запит у фоні", "Запрос в фоне"],
+    help_remote_notify_desc: [
+      "Якщо вкладка згорнута, про запит скаже системне сповіщення — його видно поверх інших вікон — і мигтливий заголовок вкладки зі звуком. Дозвіл на сповіщення браузер запитає під час першого відкриття цієї вкладки; без нього залишається заголовок. Дозволяти доступ усе одно потрібно <b>тут</b>, а не у сповіщенні.",
+      "Если вкладка свёрнута, о запросе скажет уведомление системы — оно видно поверх других окон — и мигающий заголовок вкладки со звуком. Разрешение на уведомления браузер спросит при первом открытии этой вкладки; без него остаётся заголовок. Разрешать доступ всё равно нужно <b>здесь</b>, а не в уведомлении.",
+    ],
+    help_remote_id: ["Ідентифікатор CortenDesk", "Идентификатор CortenDesk"],
+    help_remote_id_desc: [
+      "Живе у вікні <b>«Акаунт»</b> і підставляється в підтвердження, коли керувати просять вас. Переносити дев'ять цифр очима зазвичай не треба: у порожнє поле сайт підставляє ID сам, дізнавшись у свого сервера, хто реєструвався з цієї адреси. Спрацьовує це в домашній мережі; в інших випадках впишіть ID руками з вікна CortenDesk «Ваш ID».",
+      "Живёт в окне <b>«Аккаунт»</b> и подставляется в подтверждение, когда управлять просят вас. Переносить девять цифр глазами обычно не нужно: в пустое поле сайт подставляет ID сам, узнав у своего сервера, кто регистрировался с этого адреса. Работает это в домашней сети; в остальных случаях впишите ID руками из окна CortenDesk «Ваш ID».",
+    ],
+    help_remote_open: ["Вікно керування", "Окно управления"],
+    help_remote_open_desc: [
+      "Щойно друга сторона погодилася і передала пароль, SpriteNote відкриває екран сам. Якщо налаштована своя вебконсоль — вкладкою просто в браузері, встановлювати нічого не треба; якщо ні — встановленим <b>CortenDesk</b> за посиланням. Автоматичний перехід браузер вправі не пустити, тому поруч завжди є кнопка, а під реквізитами — готова команда. Панель може повідомити, що програма не відкрилася: це здогад, а не перевірка — дізнатися зі сторінки, що встановлено на машині, браузер не дає. Програма на місці — натисніть «Він встановлений», і повідомлення зникне.",
+      "Как только вторая сторона согласилась и передала пароль, SpriteNote открывает экран сам. Если настроена своя веб-консоль — вкладкой прямо в браузере, ставить ничего не надо; если нет — установленным <b>CortenDesk</b> по ссылке. Автоматический переход браузер вправе не пустить, поэтому рядом всегда есть кнопка, а под реквизитами — готовая команда. Панель может сообщить, что программа не открылась: это догадка, а не проверка — узнать со страницы, что установлено на машине, браузер не даёт. Программа на месте — нажмите «Он установлен», и сообщение уйдёт.",
+    ],
+    help_remote_server: ["Свій сервер CortenDesk", "Свой сервер CortenDesk"],
+    help_remote_server_desc: [
+      "На цьому ж Raspberry Pi піднято <b>CortenDesk Server OSS</b> — той, що роздає ідентифікатори і зводить сторони. Адресу і ключ показано на вкладці «Віддалений доступ», їх треба один раз вписати в CortenDesk на кожній машині: «Налаштування» → «Мережа». Після цього керування не виходить за межі дому і не йде через публічні сервери. Адміністраторові там само видно рядок <b>«Панель консолі»</b> з кнопкою — це панель керування вебконсоллю, вхід до неї свій.",
+      "На этом же Raspberry Pi поднят <b>CortenDesk Server OSS</b> — тот, что раздаёт идентификаторы и сводит стороны. Адрес и ключ показаны на вкладке «Удалённый доступ», их надо один раз вписать в CortenDesk на каждой машине: «Настройки» → «Сеть». После этого управление не выходит за пределы дома и не идёт через публичные серверы. Администратору там же видна строка <b>«Панель консоли»</b> с кнопкой — это панель управления веб-консолью, вход в неё свой.",
+    ],
+    help_remote_outside: ["Керування з інтернету", "Управление из интернета"],
+    help_remote_outside_desc: [
+      "Порти свого сервера назовні не відкриті й відкрити їх не можна — провайдер тримає нас за CGNAT. Тому ззовні CortenDesk ходить на ту саму адресу, що й сайт, захищеним сокетом. Візьміть на вкладці варіант <b>«З інтернету»</b> й увімкніть у CortenDesk «Налаштування» → «Мережа» → <b>«Використовувати WebSocket»</b>. У локальній мережі та через Tailscale галочка не потрібна: там зв’язок іде навпростець і швидше.",
+      "Порты своего сервера наружу не открыты и открыть их нельзя — провайдер держит нас за CGNAT. Поэтому снаружи CortenDesk ходит на тот же адрес, что и сайт, по защищённому сокету. Возьмите на вкладке вариант <b>«Из интернета»</b> и включите в CortenDesk «Настройки» → «Сеть» → <b>«Использовать WebSocket»</b>. В локальной сети и через Tailscale галочка не нужна: там связь идёт напрямую и быстрее.",
+    ],
+    help_remote_https: ["Тільки по https", "Только по https"],
+    help_remote_https_desc: [
+      "Показ екрана вимагає захищеного з’єднання: по звичайному http браузер його заборонить, і вкладка про це попередить. Керування через CortenDesk цього не вимагає — це окрема програма.",
+      "Показ экрана требует защищённого соединения: по обычному http браузер его запретит, и вкладка об этом предупредит. Управление через CortenDesk этого не требует — это отдельная программа.",
+    ],
+    help_remote_where: ["Звідки видно екран", "Откуда виден экран"],
+    help_remote_where_desc: [
+      "Показ екрана працює між пристроями домашньої мережі та між пристроями тайлнета. Ззовні, без Tailscale, картинки не буде: відео шукає прямий шлях між браузерами, а ззовні його немає. Керування через CortenDesk працює звідусіль.",
+      "Показ экрана работает между устройствами домашней сети и между устройствами тайлнета. Снаружи, без Tailscale, картинки не будет: видео ищет прямой путь между браузерами, а снаружи его нет. Управление через CortenDesk работает отовсюду.",
+    ],
+    th_online: ["На сайті", "На сайте"],
+    online_yes: ["зараз тут", "сейчас здесь"],
+    online_no: ["немає", "нет"],
+    online_tabs: ["({n} вкладки)", "({n} вкладки)"],
+    online_since: ["З {time}", "С {time}"],
+    remote_fullscreen: ["На весь екран", "На весь экран"],
+    remote_fullscreen_exit: ["Вийти з повного екрана", "Выйти из полного экрана"],
+    remote_fullscreen_denied: [
+      "Браузер не дав розгорнути на весь екран.",
+      "Браузер не дал развернуть на весь экран.",
+    ],
+    help_remote_fullscreen: ["На весь екран", "На весь экран"],
+    help_remote_fullscreen_desc: [
+      "Кнопка у смузі над чужим екраном розгортає вікно перегляду на весь монітор. Смуга з кнопкою «Завершити» лишається видимою. Вийти можна тією ж кнопкою або клавішею Esc.",
+      "Кнопка в полосе над чужим экраном разворачивает окно просмотра во весь монитор. Полоса с кнопкой «Завершить» остаётся видна. Выйти можно той же кнопкой или клавишей Esc.",
+    ],
+    help_admin_online: ["Стовпець «На сайті»", "Столбец «На сайте»"],
+    help_admin_online_desc: [
+      "Показує, хто відкрив сайт прямо зараз і скільки в нього вкладок. Рахується за живими з’єднаннями, а не за сесіями: сесія живе місяць і каже лише про те, що людина колись увійшла. Стовпець оновлюється сам, доки вкладка відкрита.",
+      "Показывает, кто открыл сайт прямо сейчас, и сколько у него вкладок. Считается по живым соединениям, а не по сессиям: сессия живёт месяц и говорит лишь о том, что человек когда-то вошёл. Столбец обновляется сам, пока вкладка открыта.",
+    ],
   };
 
   // Подстановка вида {name} — для строк, куда попадают имена файлов, счётчики и т. п.
@@ -1175,6 +1395,67 @@
     logsScanBtn: $('#logs-scan-btn'),
     viewNotepad: $('#view-notepad'),
     viewTerminal: $('#view-terminal'),
+    viewRemote: $('#view-remote'),
+    tabRemote: $('#tab-remote'),
+    remoteUsers: $('#remote-users'),
+    remoteStatus: $('#remote-status'),
+    remoteInsecure: $('#remote-insecure'),
+    remoteRefreshBtn: $('#remote-refresh-btn'),
+    remoteStage: $('#remote-stage'),
+    remoteStageTitle: $('#remote-stage-title'),
+    remoteVideo: $('#remote-video'),
+    remoteStopBtn: $('#remote-stop-btn'),
+    remoteFullscreenBtn: $('#remote-fullscreen-btn'),
+    remoteAskBar: $('#remote-ask-bar'),
+    remoteAskBarText: $('#remote-ask-bar-text'),
+    remoteAskBarNote: $('#remote-ask-bar-note'),
+    remoteAskBarShow: $('#remote-ask-bar-show'),
+    remoteAskBarDeny: $('#remote-ask-bar-deny'),
+    remoteAskOverlay: $('#remote-ask-overlay'),
+    remoteAskText: $('#remote-ask-text'),
+    remoteAskNote: $('#remote-ask-note'),
+    remoteAskAllow: $('#remote-ask-allow'),
+    remoteAskDeny: $('#remote-ask-deny'),
+    remoteRdOverlay: $('#remote-rd-overlay'),
+    remoteRdIdInput: $('#remote-rd-id-input'),
+    remoteRdPassInput: $('#remote-rd-pass-input'),
+    remoteRdSend: $('#remote-rd-send'),
+    remoteRdCancel: $('#remote-rd-cancel'),
+    remoteRdResult: $('#remote-rd-result'),
+    remoteRdId: $('#remote-rd-id'),
+    remoteRdPass: $('#remote-rd-pass'),
+    remoteServer: $('#remote-server'),
+    remoteSrvLanRow: $('#remote-srv-lan-row'),
+    remoteSrvLan: $('#remote-srv-lan'),
+    remoteSrvLanCopy: $('#remote-srv-lan-copy'),
+    remoteSrvVpnRow: $('#remote-srv-vpn-row'),
+    remoteSrvVpn: $('#remote-srv-vpn'),
+    remoteSrvVpnCopy: $('#remote-srv-vpn-copy'),
+    remoteSrvKey: $('#remote-srv-key'),
+    remoteSrvKeyCopy: $('#remote-srv-key-copy'),
+    remoteSrvCfgLan: $('#remote-srv-cfg-lan'),
+    remoteSrvCfgVpn: $('#remote-srv-cfg-vpn'),
+    remoteSrvWssRow: $('#remote-srv-wss-row'),
+    remoteSrvWss: $('#remote-srv-wss'),
+    remoteSrvWssCopy: $('#remote-srv-wss-copy'),
+    remoteSrvCfgWss: $('#remote-srv-cfg-wss'),
+    remoteSrvOwnWeb: $('#remote-srv-own-web'),
+    remoteSrvAdminRow: $('#remote-srv-admin-row'),
+    remoteSrvAdminUrl: $('#remote-srv-admin-url'),
+    remoteSrvAdminOpen: $('#remote-srv-admin-open'),
+    remoteSrvWssNote: $('#remote-srv-wss-note'),
+    remoteRdOpen: $('#remote-rd-open'),
+    remoteRdConsole: $('#remote-rd-console'),
+    remoteRdGotSub: $('#remote-rd-got-sub'),
+    remoteRdMissing: $('#remote-rd-missing'),
+    remoteRdMissingHide: $('#remote-rd-missing-hide'),
+    remoteRdCopy: $('#remote-rd-copy'),
+    remoteRdCopyId: $('#remote-rd-copy-id'),
+    remoteRdCmd: $('#remote-rd-cmd'),
+    remoteRdCopyCmd: $('#remote-rd-copy-cmd'),
+    remoteRdClose: $('#remote-rd-close'),
+    accountCortendesk: $('#account-cortendesk'),
+    accountCortendeskAuto: $('#account-cortendesk-auto'),
 
     treeRoot: $('#tree-root'),
     btnNewRootFolder: $('#btn-new-root-folder'),
@@ -1301,6 +1582,9 @@
   // light and dark parts of the palette.
 
   const ICONS = {
+    // Монитор: экран и подставка. Используется в списке людей на вкладке удалённого доступа.
+    monitor:
+      '<rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/>',
     // Геометрия повторяет folderOpen ниже: та же левая грань (x=2), тот же верх язычка (y=4)
     // и тот же вырез (l1 1.4). В дереве иконка переключается между этими двумя при раскрытии,
     // и расхождение хоть на единицу читается как прыжок.
@@ -1556,6 +1840,7 @@
     document.title = t('app_title');
     document.documentElement.lang = lang;
     if (el.accountLanguage) el.accountLanguage.value = lang;
+    if (el.accountCortendesk) el.accountCortendesk.value = state.settings?.cortendeskId || '';
 
     // Тексты, которые собираются не из разметки, а зависят от режима окна.
     if (!el.authOverlay.classList.contains('hidden')) renderAuthMode();
@@ -1674,6 +1959,7 @@
 
   function returnToLanding() {
     closeAllTerminalSessions();
+    remoteDisconnect();
     state.user = null;
     state.nodes = [];
     state.selectedFolderId = null;
@@ -1688,10 +1974,23 @@
     returnToLanding();
   });
 
+  // Generate a random numeric string of specified length
   // ---------------- Account: change password / delete account ----------------
 
   function openAccountModal() {
     el.accountModalEmail.textContent = state.user.email;
+
+    // Идентификатор сюда по-прежнему не придумывается: сгенерированный номер не принадлежит
+    // ни одному клиенту — ID-сервер такого пира в сети не видит, и попытка подключения
+    // кончается «punch hole failed: OFFLINE». Но и переносить девять цифр глазами из окна
+    // «Ваш ID» не обязательно: у пустого поля спрашиваем сервер, кто регистрировался на нашем
+    // hbbs с этого адреса. Пустое поле остаётся законным состоянием «управление не настроено».
+
+    if (el.accountCortendesk) {
+      el.accountCortendesk.value = state.settings?.cortendeskId || '';
+      if (el.accountCortendeskAuto) el.accountCortendeskAuto.classList.add('hidden');
+      if (!state.settings?.cortendeskId) fillCortendeskId();
+    }
     el.passwordForm.reset();
     el.deleteAccountForm.reset();
     el.passwordError.textContent = '';
@@ -1699,6 +1998,7 @@
     el.accountOverlay.classList.remove('hidden');
   }
   function closeAccountModal() {
+    saveCortendeskId();
     el.accountOverlay.classList.add('hidden');
   }
   el.btnAccount.addEventListener('click', openAccountModal);
@@ -1761,6 +2061,7 @@
     // Not awaited: the admin tabs start hidden in the markup, so they simply appear once the
     // probe answers — nothing flashes on screen that then has to be taken away.
     applyAdminVisibility();
+    remoteConnect();
     await loadNodes();
   }
 
@@ -1840,6 +2141,7 @@
     el.viewLogs.classList.toggle('hidden', view !== 'logs');
     el.viewNotepad.classList.toggle('hidden', view !== 'notepad');
     el.viewTerminal.classList.toggle('hidden', view !== 'terminal');
+    if (el.viewRemote) el.viewRemote.classList.toggle('hidden', view !== 'remote');
     el.viewTabs.querySelectorAll('.tab-btn').forEach((b) => {
       b.classList.toggle('active', b.dataset.view === view);
     });
@@ -1848,6 +2150,7 @@
     if (view === 'logs') { loadLogs(); }
     if (view === 'notepad') { loadNotepad(); }
     if (view === 'terminal') { ensureTerminal(); }
+    if (view === 'remote') { renderRemoteUsers(); askNotifyPermission(); }
   }
 
   el.viewTabs.addEventListener('click', (e) => {
@@ -3070,6 +3373,10 @@
         const isSelf = u.id === state.user.id;
         tr.innerHTML = `
           <td>${escapeHtml(u.email)}${isSelf ? ` <span style="color:var(--text-dim)">${escapeHtml(t('you'))}</span>` : ''}</td>
+          <td>${u.online
+              ? `<span class="online-dot" title="${escapeHtml(t('online_since', { time: formatDate(u.onlineSince) }))}"></span>` +
+                `${escapeHtml(t('online_yes'))}${u.tabs > 1 ? ` <span style="color:var(--text-dim)">${escapeHtml(t('online_tabs', { n: u.tabs }))}</span>` : ''}`
+              : `<span style="color:var(--text-dim)">${escapeHtml(t('online_no'))}</span>`}</td>
           <td><span class="badge ${u.isAdmin ? 'badge-admin' : 'badge-user'}">${u.isAdmin ? t('role_admin') : t('role_user')}</span></td>
           <td>${formatBytes(u.bytesUsed)}</td>
           <td>${formatDate(u.createdAt)}</td>
@@ -3597,8 +3904,23 @@
     [el.itemOverlay, el.moveOverlay, el.textOverlay, el.accountOverlay, el.authOverlay, el.hotkeysOverlay]
       .some((o) => o && !o.classList.contains('hidden'));
 
+  // Esc на окне согласия — это отказ, а не просто закрытие: запросивший обязан получить ответ.
+  function remoteDenyFromEsc() {
+    if (remote.ask) remoteSend({ type: 'decline', id: remote.ask.id });
+    closeRemoteAsk();
+  }
+  function remoteCancelRdFromEsc() {
+    el.remoteRdOverlay.classList.add('hidden');
+    remoteEnd();
+  }
+
+  // Полосы запроса на показ экрана здесь намеренно нет: она не модальная, Esc в это время
+  // может нажиматься по совсем другому поводу, и отклонять чужой запрос вслепую нечестно.
+  // Отказ у неё — кнопкой.
   function closeTopmostModal() {
     const pairs = [
+      [el.remoteAskOverlay, remoteDenyFromEsc],
+      [el.remoteRdOverlay, remoteCancelRdFromEsc],
       [el.hotkeysOverlay, closeHotkeys],
       [el.textOverlay, closeTextReader],
       [el.moveOverlay, closeMoveModal],
@@ -3797,6 +4119,864 @@
     }
     if (window.caches) caches.keys().then((keys) => keys.forEach((k) => caches.delete(k))).catch(() => {});
   }
+
+
+  // ---------------- Удалённый доступ ----------------
+  //
+  // Два режима с разными возможностями, и разница не в удобстве, а в том, что вообще умеет
+  // браузер:
+  //
+  //   screen   — просмотр экрана. Работает без установки чего-либо: getDisplayMedia() и WebRTC.
+  //              Управлять чужой машиной нельзя — песочница браузера этого не позволяет, и
+  //              никакой код здесь этого не изменит.
+  //   cortendesk — настоящее управление. Мы только сводим стороны: после согласия принимающий
+  //              отдаёт свой ID и одноразовый пароль, дальше работает CortenDesk.
+  //
+  // Согласие обязательно в обоих режимах и для администратора тоже. Обхода нет намеренно:
+  // права админа здесь ≈ доступ к серверу, но чужой рабочий стол — не сервер.
+
+  const remote = {
+    ws: null,
+    retry: 0,
+    closing: false,
+    users: [],
+    session: null,   // { id, role: 'viewer' | 'target', mode, peerEmail }
+    ask: null,       // входящий запрос, пока открыто окно согласия
+    pc: null,
+    stream: null,
+    pendingIce: [],  // кандидаты, пришедшие раньше remoteDescription
+    // Свой STUN/TURN. Приходит с сервера сообщением hello, а не зашит сюда: адрес зависит от
+    // машины, а пароль TURN временный и живёт часы. Пусто = только host-кандидаты, то есть
+    // просмотр экрана работает, лишь пока обе стороны в одной сети.
+    iceServers: [],
+    rd: null,        // { id, password } — реквизиты CortenDesk, пока открыта панель
+    srvConfig: null, // { lan, vpn, wss, web } — готовые строки настройки сервера CortenDesk
+    webUrl: '',      // адрес своей веб-консоли, если она поднята
+  };
+
+  // Экран отдаёт только защищённый контекст: по http навигатор просто не даёт mediaDevices.
+  function canShareScreen() {
+    return !!(navigator.mediaDevices && navigator.mediaDevices.getDisplayMedia);
+  }
+
+  function remoteSend(msg) {
+    if (remote.ws && remote.ws.readyState === WebSocket.OPEN) {
+      remote.ws.send(JSON.stringify(msg));
+      return true;
+    }
+    toast(t('remote_offline'), 'error');
+    return false;
+  }
+
+  function remoteConnect() {
+    if (remote.ws || remote.closing || !remoteUiReady) return;
+    const proto = location.protocol === 'https:' ? 'wss' : 'ws';
+    let ws;
+    try {
+      ws = new WebSocket(`${proto}://${location.host}/api/remote`);
+    } catch (_) {
+      return;
+    }
+    remote.ws = ws;
+
+    ws.addEventListener('open', () => { remote.retry = 0; });
+    ws.addEventListener('message', (e) => {
+      let msg;
+      try { msg = JSON.parse(e.data); } catch (_) { return; }
+      onRemoteMessage(msg);
+    });
+    ws.addEventListener('close', () => {
+      remote.ws = null;
+      remote.users = [];
+      if (state.view === 'remote') renderRemoteUsers();
+      if (remote.closing || !state.user) return;
+      // Переподключение с растущей паузой: сеть на телефоне рвётся постоянно, а вкладка
+      // «кто онлайн» без соединения бесполезна.
+      remote.retry = Math.min(remote.retry + 1, 6);
+      setTimeout(remoteConnect, 1000 * remote.retry);
+    });
+    ws.addEventListener('error', () => { /* close придёт следом */ });
+  }
+
+  function remoteDisconnect() {
+    remote.closing = true;
+    remoteTeardown();
+    if (remote.ws) { try { remote.ws.close(); } catch (_) {} }
+    remote.ws = null;
+    remote.users = [];
+    remote.closing = false;
+  }
+
+  function onRemoteMessage(msg) {
+    switch (msg.type) {
+      case 'hello':
+        remote.iceServers = Array.isArray(msg.iceServers) ? msg.iceServers : [];
+        return showCortendeskServer(msg.cortendeskServer);
+      case 'presence':
+        remote.users = msg.users || [];
+        if (state.view === 'remote') renderRemoteUsers();
+        // Панель управления показывает тот же признак «на сайте». Список приходит без
+        // офлайновых, поэтому перерисовать колонку из него нельзя — перезапрашиваем.
+        if (state.view === 'admin') loadAdminUsers();
+        return;
+      case 'requested':
+        remoteStatus(t('remote_requested'));
+        return;
+      case 'request':
+        return showRemoteAsk(msg);
+      case 'accepted':
+        // Пароль TURN живёт сутки, а вкладка — сколько угодно: берём свежий, раз он пришёл.
+        if (Array.isArray(msg.iceServers) && msg.iceServers.length) remote.iceServers = msg.iceServers;
+        return onRemoteAccepted(msg);
+      case 'signal':
+        return onRemoteSignal(msg);
+      case 'cortendesk':
+        return showCortendeskResult(msg);
+      case 'ended': {
+        const reasons = { declined: 'remote_declined', timeout: 'remote_timeout', peer_gone: 'remote_peer_gone' };
+        remoteTeardown();
+        remoteStatus('');
+        toast(t(reasons[msg.reason] || 'remote_ended'));
+        return;
+      }
+      case 'error':
+        remoteStatus('');
+        toast(errMsg(msg.error), 'error');
+        return;
+      default:
+        return;
+    }
+  }
+
+  function remoteStatus(text) {
+    if (el.remoteStatus) el.remoteStatus.textContent = text || ' ';
+  }
+
+  // ---- свой сервер CortenDesk ----
+
+  // Значения приходят с сервера, а не зашиты в разметку: адрес и ключ зависят от машины,
+  // а ключ вдобавок меняется, если пару пересоздали. Нет сервера — нет и блока: пустые поля
+  // хуже отсутствующих, они выглядят поломкой.
+  function showCortendeskServer(srv) {
+    if (!remoteUiReady) return;
+    if (!srv || !srv.key) {
+      el.remoteServer.classList.add('hidden');
+      return;
+    }
+    el.remoteSrvKey.textContent = srv.key;
+    el.remoteSrvLan.textContent = srv.lan || '';
+    el.remoteSrvVpn.textContent = srv.vpn || '';
+    el.remoteSrvLanRow.classList.toggle('hidden', !srv.lan);
+    el.remoteSrvVpnRow.classList.toggle('hidden', !srv.vpn);
+    el.remoteSrvWss.textContent = srv.wss || '';
+    el.remoteSrvWssRow.classList.toggle('hidden', !srv.wss);
+    // Сами строки настройки на экран не выводим: это нечитаемый base64 задом наперёд, его
+    // место в буфере обмена, а не в глазах.
+    remote.webUrl = srv.web || '';
+    remote.srvConfig = {
+      lan: srv.configLan || '', vpn: srv.configVpn || '',
+      wss: srv.configWss || '',
+    };
+    el.remoteSrvCfgLan.classList.toggle('hidden', !remote.srvConfig.lan);
+    el.remoteSrvCfgVpn.classList.toggle('hidden', !remote.srvConfig.vpn);
+    el.remoteSrvCfgWss.classList.toggle('hidden', !remote.srvConfig.wss);
+    // Оговорка про галочку «Использовать WebSocket» показывается только вместе с самим
+    // вариантом: без него она объясняла бы кнопку, которой на экране нет.
+    el.remoteSrvWssNote.classList.toggle('hidden', !remote.srvConfig.wss);
+    el.remoteSrvOwnWeb.classList.toggle('hidden', !remote.webUrl);
+    // Панель консоли — только администратору. Учётка в консоли есть у каждого, но панель
+    // ему не откроется, и кнопка звала бы в закрытую дверь.
+    const ownConsole = !!remote.webUrl && !!state.user?.isAdmin;
+    el.remoteSrvAdminRow.classList.toggle('hidden', !ownConsole);
+    if (ownConsole) el.remoteSrvAdminUrl.textContent = remote.webUrl.replace(/^https?:\/\//, '');
+    el.remoteServer.classList.remove('hidden');
+  }
+
+  // ---- список людей на сайте ----
+
+  function renderRemoteUsers() {
+    if (!remoteUiReady) return;
+    if (el.remoteInsecure) el.remoteInsecure.classList.toggle('hidden', canShareScreen());
+    const box = el.remoteUsers;
+    box.innerHTML = '';
+    if (remote.users.length === 0) {
+      const empty = document.createElement('p');
+      empty.className = 'panel-sub';
+      empty.textContent = t('remote_nobody');
+      box.appendChild(empty);
+      return;
+    }
+    remote.users.forEach((u) => {
+      const row = document.createElement('div');
+      row.className = 'remote-user';
+
+      const icon = iconEl('monitor', 'remote-user-icon');
+      if (icon) row.appendChild(icon);
+
+      const main = document.createElement('span');
+      main.className = 'remote-user-main';
+
+      const name = document.createElement('span');
+      name.className = 'remote-user-name';
+      // Адрес — данные пользователя, он не переводится и вставляется текстом, а не разметкой.
+      name.textContent = u.email;
+      main.appendChild(name);
+
+      // Подсказка про несохранённый ID: не запрет, а предупреждение о лишнем шаге — человеку
+      // на той стороне придётся ввести его вручную.
+      if (!u.cortendeskReady) {
+        const hint = document.createElement('span');
+        hint.className = 'remote-user-hint';
+        hint.textContent = t('remote_no_cortendesk');
+        main.appendChild(hint);
+      }
+      row.appendChild(main);
+
+      const actions = document.createElement('span');
+      actions.className = 'remote-user-actions';
+
+      const watch = document.createElement('button');
+      watch.className = 'btn btn-ghost btn-small';
+      watch.textContent = t('remote_watch');
+      watch.disabled = !!remote.session;
+      watch.addEventListener('click', () => remoteRequest(u.id, 'screen'));
+      actions.appendChild(watch);
+
+      const control = document.createElement('button');
+      control.className = 'btn btn-ghost btn-small';
+      control.textContent = t('remote_control');
+      // Кнопка доступна и когда ID у той стороны не сохранён: его спросят в окне подтверждения,
+      // и человек введёт прямо там. Блокировать здесь было ошибкой — серая кнопка оказывалась
+      // у того, кто ничего с ней сделать не может: настройка нужна на другой стороне.
+      control.disabled = !!remote.session;
+      control.addEventListener('click', () => remoteRequest(u.id, 'cortendesk'));
+      actions.appendChild(control);
+
+      row.appendChild(actions);
+      box.appendChild(row);
+    });
+  }
+
+  function remoteRequest(userId, mode) {
+    if (remote.session) return;
+    if (mode === 'screen' && !canShareScreen()) {
+      toast(t('remote_insecure').replace(/<[^>]+>/g, ''), 'error');
+      return;
+    }
+    const peer = remote.users.find((u) => u.id === userId);
+    remote.session = { id: null, role: 'viewer', mode, peerEmail: peer ? peer.email : '' };
+    if (!remoteSend({ type: 'request', to: userId, mode })) {
+      remote.session = null;
+      return;
+    }
+    renderRemoteUsers();
+  }
+
+  // ---- согласие ----
+
+  // ---- внимание к запросу ----
+  //
+  // Полоса и окно видны, только когда человек смотрит в эту вкладку, а запрос приходит ровно
+  // тогда, когда он занят чем-то другим. Поднять своё окно поверх чужих страница не может —
+  // такого API нет ни в одном браузере. Доступно два обходных пути, и здесь есть оба, потому
+  // что каждый по отдельности дырявый: уведомление рисует уже операционная система, и его
+  // видно поверх всех окон, но оно требует разрешения; мигание заголовка разрешений не просит,
+  // но видно только в панели задач и в списке вкладок.
+
+  const attention = {
+    notification: null,
+    timer: null,
+  };
+
+  // Разрешение спрашивается при открытии вкладки «Удалённый доступ», а не при входе в аккаунт:
+  // запрос браузера, выскочивший ни с того ни с сего, чаще всего отклоняют не глядя, а второй
+  // раз он уже не появится. Отсюда известное ограничение: кто вкладку ни разу не открывал,
+  // остаётся с мигающим заголовком.
+  function askNotifyPermission() {
+    if (!('Notification' in window)) return;
+    if (Notification.permission !== 'default') return;
+    try {
+      const res = Notification.requestPermission();
+      if (res && typeof res.catch === 'function') res.catch(() => {});
+    } catch (_) { /* старые браузеры требуют колбэк вместо обещания */ }
+  }
+
+  // Короткий сигнал вместо звукового файла: лишний ресурс ради трети секунды не нужен.
+  // Автозапуск звука браузер разрешает только после того, как со страницей взаимодействовали,
+  // поэтому молчание здесь — штатный исход, а не сбой.
+  function attentionBeep() {
+    try {
+      const Ctx = window.AudioContext || window.webkitAudioContext;
+      if (!Ctx) return;
+      const ctx = new Ctx();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.frequency.value = 880;
+      gain.gain.setValueAtTime(0.0001, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.12, ctx.currentTime + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.32);
+      osc.connect(gain).connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.33);
+      osc.addEventListener('ended', () => { try { ctx.close(); } catch (_) {} });
+    } catch (_) { /* звук — приятная мелочь, а не условие работы */ }
+  }
+
+  function startAttention(msg) {
+    stopAttention();
+    // Человек и так смотрит в эту вкладку — звать его некуда.
+    if (!document.hidden && document.hasFocus()) return;
+
+    const isControl = msg.mode === 'cortendesk';
+    if ('Notification' in window && Notification.permission === 'granted') {
+      try {
+        attention.notification = new Notification(t('remote_ask_title'), {
+          body: t(isControl ? 'remote_ask_control' : 'remote_ask_screen', { email: msg.from.email }),
+          icon: '/icons/icon-192.png',
+          // Запрос гаснет через минуту, и всю эту минуту уведомление обязано висеть:
+          // свернувшееся через пару секунд равносильно тому, что его не было.
+          requireInteraction: true,
+          // Повторный запрос заменяет прежний, а не копится стопкой.
+          tag: 'spritenote-remote-ask',
+        });
+        // Согласие отсюда не даётся намеренно: разрешать доступ к своему экрану надо там,
+        // где написано, кто просит и что именно откроется, — то есть на самой странице.
+        attention.notification.addEventListener('click', () => {
+          window.focus();
+          stopAttention();
+        });
+      } catch (_) { attention.notification = null; }
+    }
+
+    // Заголовок мигает независимо от уведомления: разрешения на него может не быть, а на
+    // телефоне уведомления от вкладки не показываются вовсе.
+    //
+    // Обычный заголовок берётся из словаря заново на каждом такте, а не запоминается перед
+    // миганием: смена языка посреди мигания оставила бы запомненную строку на прежнем языке.
+    let shown = false;
+    attention.timer = setInterval(() => {
+      shown = !shown;
+      document.title = shown ? t('remote_notify_tab') : t('app_title');
+    }, 1000);
+    attentionBeep();
+  }
+
+  function stopAttention() {
+    if (attention.timer) {
+      clearInterval(attention.timer);
+      attention.timer = null;
+      document.title = t('app_title');
+    }
+    if (attention.notification) {
+      try { attention.notification.close(); } catch (_) {}
+      attention.notification = null;
+    }
+  }
+
+  // Вернулись во вкладку — звать уже незачем: запрос виден сам. Сам запрос при этом жив,
+  // гасится только шум вокруг него.
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) stopAttention(); });
+  window.addEventListener('focus', stopAttention);
+
+  // Управление спрашивается модальным окном, показ экрана — полосой. Разница не в оформлении:
+  // за согласием на показ сразу идёт диалог браузера, и модальное окно перед ним было бы
+  // вторым окном согласия подряд. У «Управлять» второго диалога нет вовсе, а выдаётся куда
+  // больше — мышь, клавиатура и файлы, — поэтому там окно и осталось.
+  function showRemoteAsk(msg) {
+    remote.ask = msg;
+    startAttention(msg);
+    const isControl = msg.mode === 'cortendesk';
+    if (isControl) {
+      el.remoteAskText.textContent = t('remote_ask_control', { email: msg.from.email });
+      el.remoteAskNote.textContent = t('remote_ask_note_control');
+      el.remoteAskOverlay.classList.remove('hidden');
+      return;
+    }
+    el.remoteAskBarText.textContent = t('remote_ask_screen', { email: msg.from.email });
+    el.remoteAskBarNote.textContent = t('remote_ask_note_screen');
+    el.remoteAskBar.classList.remove('hidden');
+  }
+
+  // Закрывает обе формы, не разбирая, которая была открыта: вызывается и по отказу,
+  // и по согласию, и по погасшему запросу.
+  function closeRemoteAsk() {
+    stopAttention();
+    el.remoteAskOverlay.classList.add('hidden');
+    el.remoteAskBar.classList.add('hidden');
+    remote.ask = null;
+  }
+
+  // Разметка и скрипт приезжают отдельными файлами, и service worker при обрыве сети может
+  // отдать их из разных поколений: одно свежим, другое из кэша. Раньше это стоило бы всего
+  // приложения — обращение к несуществующему элементу кидает TypeError на верхнем уровне IIFE,
+  // и дальше не выполняется ничего, включая показ вкладок администратора. Поэтому обвязка
+  // ставится только при полной разметке, а её отсутствие лишает одной вкладки, а не всего.
+  const REMOTE_NODES = [
+    el.viewRemote, el.remoteUsers, el.remoteStatus, el.remoteRefreshBtn, el.remoteStage,
+    el.remoteVideo, el.remoteStopBtn, el.remoteFullscreenBtn, el.remoteAskOverlay, el.remoteAskText, el.remoteAskNote,
+    el.remoteAskAllow, el.remoteAskDeny,
+    el.remoteAskBar, el.remoteAskBarText, el.remoteAskBarNote, el.remoteAskBarShow, el.remoteAskBarDeny,
+    el.remoteRdOverlay, el.remoteRdIdInput,
+    el.remoteRdPassInput, el.remoteRdSend, el.remoteRdCancel, el.remoteRdResult,
+    el.remoteServer, el.remoteSrvLanRow, el.remoteSrvLan, el.remoteSrvLanCopy,
+    el.remoteSrvVpnRow, el.remoteSrvVpn, el.remoteSrvVpnCopy, el.remoteSrvKey, el.remoteSrvKeyCopy,
+    el.remoteSrvCfgLan, el.remoteSrvCfgVpn,
+    el.remoteSrvWssRow, el.remoteSrvWss, el.remoteSrvWssCopy, el.remoteSrvCfgWss, el.remoteSrvWssNote,
+    el.remoteSrvOwnWeb,
+    el.remoteSrvAdminRow, el.remoteSrvAdminUrl, el.remoteSrvAdminOpen,
+    el.remoteRdId, el.remoteRdPass, el.remoteRdOpen, el.remoteRdCopy,
+    el.remoteRdConsole, el.remoteRdGotSub,
+    el.remoteRdMissing, el.remoteRdMissingHide,
+    el.remoteRdCopyId, el.remoteRdCmd, el.remoteRdCopyCmd, el.remoteRdClose,
+    el.accountCortendesk,
+  ];
+  const remoteUiReady = REMOTE_NODES.every(Boolean);
+  if (!remoteUiReady) {
+    console.warn('Удалённый доступ отключён: разметка не совпадает со скриптом. Обновите страницу с очисткой кэша.');
+    if (el.tabRemote) el.tabRemote.classList.add('hidden');
+  }
+
+  // Подписка через обёртку, а не условным блоком вокруг всего модуля: объявления функций
+  // внутри блока видны только в нём, и вынесенные наружу обработчики их бы не нашли.
+  const onEl = (node, ev, fn) => { if (node) node.addEventListener(ev, fn); };
+
+  function denyRemoteAsk() {
+    if (remote.ask) remoteSend({ type: 'decline', id: remote.ask.id });
+    closeRemoteAsk();
+  }
+
+  // Функция намеренно синхронно доходит до getDisplayMedia(): это требование браузера —
+  // диалог доступа к экрану открывается только из жеста пользователя, и await перед ним
+  // всё сломает. По той же причине она вызывается прямо из обработчика нажатия, а не через
+  // очередь или таймер: жест теряется вместе с кадром стека.
+  function acceptRemoteAsk() {
+    const ask = remote.ask;
+    if (!ask) return;
+    closeRemoteAsk();
+    remote.session = { id: ask.id, role: 'target', mode: ask.mode, peerEmail: ask.from.email };
+    remoteSend({ type: 'accept', id: ask.id });
+    if (ask.mode === 'cortendesk') {
+      el.remoteRdIdInput.value = state.settings?.cortendeskId || '';
+      el.remoteRdPassInput.value = '';
+      el.remoteRdOverlay.classList.remove('hidden');
+      el.remoteRdPassInput.focus();
+    } else {
+      startScreenShare(ask.id);
+    }
+  }
+
+  onEl(el.remoteAskDeny, 'click', denyRemoteAsk);
+  onEl(el.remoteAskAllow, 'click', acceptRemoteAsk);
+  onEl(el.remoteAskBarDeny, 'click', denyRemoteAsk);
+  onEl(el.remoteAskBarShow, 'click', acceptRemoteAsk);
+
+  // ---- WebRTC ----
+
+  function newPeerConnection(sessionId) {
+    const pc = new RTCPeerConnection({ iceServers: remote.iceServers });
+    pc.addEventListener('icecandidate', (e) => {
+      if (e.candidate) remoteSend({ type: 'signal', id: sessionId, data: { candidate: e.candidate } });
+    });
+    pc.addEventListener('connectionstatechange', () => {
+      if (['failed', 'closed'].includes(pc.connectionState)) remoteEnd();
+    });
+    return pc;
+  }
+
+  async function startScreenShare(sessionId) {
+    try {
+      remote.stream = await navigator.mediaDevices.getDisplayMedia({
+        // Диалог выбора убрать со страницы нельзя: getDisplayMedia() без него не отдаёт
+        // поток ни в одном браузере, и обойти это нечем — иначе любой сайт снимал бы экран
+        // молча. Отключается только флагом при запуске самого браузера, то есть не отсюда.
+        //
+        // displaySurface: 'monitor' — максимум, что даётся странице: диалог открывается
+        // сразу на «Весь экран» с выбранным монитором, и остаётся одно подтверждение вместо
+        // выбора вкладки и поверхности в ней. Это подсказка, а не требование: браузер вправе
+        // её не послушать, и тогда всё работает как раньше.
+        video: { displaySurface: 'monitor' },
+        audio: false,
+        // Своя же вкладка в списке не нужна: показывать смотрящему его собственное окно
+        // с этим сеансом незачем, а промахнуться по ней легко.
+        selfBrowserSurface: 'exclude',
+        // И кнопка «показать что-нибудь другое» посреди сеанса тоже: просили весь экран.
+        surfaceSwitching: 'exclude',
+      });
+    } catch (_) {
+      // Диалог выбора экрана закрыли — это отказ, а не ошибка.
+      toast(t('remote_share_cancelled'));
+      remoteEnd();
+      return;
+    }
+    // Кнопка «Остановить показ» рисуется самим браузером и до нас доходит только так.
+    remote.stream.getVideoTracks().forEach((tr) => tr.addEventListener('ended', () => remoteEnd()));
+
+    remote.pc = newPeerConnection(sessionId);
+    remote.stream.getTracks().forEach((tr) => remote.pc.addTrack(tr, remote.stream));
+    const offer = await remote.pc.createOffer();
+    await remote.pc.setLocalDescription(offer);
+    remoteSend({ type: 'signal', id: sessionId, data: { sdp: remote.pc.localDescription } });
+    remoteStatus(t('remote_sharing', { email: remote.session.peerEmail }));
+  }
+
+  function onRemoteAccepted(msg) {
+    if (!remote.session) return;
+    remote.session.id = msg.id;
+    if (remote.session.role !== 'viewer') return;
+    if (msg.mode === 'cortendesk') {
+      remoteStatus(t('remote_connecting'));
+      return;
+    }
+    // Смотрящий ждёт предложения от показывающего: поток идёт от него, значит и offer тоже.
+    remote.pc = newPeerConnection(msg.id);
+    remote.pc.addEventListener('track', (e) => {
+      el.remoteVideo.srcObject = e.streams[0];
+      el.remoteStage.classList.remove('hidden');
+      el.remoteStageTitle.textContent = t('remote_watching', { email: remote.session.peerEmail });
+    });
+    remoteStatus(t('remote_connecting'));
+  }
+
+  async function onRemoteSignal(msg) {
+    const pc = remote.pc;
+    if (!pc || !msg.data) return;
+    try {
+      if (msg.data.sdp) {
+        await pc.setRemoteDescription(msg.data.sdp);
+        // Кандидаты часто приходят раньше описания — тогда их складывают и применяют здесь.
+        for (const c of remote.pendingIce.splice(0)) {
+          try { await pc.addIceCandidate(c); } catch (_) { /* устаревший кандидат */ }
+        }
+        if (msg.data.sdp.type === 'offer') {
+          const answer = await pc.createAnswer();
+          await pc.setLocalDescription(answer);
+          remoteSend({ type: 'signal', id: msg.id, data: { sdp: pc.localDescription } });
+        }
+      } else if (msg.data.candidate) {
+        if (pc.remoteDescription && pc.remoteDescription.type) {
+          try { await pc.addIceCandidate(msg.data.candidate); } catch (_) { /* устаревший кандидат */ }
+        } else {
+          remote.pendingIce.push(msg.data.candidate);
+        }
+      }
+    } catch (err) {
+      console.error('remote signal', err);
+      remoteEnd();
+    }
+  }
+
+  // ---- CortenDesk ----
+
+  onEl(el.remoteRdCancel, 'click', () => {
+    el.remoteRdOverlay.classList.add('hidden');
+    remoteEnd();
+  });
+
+  onEl(el.remoteRdSend, 'click', () => {
+    const id = el.remoteRdIdInput.value.trim();
+    const password = el.remoteRdPassInput.value.trim();
+    if (!/^\d{6,16}$/.test(id) || password.length < 4) {
+      toast(t('remote_bad_cortendesk'), 'error');
+      return;
+    }
+    if (!remote.session) return;
+    remoteSend({ type: 'cortendesk', id: remote.session.id, cortendeskId: id, password });
+    el.remoteRdOverlay.classList.add('hidden');
+    remoteStatus(t('remote_granted', { email: remote.session.peerEmail }));
+    // ID пригодится в следующий раз; одноразовый пароль не сохраняется никогда.
+    if (id !== (state.settings?.cortendeskId || '')) saveSetting('cortendeskId', id);
+  });
+
+  // Ссылка, которую понимает установленный CortenDesk: она открывает окно управления уже
+  // с подставленными ID и паролем. Пароль здесь одноразовый и живёт один сеанс — поэтому
+  // его не страшно передавать самой ссылкой, как это делает и веб-консоль CortenDesk.
+  //
+  // Формат взят из исходников CortenDesk (flutter/lib/common.dart, разбор deep link): ветка
+  // `uri.authority == "connection" && uri.path.startsWith("/new/")` помечена там «For
+  // compatibility» — её понимают и старые клиенты, и текущие, а `cortendesk://<id>` и
+  // `cortendesk://connect/<id>` появились позже. Параметр `password` оттуда же: на десктопе
+  // он превращается в `--password`, на мобильных уходит прямо в connect().
+  function cortendeskUrl() {
+    if (!remote.rd) return '';
+    const id = encodeURIComponent(remote.rd.id);
+    return `cortendesk://connection/new/${id}?password=${encodeURIComponent(remote.rd.password)}`;
+  }
+
+  // Экран сеанса в своей веб-консоли. Именно `/webclient?id=`, а не корень: корень — это
+  // панель управления, она нужна администратору, а человеку нужен сразу чужой экран.
+  // Пароль в адрес не кладётся: консоль читает оттуда только `id`, поэтому пароль уходит
+  // в буфер обмена. Пусто, если своя консоль не настроена (CORTENDESK_WEB_URL).
+  function consoleSessionUrl() {
+    if (!remote.webUrl || !remote.rd) return '';
+    const id = encodeURIComponent(remote.rd.id);
+    return `${remote.webUrl.replace(/\/+$/, '')}/webclient?id=${id}`;
+  }
+
+  // Переход делается щелчком по временной ссылке, а не присваиванием location: если схему
+  // cortendesk:// в системе никто не обслуживает, страница при этом гарантированно остаётся
+  // на месте, а не уходит в неизвестность.
+  function openCortendesk() {
+    const url = cortendeskUrl();
+    if (!url) return;
+    const a = document.createElement('a');
+    a.href = url;
+    a.rel = 'noopener';
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    // Ссылку убираем не сразу: браузер обрабатывает переход к внешней схеме асинхронно,
+    // и выдёргивать узел из документа в тот же момент незачем.
+    setTimeout(() => a.remove(), 2000);
+  }
+
+  // Та же связка для случая, когда схема cortendesk:// в системе не зарегистрирована: клиент
+  // понимает те же параметры аргументами командной строки (src/core_main.rs в его исходниках).
+  function cortendeskCommand() {
+    if (!remote.rd) return '';
+    return `cortendesk --connect ${remote.rd.id} --password ${remote.rd.password}`;
+  }
+
+  async function copyToClipboard(text, okKey) {
+    if (!text) return;
+    try {
+      // clipboard есть только на защищённом соединении, поэтому обращение — внутри try.
+      await navigator.clipboard.writeText(text);
+      toast(t(okKey));
+    } catch (_) {
+      toast(t('remote_rd_copy_failed'), 'error');
+    }
+  }
+
+  function showCortendeskResult(msg) {
+    remote.rd = { id: msg.cortendeskId, password: msg.password };
+    el.remoteRdId.textContent = msg.cortendeskId;
+    el.remoteRdPass.textContent = msg.password;
+    el.remoteRdCmd.textContent = cortendeskCommand();
+    el.remoteRdMissing.classList.add('hidden');
+    el.remoteRdResult.classList.remove('hidden');
+    remoteStatus('');
+
+    // Есть своя веб-консоль — экран открывается прямо в браузере, ставить ничего не надо.
+    // Нет — остаётся установленный CortenDesk по ссылке cortendesk://.
+    const web = consoleSessionUrl();
+    el.remoteRdConsole.classList.toggle('hidden', !web);
+    // Подсказка меняется вместе с путём. Правится сам `data-t`, а не только текст: иначе
+    // переключение языка вернуло бы строку, описывающую другой способ.
+    el.remoteRdGotSub.dataset.t = web ? 'remote_rd_got_sub_web' : 'remote_rd_got_sub';
+    setElementText(el.remoteRdGotSub, t(el.remoteRdGotSub.dataset.t));
+
+    // Реквизиты приходят по сокету, а не по нажатию, и переход без жеста пользователя
+    // браузер вправе не пустить — вкладку тем более. Поэтому попытка открыть окно
+    // автоматически — только удобство, а рабочий путь — кнопка рядом.
+    if (web) {
+      // ID уходит в адресе, руками останется вставить только пароль.
+      copyToClipboard(remote.rd.password, 'remote_rd_copied');
+      window.open(web, '_blank', 'noopener');
+      return;
+    }
+    openCortendesk();
+  }
+
+  // ---- «а установлен ли CortenDesk» ----
+  //
+  // Спросить систему про обработчик схемы браузер не даёт и не даст: это утечка того, что
+  // у человека стоит. Косвенный признак ровно один — запустившееся приложение забирает фокус
+  // у страницы. Не забрал за полторы секунды, значит, скорее всего, запускать было нечего.
+  //
+  // Признак ненадёжен в обе стороны: человек мог сам переключиться в другое окно (скажем,
+  // решил не ждать), а мог отмахнуться от системного запроса «Открыть CortenDesk?». Поэтому
+  // здесь именно предположение: текст говорит «похоже», рядом стоит кнопка «Он установлен»,
+  // а запасной путь с командой как висел на экране всегда, так и висит.
+  const RD_LAUNCH_GRACE_MS = 1500;
+  let rdWatch = null;
+
+  function stopCortendeskWatch() {
+    if (!rdWatch) return;
+    clearTimeout(rdWatch.timer);
+    window.removeEventListener('blur', rdWatch.onAway);
+    window.removeEventListener('pagehide', rdWatch.onAway);
+    document.removeEventListener('visibilitychange', rdWatch.onVisibility);
+    rdWatch = null;
+  }
+
+  // Слежка ставится только на явное нажатие. На попытку из showCortendeskResult() её ставить
+  // нельзя: браузер вправе не пустить переход к внешней схеме без жеста пользователя, и тогда
+  // «фокус не ушёл» означало бы «переход не состоялся», а вовсе не «программы нет».
+  function watchCortendeskLaunch() {
+    stopCortendeskWatch();
+    const w = {};
+    w.onAway = () => stopCortendeskWatch();
+    w.onVisibility = () => { if (document.hidden) stopCortendeskWatch(); };
+    w.timer = setTimeout(() => {
+      stopCortendeskWatch();
+      if (el.remoteRdMissing) el.remoteRdMissing.classList.remove('hidden');
+    }, RD_LAUNCH_GRACE_MS);
+    window.addEventListener('blur', w.onAway);
+    window.addEventListener('pagehide', w.onAway);
+    document.addEventListener('visibilitychange', w.onVisibility);
+    rdWatch = w;
+  }
+
+  onEl(el.remoteRdMissingHide, 'click', () => {
+    // Догадка не подтвердилась — убираем её и больше в этом сеансе не навязываемся.
+    stopCortendeskWatch();
+    el.remoteRdMissing.classList.add('hidden');
+  });
+
+  onEl(el.remoteRdOpen, 'click', () => {
+    // Нажатие обязано быть заметным: если CortenDesk не установлен, переход по cortendesk://
+    // не делает ровно ничего и молчит, а страница выглядит сломанной.
+    toast(t('remote_rd_opening'));
+    el.remoteRdMissing.classList.add('hidden');
+    watchCortendeskLaunch();
+    openCortendesk();
+  });
+
+  onEl(el.remoteRdConsole, 'click', () => {
+    const web = consoleSessionUrl();
+    if (!web) return;
+    window.open(web, '_blank', 'noopener');
+    copyToClipboard(remote.rd ? remote.rd.password : '', 'remote_rd_copied');
+  });
+
+  onEl(el.remoteRdCopyId, 'click', () => copyToClipboard(remote.rd ? remote.rd.id : '', 'remote_rd_id_copied'));
+  onEl(el.remoteRdCopy, 'click', () => copyToClipboard(remote.rd ? remote.rd.password : '', 'remote_rd_copied'));
+  onEl(el.remoteRdCopyCmd, 'click', () => copyToClipboard(cortendeskCommand(), 'remote_rd_cmd_copied'));
+
+  onEl(el.remoteSrvLanCopy, 'click', () => copyToClipboard(el.remoteSrvLan.textContent, 'remote_srv_copied'));
+  onEl(el.remoteSrvVpnCopy, 'click', () => copyToClipboard(el.remoteSrvVpn.textContent, 'remote_srv_copied'));
+  onEl(el.remoteSrvWssCopy, 'click', () => copyToClipboard(el.remoteSrvWss.textContent, 'remote_srv_copied'));
+  onEl(el.remoteSrvKeyCopy, 'click', () => copyToClipboard(el.remoteSrvKey.textContent, 'remote_srv_copied'));
+  onEl(el.remoteSrvCfgLan, 'click', () => copyToClipboard(remote.srvConfig?.lan, 'remote_srv_cfg_copied'));
+  onEl(el.remoteSrvCfgVpn, 'click', () => copyToClipboard(remote.srvConfig?.vpn, 'remote_srv_cfg_copied'));
+  onEl(el.remoteSrvCfgWss, 'click', () => copyToClipboard(remote.srvConfig?.wss, 'remote_srv_cfg_copied'));
+
+  // Корень консоли — это и есть её панель управления; страница сеанса лежит на /webclient.
+  // Новой вкладкой: к списку людей на сайте возвращаться придётся почти сразу.
+  onEl(el.remoteSrvAdminOpen, 'click', () => {
+    if (remote.webUrl) window.open(remote.webUrl, '_blank', 'noopener');
+  });
+
+  onEl(el.remoteRdClose, 'click', () => {
+    stopCortendeskWatch();
+    el.remoteRdMissing.classList.add('hidden');
+    el.remoteRdResult.classList.add('hidden');
+    remote.rd = null;
+    el.remoteRdCmd.textContent = '';
+    remoteEnd();
+  });
+
+  // ---- завершение ----
+
+  function remoteTeardown() {
+    if (!remoteUiReady) return;
+    // Иначе после конца сеанса остаётся развёрнутый на весь экран чёрный прямоугольник.
+    if (fullscreenElement() === el.remoteStage) {
+      (document.exitFullscreen || document.webkitExitFullscreen || (() => {})).call(document);
+    }
+    if (remote.pc) { try { remote.pc.close(); } catch (_) {} }
+    remote.pc = null;
+    if (remote.stream) remote.stream.getTracks().forEach((tr) => { try { tr.stop(); } catch (_) {} });
+    remote.stream = null;
+    remote.pendingIce = [];
+    remote.session = null;
+    el.remoteVideo.srcObject = null;
+    el.remoteStage.classList.add('hidden');
+    el.remoteRdOverlay.classList.add('hidden');
+    if (state.view === 'remote') renderRemoteUsers();
+  }
+
+  function remoteEnd() {
+    if (remote.session && remote.session.id) remoteSend({ type: 'end', id: remote.session.id });
+    remoteTeardown();
+    remoteStatus('');
+  }
+
+  // Полноэкранный режим разворачивает контейнер, а не само видео: внутри остаётся полоса
+  // с кнопкой «Завершить», иначе выйти из чужого экрана можно было бы только клавишей Esc.
+  function fullscreenElement() {
+    return document.fullscreenElement || document.webkitFullscreenElement || null;
+  }
+
+  function toggleRemoteFullscreen() {
+    if (fullscreenElement()) {
+      (document.exitFullscreen || document.webkitExitFullscreen || (() => {})).call(document);
+      return;
+    }
+    const box = el.remoteStage;
+    const req = box.requestFullscreen || box.webkitRequestFullscreen;
+    if (req) {
+      // Promise, потому что браузер может отказать (нет жеста, запрет политикой) — тогда
+      // остаёмся как были, но молча падать в консоль не даём.
+      Promise.resolve(req.call(box)).catch(() => toast(t('remote_fullscreen_denied'), 'error'));
+      return;
+    }
+    // iOS Safari не разворачивает произвольный элемент, только само видео.
+    const v = el.remoteVideo;
+    if (v.webkitEnterFullscreen) v.webkitEnterFullscreen();
+    else toast(t('remote_fullscreen_denied'), 'error');
+  }
+
+  function syncFullscreenLabel() {
+    if (!el.remoteFullscreenBtn) return;
+    const on = fullscreenElement() === el.remoteStage;
+    el.remoteFullscreenBtn.textContent = t(on ? 'remote_fullscreen_exit' : 'remote_fullscreen');
+  }
+
+  onEl(el.remoteFullscreenBtn, 'click', toggleRemoteFullscreen);
+  // Из полноэкранного режима выходят и клавишей Esc, мимо нашей кнопки — надпись обязана
+  // меняться от состояния, а не от нажатия.
+  ['fullscreenchange', 'webkitfullscreenchange'].forEach((ev) => {
+    document.addEventListener(ev, syncFullscreenLabel);
+  });
+
+  onEl(el.remoteStopBtn, 'click', remoteEnd);
+  onEl(el.remoteRefreshBtn, 'click', () => {
+    if (!remote.ws) remoteConnect();
+    renderRemoteUsers();
+  });
+
+  // Поле «Идентификатор CortenDesk» в окне «Аккаунт». Сохраняется и по change, и при закрытии
+  // окна: Esc закрывает его, не снимая фокус с поля, а значит change не придёт вовсе —
+  // раньше набранный ID в этом случае молча пропадал.
+  // Подставить идентификатор машины, с которой открыта страница. Свой ID браузер узнать не может
+  // никак: CortenDesk — отдельная программа, и страница в неё не заглядывает. Знает его сервер,
+  // потому что клиент сам зарегистрировался на нашем hbbs, и знает адрес, с которого пришёл
+  // запрос, — по нему и находит.
+  async function fillCortendeskId() {
+    let id = '';
+    try {
+      const data = await api('/api/auth/cortendesk-id');
+      id = data && data.id ? String(data.id) : '';
+    } catch (_) {
+      return; // Подсказки не будет — поле останется пустым, как было до этого.
+    }
+    if (!id || !el.accountCortendesk) return;
+    // Запрос идёт по сети, а окно за это время могли закрыть, набрать ID руками или получить
+    // настройку с другого устройства. Во всех трёх случаях подставлять уже нечего.
+    if (el.accountCortendesk.value !== '' || state.settings?.cortendeskId) return;
+
+    el.accountCortendesk.value = id;
+    if (el.accountCortendeskAuto) el.accountCortendeskAuto.classList.remove('hidden');
+    state.settings.cortendeskId = id;
+    saveSetting('cortendeskId', id);
+  }
+
+  function saveCortendeskId() {
+    if (!el.accountCortendesk) return;
+    const v = el.accountCortendesk.value.trim();
+    if (v !== '' && !/^\d{6,16}$/.test(v)) {
+      toast(t('cortendesk_bad'), 'error');
+      el.accountCortendesk.value = state.settings?.cortendeskId || '';
+      return;
+    }
+    if (v === (state.settings?.cortendeskId || '')) return;
+    state.settings.cortendeskId = v;
+    saveSetting('cortendeskId', v);
+  }
+
+  onEl(el.accountCortendesk, 'change', saveCortendeskId);
+  onEl(el.accountCortendesk, 'keydown', (e) => { if (e.key === 'Enter') saveCortendeskId(); });
 
   // ---------------- Init ----------------
 

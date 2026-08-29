@@ -1,51 +1,18 @@
 // Admin-only web terminal: WebSocket <-> real PTY (bash), spawned as the app's own OS user.
-// Auth is re-checked on every WebSocket upgrade using the same session cookie as the rest of the app.
+// Auth is re-checked on every WebSocket upgrade using the same session cookie as the rest of the
+// app; the handshake itself (path dispatch, Origin check, cookie lookup) lives in ws-router.js,
+// which owns the server's single 'upgrade' listener.
 const os = require('os');
 const pty = require('node-pty');
 const { WebSocketServer } = require('ws');
-const pool = require('./db');
-const { COOKIE_NAME } = require('./auth');
+const { registerWs, authenticateFromCookies } = require('./ws-router');
 
-function parseCookies(header) {
-  const out = {};
-  (header || '').split(';').forEach((part) => {
-    const idx = part.indexOf('=');
-    if (idx === -1) return;
-    const key = part.slice(0, idx).trim();
-    const val = part.slice(idx + 1).trim();
-    if (key) out[key] = decodeURIComponent(val);
-  });
-  return out;
-}
+const TERMINAL_PATH = '/api/admin/terminal';
 
-async function authenticateFromCookies(header) {
-  const cookies = parseCookies(header);
-  const token = cookies[COOKIE_NAME];
-  if (!token) return null;
-  const [rows] = await pool.query(
-    `SELECT u.id, u.email, u.is_admin, s.expires_at
-     FROM sessions s JOIN users u ON u.id = s.user_id
-     WHERE s.token = ?`,
-    [token]
-  );
-  if (rows.length === 0) return null;
-  const session = rows[0];
-  if (new Date(session.expires_at) < new Date()) return null;
-  if (!session.is_admin) return null;
-  return { id: session.id, email: session.email };
-}
-
-// Browsers always send Origin on a WebSocket handshake, and SameSite=Lax should already stop a
-// cross-site page from getting the session cookie attached to this request in the first place —
-// but this endpoint is a full remote shell, so it gets an explicit belt-and-braces check too.
-function isAllowedOrigin(req) {
-  const origin = req.headers.origin;
-  if (!origin) return false;
-  try {
-    return new URL(origin).host === req.headers.host;
-  } catch (_) {
-    return false;
-  }
+// Admin rights are what this endpoint gates on, and they can be revoked while a shell is open —
+// so the periodic re-check below asks the same question as the handshake, not a weaker one.
+function isLiveAdmin(user) {
+  return !!user && user.isAdmin;
 }
 
 // The handshake authenticates once, but a shell stays open for hours. Re-checking the cookie on a
@@ -62,33 +29,10 @@ function attachTerminal(server) {
   const wss = new WebSocketServer({ noServer: true });
   const liveSessions = new Map(); // user id -> how many PTYs that user has open right now
 
-  server.on('upgrade', async (req, socket, head) => {
-    // Subscribing to 'upgrade' switches off Node's own handling, so a request we do not serve has
-    // to be closed here by hand — otherwise the socket hangs around with no timeout, and anyone
-    // could pile them up unauthenticated. There is no other upgrade handler to defer to.
-    if (!req.url.startsWith('/api/admin/terminal')) {
-      socket.destroy();
-      return;
-    }
-    if (!isAllowedOrigin(req)) {
-      socket.write('HTTP/1.1 403 Forbidden\r\n\r\n');
-      socket.destroy();
-      return;
-    }
-    try {
-      const user = await authenticateFromCookies(req.headers.cookie);
-      if (!user) {
-        socket.write('HTTP/1.1 401 Unauthorized\r\n\r\n');
-        socket.destroy();
-        return;
-      }
-      wss.handleUpgrade(req, socket, head, (ws) => {
-        wss.emit('connection', ws, req, user);
-      });
-    } catch (err) {
-      console.error('terminal auth error', err);
-      socket.destroy();
-    }
+  registerWs(TERMINAL_PATH, isLiveAdmin, (req, socket, head, user) => {
+    wss.handleUpgrade(req, socket, head, (ws) => {
+      wss.emit('connection', ws, req, user);
+    });
   });
 
   wss.on('connection', (ws, req, user) => {
@@ -134,7 +78,7 @@ function attachTerminal(server) {
     // without this a shell would outlive logout, session expiry and the removal of admin rights.
     const reauth = setInterval(async () => {
       try {
-        if (await authenticateFromCookies(req.headers.cookie)) return;
+        if (isLiveAdmin(await authenticateFromCookies(req.headers.cookie))) return;
         console.log(`[terminal] session no longer valid for ${user.email} (pid ${term.pid})`);
         ws.close(4001, 'session_expired');
       } catch (err) {
